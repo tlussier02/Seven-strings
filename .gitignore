@@ -100,3 +100,7 @@ InitTestScene*.unity*
 
 # IDE configuration files
 .idea/
+
+# Local IDE files
+.vscode/
+*.slnx
