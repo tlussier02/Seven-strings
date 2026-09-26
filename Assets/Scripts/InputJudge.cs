@@ -1,16 +1,37 @@
+using System;
 using UnityEngine;
 
 public class InputJudge : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public enum Judgement
     {
-        
+        Perfect,
+        Great,
+        Good,
+        Ok,
+        Miss
     }
 
-    // Update is called once per frame
-    void Update()
+    private static readonly (double threshold, Judgement judgement)[] JudgementThresholds =
     {
-        
+        (0.025, Judgement.Perfect),
+        (0.05, Judgement.Great),
+        (0.0875, Judgement.Good),
+        (0.125, Judgement.Ok)
+    };
+
+    public Judgement Evaluate(double receptor, double nextBeatTime, double lastBeatTime)
+    {
+        double offsetToNext = Math.Abs(receptor - nextBeatTime);
+        double offsetToLast = Math.Abs(receptor - lastBeatTime);
+        double offset = Math.Min(offsetToNext, offsetToLast);
+
+        foreach (var (threshold, judgement) in JudgementThresholds)
+        {
+            if (offset <= threshold)
+                return judgement;
+        }
+
+        return Judgement.Miss;
     }
 }
