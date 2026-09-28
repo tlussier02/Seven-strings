@@ -43,4 +43,9 @@ public class ReceptorClock : MonoBehaviour
         NextBeatTime = Notes[CurrentNoteIndex].Time;
         // might have to define LastBeatTime
     }
+
+    public NoteData GetNextNote()
+    {
+        return Notes[CurrentNoteIndex];
+    }
 }

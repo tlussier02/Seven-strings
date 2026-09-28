@@ -19,13 +19,13 @@ public class InputJudge : MonoBehaviour
         (0.0875, Judgement.Good),
         (0.125, Judgement.Ok)
     };
-
-    // need to check for correct input as well
-    public Judgement Evaluate(double receptor, double nextBeatTime, double lastBeatTime)
+    
+    public Judgement Evaluate(InputType input, double receptor, NoteData note)
     {
-        double offsetToNext = Math.Abs(receptor - nextBeatTime);
-        double offsetToLast = Math.Abs(receptor - lastBeatTime);
-        double offset = Math.Min(offsetToNext, offsetToLast);
+        if (!note.InputTypes.Contains(input))
+            return Judgement.Miss;
+        
+        double offset = Math.Min(receptor, note.Time);
 
         foreach (var (threshold, judgement) in JudgementThresholds)
         {
