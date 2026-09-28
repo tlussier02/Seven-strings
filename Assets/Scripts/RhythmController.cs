@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class RhythmController : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class RhythmController : MonoBehaviour
     public ChartLoader ChartLoader;
     public InputHandler InputHandler;
     
-    // store notes? 
 
     void Awake()
     {
@@ -33,7 +33,27 @@ public class RhythmController : MonoBehaviour
 
     public void HandleInput(InputType input)
     {
-        //eval input
+        BeatVisual.FlashInput();
+        
+        InputJudge.Judgement judgement = InputJudge.Evaluate(input, ReceptorClock.Receptor, ReceptorClock.GetNextNote());
+        switch (judgement)
+        {
+            case InputJudge.Judgement.Perfect:
+                BeatVisual.DisplayAccuracy("Perfect", Color.dodgerBlue);
+                break;
+            case InputJudge.Judgement.Great:
+                BeatVisual.DisplayAccuracy("Great", Color.forestGreen);
+                break;
+            case InputJudge.Judgement.Good:
+                BeatVisual.DisplayAccuracy("Good", Color.darkGreen);
+                break;
+            case InputJudge.Judgement.Ok:
+                BeatVisual.DisplayAccuracy("Ok", Color.softYellow);
+                break;
+            default:
+                BeatVisual.DisplayAccuracy("Miss", Color.softRed);
+                break;
+        }
     }
 
     void OnDestroy()
