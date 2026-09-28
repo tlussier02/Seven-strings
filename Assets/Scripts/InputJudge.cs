@@ -20,6 +20,7 @@ public class InputJudge : MonoBehaviour
         (0.125, Judgement.Ok)
     };
 
+    // need to check for correct input as well
     public Judgement Evaluate(double receptor, double nextBeatTime, double lastBeatTime)
     {
         double offsetToNext = Math.Abs(receptor - nextBeatTime);
