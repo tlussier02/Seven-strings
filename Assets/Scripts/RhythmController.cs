@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class RhythmController : MonoBehaviour
 {
@@ -10,19 +8,36 @@ public class RhythmController : MonoBehaviour
     public BeatVisual BeatVisual;
     public ChartLoader ChartLoader;
     public InputHandler InputHandler;
-    
+    public NoteManager NoteManager;
 
     void Awake()
     {
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
-        ReceptorClock.SetNotes(ChartLoader.LoadChart());
+        var notes = ChartLoader.LoadChart();
+        ReceptorClock.SetNotes(notes);
+        NoteManager.SetNotes(notes);
+        NoteManager.ReceptorClock = ReceptorClock;
+    }
+
+    void OnEnable()
+    {
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
+        NoteManager.OnJudgement += HandleJudgement;
     }
+
+    void OnDisable()
+    {
+        ReceptorClock.OnBeat -= HandleBeat;
+        InputHandler.OnInputPressed -= HandleInput;
+        NoteManager.OnJudgement -= HandleJudgement;
+    }
+
     void Update()
     {
         ScheduledAudioPlayer.Tick();
         ReceptorClock.Tick();
+        NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
     }
 
@@ -34,8 +49,11 @@ public class RhythmController : MonoBehaviour
     public void HandleInput(InputType input)
     {
         BeatVisual.FlashInput();
-        
-        InputJudge.Judgement judgement = InputJudge.Evaluate(input, ReceptorClock.Receptor, ReceptorClock.GetNextNote());
+        NoteManager.HandleInput(input, ReceptorClock.Receptor);
+    }
+
+    public void HandleJudgement(InputType input, InputJudge.Judgement judgement)
+    {
         switch (judgement)
         {
             case InputJudge.Judgement.Perfect:
@@ -54,23 +72,5 @@ public class RhythmController : MonoBehaviour
                 BeatVisual.DisplayAccuracy("Miss", Color.softRed);
                 break;
         }
-    }
-
-    void OnDestroy()
-    {
-        ReceptorClock.OnBeat -= HandleBeat;
-        InputHandler.OnInputPressed -= HandleInput;
-    }
-
-    void OnEnable()
-    {
-        ReceptorClock.OnBeat += HandleBeat;
-        InputHandler.OnInputPressed += HandleInput;
-    }
-
-    void OnDisable()
-    {
-        ReceptorClock.OnBeat -= HandleBeat;
-        InputHandler.OnInputPressed -= HandleInput;
     }
 }
