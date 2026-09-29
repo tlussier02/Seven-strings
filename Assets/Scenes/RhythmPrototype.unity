@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 471992496}
   - component: {fileID: 471992495}
   - component: {fileID: 471992494}
+  - component: {fileID: 471992501}
   - component: {fileID: 471992493}
   - component: {fileID: 471992500}
   m_Layer: 0
@@ -525,6 +526,7 @@ MonoBehaviour:
   BeatVisual: {fileID: 471992494}
   ChartLoader: {fileID: 471992495}
   InputHandler: {fileID: 471992498}
+  NoteManager: {fileID: 471992501}
 --- !u!82 &471992500
 AudioSource:
   m_ObjectHideFlags: 0
@@ -622,6 +624,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &471992501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471992491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c61353a1f035403d97a0eb33c3a8e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NoteManager
+  ReceptorClock: {fileID: 471992497}
+  InputJudge: {fileID: 471992493}
+  MaxWindow: 0.125
 --- !u!1 &601636335
 GameObject:
   m_ObjectHideFlags: 0
