@@ -32,7 +32,12 @@ public class ReceptorClock : MonoBehaviour
         {
             OnBeat?.Invoke(Notes[CurrentNoteIndex]);
             LastBeatTime = NextBeatTime;
-            NextBeatTime = Notes[++CurrentNoteIndex].Time;
+            CurrentNoteIndex++;
+
+            if (CurrentNoteIndex < Notes.Count)
+                NextBeatTime = Notes[CurrentNoteIndex].Time;
+            else
+                NextBeatTime = double.PositiveInfinity;
         }
     }
     
