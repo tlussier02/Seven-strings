@@ -15,8 +15,6 @@ public class RhythmController : MonoBehaviour
     {
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
         List<NoteData> notes = ChartLoader.LoadChart();
-        foreach (NoteData note in notes)
-            Debug.Log($"Note at time {note.Time}");
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
         NoteManager.ReceptorClock = ReceptorClock;
