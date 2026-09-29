@@ -6,6 +6,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
     public AudioClip AudioClip;
     public double ScheduledStartTime { get; private set; }
     public bool IsScheduled { get; private set; }
+    private bool IsRunning;
     
 
     void Start()
@@ -21,12 +22,13 @@ public class ScheduledAudioPlayer : MonoBehaviour
     public void Tick()
     {
         double time = AudioSettings.dspTime;
-        if (time + 1.0f > ScheduledStartTime)
+        if (!IsRunning && time + 1.0f > ScheduledStartTime)
         {
             AudioSource.clip = AudioClip;
             AudioSource.PlayScheduled(ScheduledStartTime);
+            IsRunning = true;
 
-            Debug.Log("Scheduled audio to start at dsp time " + ScheduledStartTime);
+            Debug.Log("Scheduled audio to start at dsp time " + ScheduledStartTime + " | DSP time: " + AudioSettings.dspTime);
         }
     }
 }
