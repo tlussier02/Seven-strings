@@ -396,9 +396,9 @@ GameObject:
   - component: {fileID: 471992498}
   - component: {fileID: 471992497}
   - component: {fileID: 471992496}
-  - component: {fileID: 471992495}
   - component: {fileID: 471992494}
   - component: {fileID: 471992501}
+  - component: {fileID: 471992495}
   - component: {fileID: 471992493}
   - component: {fileID: 471992500}
   m_Layer: 0
@@ -464,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
-  ChartFile: {fileID: 4900000, guid: 9bebbc2f9feaf404fae16b5d2f756bde, type: 3}
+  ChartFile: {fileID: 4900000, guid: 456266c64ca0d4dbdafd962ee6f376df, type: 3}
 --- !u!114 &471992496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,7 +998,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 500, y: 300}
+  m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1571905408
 MonoBehaviour:
