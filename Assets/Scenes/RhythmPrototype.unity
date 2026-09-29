@@ -492,7 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceptorClock
   ScheduledAudioPlayer: {fileID: 0}
-  LatencyCompensation: 0
+  LatencyCompensation: 0.19
 --- !u!114 &471992498
 MonoBehaviour:
   m_ObjectHideFlags: 0
