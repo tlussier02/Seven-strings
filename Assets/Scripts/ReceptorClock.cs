@@ -10,6 +10,7 @@ public class ReceptorClock : MonoBehaviour
     public double LastBeatTime { get; private set; }
     public double LatencyCompensation; // need to create a way to manually calibrate and adjust
     public Action<NoteData> OnBeat; //jumping between Note and Beat naming. pick one
+    public NoteData? NextNote => CurrentNoteIndex < Notes.Count ? Notes[CurrentNoteIndex] : null;
 
     private bool FoundOvertime;
     private List<NoteData> Notes;
@@ -27,7 +28,7 @@ public class ReceptorClock : MonoBehaviour
             FoundOvertime = true;
         }
         
-        if (Receptor >= NextBeatTime)
+        if (Receptor >= NextBeatTime && CurrentNoteIndex < Notes.Count)
         {
             OnBeat?.Invoke(Notes[CurrentNoteIndex]);
             LastBeatTime = NextBeatTime;
