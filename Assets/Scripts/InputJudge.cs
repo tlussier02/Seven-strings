@@ -23,6 +23,8 @@ public class InputJudge : MonoBehaviour
     public Judgement Evaluate(double receptor, double noteTime)
     {
         double offset = Math.Abs(receptor - noteTime);
+        
+        Debug.Log($"offset: {offset}");
 
         foreach ((double threshold, Judgement judgement) in JudgementThresholds)
         {
