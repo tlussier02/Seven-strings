@@ -36,7 +36,7 @@ public class NoteManager : MonoBehaviour
         {
             if (receptor >= ActiveNotes[i].Note.Time + MaxWindow)
             {
-                foreach (var missed in ActiveNotes[i].PendingInputs)
+                foreach (InputType missed in ActiveNotes[i].PendingInputs)
                     OnJudgement?.Invoke(missed, InputJudge.Judgement.Miss);
 
                 ActiveNotes.RemoveAt(i);
@@ -60,7 +60,7 @@ public class NoteManager : MonoBehaviour
 
     private bool IsActive(NoteData note)
     {
-        foreach (var active in ActiveNotes)
+        foreach (ActiveNote active in ActiveNotes)
         {
             if (active.Note.Time == note.Time)
                 return true;

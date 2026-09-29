@@ -6,10 +6,10 @@ public class ReceptorClock : MonoBehaviour
 {
     public ScheduledAudioPlayer ScheduledAudioPlayer;
     public double Receptor { get; private set; }
-    public double NextBeatTime { get; private set; }
-    public double LastBeatTime { get; private set; }
+    public double NextNoteTime { get; private set; }
+    public double LastNoteTime { get; private set; }
     public double LatencyCompensation; // need to create a way to manually calibrate and adjust
-    public Action<NoteData> OnBeat; //jumping between Note and Beat naming. pick one
+    public event Action<NoteData> OnBeat; //jumping between Note and Beat naming. pick one
     public NoteData? NextNote => CurrentNoteIndex < Notes.Count ? Notes[CurrentNoteIndex] : null;
 
     private bool FoundOvertime;
@@ -24,20 +24,20 @@ public class ReceptorClock : MonoBehaviour
         if (!FoundOvertime && time >= ScheduledAudioPlayer.ScheduledStartTime + LatencyCompensation)
         {
             double overtime = time - (ScheduledAudioPlayer.ScheduledStartTime + LatencyCompensation);
-            Receptor -= overtime;
+            Receptor = overtime;
             FoundOvertime = true;
         }
         
-        if (Receptor >= NextBeatTime && CurrentNoteIndex < Notes.Count)
+        if (FoundOvertime && Receptor >= NextNoteTime && CurrentNoteIndex < Notes.Count)
         {
             OnBeat?.Invoke(Notes[CurrentNoteIndex]);
-            LastBeatTime = NextBeatTime;
+            LastNoteTime = NextNoteTime;
             CurrentNoteIndex++;
 
             if (CurrentNoteIndex < Notes.Count)
-                NextBeatTime = Notes[CurrentNoteIndex].Time;
+                NextNoteTime = Notes[CurrentNoteIndex].Time;
             else
-                NextBeatTime = double.PositiveInfinity;
+                NextNoteTime = double.PositiveInfinity;
         }
     }
     
@@ -46,12 +46,7 @@ public class ReceptorClock : MonoBehaviour
         Notes = notes;
         CurrentNoteIndex = 0;
         
-        NextBeatTime = Notes[CurrentNoteIndex].Time;
+        NextNoteTime = Notes[CurrentNoteIndex].Time;
         // might have to define LastBeatTime
-    }
-
-    public NoteData GetNextNote()
-    {
-        return Notes[CurrentNoteIndex];
     }
 }

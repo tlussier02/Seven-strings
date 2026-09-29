@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RhythmController : MonoBehaviour
@@ -13,7 +14,9 @@ public class RhythmController : MonoBehaviour
     void Awake()
     {
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
-        var notes = ChartLoader.LoadChart();
+        List<NoteData> notes = ChartLoader.LoadChart();
+        foreach (NoteData note in notes)
+            Debug.Log($"Note at time {note.Time}");
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
         NoteManager.ReceptorClock = ReceptorClock;
