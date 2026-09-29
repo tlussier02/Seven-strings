@@ -19,15 +19,12 @@ public class InputJudge : MonoBehaviour
         (0.0875, Judgement.Good),
         (0.125, Judgement.Ok)
     };
-    
-    public Judgement Evaluate(InputType input, double receptor, NoteData note)
-    {
-        if (!note.InputTypes.Contains(input))
-            return Judgement.Miss;
-        
-        double offset = Math.Min(receptor, note.Time);
 
-        foreach (var (threshold, judgement) in JudgementThresholds)
+    public Judgement Evaluate(double receptor, double noteTime)
+    {
+        double offset = Math.Abs(receptor - noteTime);
+
+        foreach ((double threshold, Judgement judgement) in JudgementThresholds)
         {
             if (offset <= threshold)
                 return judgement;
