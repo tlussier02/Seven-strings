@@ -1,18 +1,21 @@
-using UnityEditor.UI;
 using UnityEngine;
 
 public class NoteAnimation : MonoBehaviour
 {
-    private float Speed;
-    private float TargetY;
-    
+    private float speed;
+    private float destroyY;
+
     void Update()
     {
-        
-    }
+        transform.position += Vector3.down * speed * Time.deltaTime;
 
-    public void Initialize(float speed, float targetY)
+        if (transform.position.y <= destroyY)
+            Destroy(gameObject);
+    }
+    
+    public void Initialize(float speed, float destroyY)
     {
-        
+        this.speed = speed;
+        this.destroyY = destroyY;
     }
 }
