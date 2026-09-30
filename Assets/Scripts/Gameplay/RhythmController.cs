@@ -42,7 +42,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.Tick();
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
-        AnimationManager.Tick(ReceptorClock.Receptor);
+        AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime);
     }
 
     public void HandleBeat(NoteData note)

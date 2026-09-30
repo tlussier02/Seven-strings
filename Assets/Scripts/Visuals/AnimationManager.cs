@@ -5,9 +5,8 @@ public class AnimationManager : MonoBehaviour
 {
     public GameObject NotePrefab;
     public GameObject InputPanel;
-    public Vector3 SpawnPosition;
     public float FallDuration;
-    public float DestroyBuffer = 400f;
+    public float DestroyBuffer;
     
     private List<NoteData> Notes;
     private int NextSpawnIndex;
@@ -16,14 +15,16 @@ public class AnimationManager : MonoBehaviour
 
     public void Awake()
     {
-        float distance =  SpawnPosition.y - InputPanel.transform.position.y;
+        float distance =  NotePrefab.transform.position.y - InputPanel.transform.position.y;
         FallSpeed = distance / FallDuration;
         DestroyY =  InputPanel.transform.position.y - DestroyBuffer;
+        Debug.Log($"NotePrefab Y: {NotePrefab.transform.position.y}, InputPanel Y: {InputPanel.transform.position.y}, destroyY: {DestroyY}, fallSpeed: {FallSpeed}");
     }
     
-    public void Tick(double receptor)
+    public void Tick(double receptor, bool foundOvertime)
     {
-        
+        if (!foundOvertime) return;
+
         while (NextSpawnIndex < Notes.Count &&
                receptor >= Notes[NextSpawnIndex].Time - FallDuration)
         {
@@ -34,7 +35,7 @@ public class AnimationManager : MonoBehaviour
 
     public void SpawnNote(NoteData note)
     {
-        GameObject newNote = Instantiate(NotePrefab, SpawnPosition, Quaternion.identity);
+        GameObject newNote = Instantiate(NotePrefab);
         NoteAnimation noteAnimation = newNote.GetComponent<NoteAnimation>();
         noteAnimation.Initialize(FallSpeed, DestroyY);
     }
