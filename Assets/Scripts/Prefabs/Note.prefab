@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6470470469904730287}
   - component: {fileID: 6186224061308930274}
+  - component: {fileID: -6455363928211539232}
   m_Layer: 0
   m_Name: Note
   m_TagString: Untagged
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.70609385, g: 1, b: 0.5896226, a: 1}
@@ -92,3 +93,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &-6455363928211539232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779403274787286036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1920168ffb6243acb8cc4389c3cc5b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NoteAnimation

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BeatVisual : MonoBehaviour
 {
-    public Image InputPanelImage;
+    public SpriteRenderer InputPanel;
     public Image BeatPanelImage;
     public Image AccuracyPanelImage;
     public Text AccuracyText;
@@ -17,7 +17,7 @@ public class BeatVisual : MonoBehaviour
     public void FlashInput()
     {
         if (inputFlashRoutine != null) StopCoroutine(inputFlashRoutine);
-        inputFlashRoutine = StartCoroutine(Flash(InputPanelImage, Color.cornflowerBlue, 0.1f));
+        inputFlashRoutine = StartCoroutine(FlashSprite(InputPanel, Color.cornflowerBlue, 0.1f));
     }
 
     public void FlashBeat()
@@ -37,6 +37,19 @@ public class BeatVisual : MonoBehaviour
         target.color = color;
         yield return new WaitForSeconds(duration);
         target.color = idleColor;
+    }
+    
+    private IEnumerator FlashSprite(SpriteRenderer target, Color color, float duration)
+    {
+        float originalAlpha = target.color.a;
+        color.a = originalAlpha;
+        
+        Color idle = Color.white;
+        idle.a = originalAlpha;
+
+        target.color = color;
+        yield return new WaitForSeconds(duration);
+        target.color = idle;
     }
     
 }
