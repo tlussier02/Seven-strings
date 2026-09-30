@@ -10,6 +10,7 @@ public class RhythmController : MonoBehaviour
     public ChartLoader ChartLoader;
     public InputHandler InputHandler;
     public NoteManager NoteManager;
+    public AnimationManager AnimationManager;
 
     void Awake()
     {
@@ -17,6 +18,7 @@ public class RhythmController : MonoBehaviour
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
+        AnimationManager.SetNotes(notes);
         NoteManager.ReceptorClock = ReceptorClock;
     }
 
@@ -40,6 +42,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.Tick();
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
+        AnimationManager.Tick(ReceptorClock.Receptor);
     }
 
     public void HandleBeat(NoteData note)
@@ -55,7 +58,7 @@ public class RhythmController : MonoBehaviour
 
     public void HandleJudgement(InputType input, InputJudge.Judgement judgement)
     {
-        switch (judgement)
+        switch (judgement)  
         {
             case InputJudge.Judgement.Perfect:
                 BeatVisual.DisplayAccuracy("Perfect", Color.dodgerBlue);
