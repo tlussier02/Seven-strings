@@ -29,7 +29,6 @@ public class NoteManager : MonoBehaviour
     {
         if (upcomingNote.HasValue && !IsActive(upcomingNote.Value) && receptor >= upcomingNote.Value.Time - ActivationWindow)
         {
-            Debug.Log($"Activating note at {upcomingNote.Value.Time}, receptor={receptor}, window={ActivationWindow}");
             Activate(upcomingNote.Value);
         }
 
