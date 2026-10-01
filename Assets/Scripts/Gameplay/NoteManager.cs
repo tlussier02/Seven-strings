@@ -6,9 +6,10 @@ public class NoteManager : MonoBehaviour
 {
     public ReceptorClock ReceptorClock;
     public InputJudge InputJudge;
-    public float MaxWindow = 0.125f; // shouldn't be manually changed. Just same value as Judgement.Ok
-    public event Action<InputType, InputJudge.Judgement> OnJudgement;
+    public float ActivationWindow = 0.4f;
+    public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
 
+    private double ExpiryWindow => InputJudge.WidestThreshold + 0.01;
     private List<NoteData> Notes;
     private List<ActiveNote> ActiveNotes = new List<ActiveNote>();
 
@@ -26,7 +27,7 @@ public class NoteManager : MonoBehaviour
 
     public void Tick(double receptor, NoteData? upcomingNote)
     {
-        if (upcomingNote.HasValue && !IsActive(upcomingNote.Value) && receptor >= upcomingNote.Value.Time - MaxWindow)
+        if (upcomingNote.HasValue && !IsActive(upcomingNote.Value) && receptor >= upcomingNote.Value.Time - ActivationWindow)
         {
             Activate(upcomingNote.Value);
         }
@@ -34,10 +35,10 @@ public class NoteManager : MonoBehaviour
         // expired note
         for (int i = ActiveNotes.Count - 1; i >= 0; i--)
         {
-            if (receptor >= ActiveNotes[i].Note.Time + MaxWindow)
+            if (receptor >= ActiveNotes[i].Note.Time + ExpiryWindow)
             {
                 foreach (InputType missed in ActiveNotes[i].PendingInputs)
-                    OnJudgement?.Invoke(missed, InputJudge.Judgement.Miss);
+                    OnJudgement?.Invoke(ActiveNotes[i].Note, missed, InputJudge.Judgement.Miss);
 
                 ActiveNotes.RemoveAt(i);
             }
@@ -51,7 +52,7 @@ public class NoteManager : MonoBehaviour
             if (active.PendingInputs.Contains(pressed))
             {
                 InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, active.Note.Time);
-                OnJudgement?.Invoke(pressed, judgement);
+                OnJudgement?.Invoke(active.Note, pressed, judgement);
                 active.PendingInputs.Remove(pressed);
                 return;
             }

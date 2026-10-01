@@ -1,8 +1,11 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class InputJudge : MonoBehaviour
 {
+    public double WidestThreshold => JudgementThresholds.Max(tuple => tuple.threshold);
+    
     public enum Judgement
     {
         Perfect,

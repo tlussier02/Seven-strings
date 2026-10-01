@@ -10,6 +10,7 @@ public class RhythmController : MonoBehaviour
     public ChartLoader ChartLoader;
     public InputHandler InputHandler;
     public NoteManager NoteManager;
+    public AnimationManager AnimationManager;
 
     void Awake()
     {
@@ -17,6 +18,7 @@ public class RhythmController : MonoBehaviour
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
+        AnimationManager.SetNotes(notes);
         NoteManager.ReceptorClock = ReceptorClock;
     }
 
@@ -25,6 +27,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
         NoteManager.OnJudgement += HandleJudgement;
+        NoteManager.OnJudgement += AnimationManager.HandleJudgement;
     }
 
     void OnDisable()
@@ -32,6 +35,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat -= HandleBeat;
         InputHandler.OnInputPressed -= HandleInput;
         NoteManager.OnJudgement -= HandleJudgement;
+        NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
     }
 
     void Update()
@@ -40,6 +44,8 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.Tick();
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
+        double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
+        AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);
     }
 
     public void HandleBeat(NoteData note)
@@ -53,9 +59,9 @@ public class RhythmController : MonoBehaviour
         NoteManager.HandleInput(input, ReceptorClock.Receptor);
     }
 
-    public void HandleJudgement(InputType input, InputJudge.Judgement judgement)
+    public void HandleJudgement(NoteData note, InputType input, InputJudge.Judgement judgement)
     {
-        switch (judgement)
+        switch (judgement)  
         {
             case InputJudge.Judgement.Perfect:
                 BeatVisual.DisplayAccuracy("Perfect", Color.dodgerBlue);
