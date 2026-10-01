@@ -12,6 +12,7 @@ public class BeatVisual : MonoBehaviour
     public Color idleColor = Color.gray;
 
     private Coroutine inputFlashRoutine;
+    private Coroutine textFlashRoutine;
     private Coroutine beatFlashRoutine;
 
     public void FlashInput()
@@ -28,8 +29,17 @@ public class BeatVisual : MonoBehaviour
 
     public void DisplayAccuracy(string accuracyText, Color color)
     {
-        AccuracyPanelImage.color = color;
-        AccuracyText.text = accuracyText;
+        if (textFlashRoutine != null) StopCoroutine(textFlashRoutine);
+        textFlashRoutine = StartCoroutine(FlashText(AccuracyText, AccuracyPanelImage, color, accuracyText, 0.5f));
+    }
+    
+    private IEnumerator FlashText(Text targetText, Image targetImage, Color color, string text, float duration)
+    {
+        targetImage.color = color;
+        targetText.text = text;
+        yield return new WaitForSeconds(duration);
+        targetImage.color = idleColor;
+        targetText.text = "";
     }
 
     private IEnumerator Flash(Image target, Color color,  float duration)
