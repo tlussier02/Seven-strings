@@ -7,7 +7,8 @@ public class NoteManager : MonoBehaviour
     public ReceptorClock ReceptorClock;
     public InputJudge InputJudge;
     public float MaxWindow = 0.125f; // shouldn't be manually changed. Just same value as Judgement.Ok
-    public event Action<InputType, InputJudge.Judgement> OnJudgement;
+    public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
+
 
     private List<NoteData> Notes;
     private List<ActiveNote> ActiveNotes = new List<ActiveNote>();
@@ -37,7 +38,7 @@ public class NoteManager : MonoBehaviour
             if (receptor >= ActiveNotes[i].Note.Time + MaxWindow)
             {
                 foreach (InputType missed in ActiveNotes[i].PendingInputs)
-                    OnJudgement?.Invoke(missed, InputJudge.Judgement.Miss);
+                    OnJudgement?.Invoke(ActiveNotes[i].Note, missed, InputJudge.Judgement.Miss);
 
                 ActiveNotes.RemoveAt(i);
             }
@@ -51,7 +52,7 @@ public class NoteManager : MonoBehaviour
             if (active.PendingInputs.Contains(pressed))
             {
                 InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, active.Note.Time);
-                OnJudgement?.Invoke(pressed, judgement);
+                OnJudgement?.Invoke(active.Note, pressed, judgement);
                 active.PendingInputs.Remove(pressed);
                 return;
             }
