@@ -155,7 +155,7 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
-  ChartFile: {fileID: 4900000, guid: 9bebbc2f9feaf404fae16b5d2f756bde, type: 3}
+  ChartFile: {fileID: 4900000, guid: 136f868b908044b508aa8f34017c6c76, type: 3}
 --- !u!114 &471992496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,7 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AnimationManager
   NotePrefab: {fileID: 1779403274787286036, guid: 1f039c3cd46ca4ecb80ece7a0a664099, type: 3}
   InputPanel: {fileID: 1520206696}
-  FallDuration: 1
+  FallDuration: 0.7
   DestroyBuffer: 5
 --- !u!1 &832575517
 GameObject:
