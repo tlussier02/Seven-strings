@@ -640,7 +640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NoteManager
   ReceptorClock: {fileID: 471992497}
   InputJudge: {fileID: 471992493}
-  MaxWindow: 0.125
+  ActivationWindow: 0.4
 --- !u!114 &471992502
 MonoBehaviour:
   m_ObjectHideFlags: 0
