@@ -1,0 +1,83 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RhythmController : MonoBehaviour
+{
+    public ScheduledAudioPlayer ScheduledAudioPlayer;
+    public ReceptorClock ReceptorClock;
+    public InputJudge InputJudge;
+    public BeatVisual BeatVisual;
+    public ChartLoader ChartLoader;
+    public InputHandler InputHandler;
+    public NoteManager NoteManager;
+    public AnimationManager AnimationManager;
+
+    void Awake()
+    {
+        ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
+        List<NoteData> notes = ChartLoader.LoadChart();
+        ReceptorClock.SetNotes(notes);
+        NoteManager.SetNotes(notes);
+        AnimationManager.SetNotes(notes);
+        NoteManager.ReceptorClock = ReceptorClock;
+    }
+
+    void OnEnable()
+    {
+        ReceptorClock.OnBeat += HandleBeat;
+        InputHandler.OnInputPressed += HandleInput;
+        NoteManager.OnJudgement += HandleJudgement;
+        NoteManager.OnJudgement += AnimationManager.HandleJudgement;
+    }
+
+    void OnDisable()
+    {
+        ReceptorClock.OnBeat -= HandleBeat;
+        InputHandler.OnInputPressed -= HandleInput;
+        NoteManager.OnJudgement -= HandleJudgement;
+        NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
+    }
+
+    void Update()
+    {
+        ScheduledAudioPlayer.Tick();
+        ReceptorClock.Tick();
+        NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
+        InputHandler.Tick();
+        double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
+        AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);
+    }
+
+    public void HandleBeat(NoteData note)
+    {
+        BeatVisual.FlashBeat();
+    }
+
+    public void HandleInput(InputType input)
+    {
+        BeatVisual.FlashInput();
+        NoteManager.HandleInput(input, ReceptorClock.Receptor);
+    }
+
+    public void HandleJudgement(NoteData note, InputType input, InputJudge.Judgement judgement)
+    {
+        switch (judgement)  
+        {
+            case InputJudge.Judgement.Perfect:
+                BeatVisual.DisplayAccuracy("Perfect", Color.dodgerBlue);
+                break;
+            case InputJudge.Judgement.Great:
+                BeatVisual.DisplayAccuracy("Great", Color.forestGreen);
+                break;
+            case InputJudge.Judgement.Good:
+                BeatVisual.DisplayAccuracy("Good", Color.darkGreen);
+                break;
+            case InputJudge.Judgement.Ok:
+                BeatVisual.DisplayAccuracy("Ok", Color.softYellow);
+                break;
+            default:
+                BeatVisual.DisplayAccuracy("Miss", Color.softRed);
+                break;
+        }
+    }
+}
