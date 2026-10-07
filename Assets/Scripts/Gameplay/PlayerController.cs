@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Rigidbody Player;
+    public float PlayerSpeed;
+
+    void Awake()
     {
+        Player = GetComponent<Rigidbody>();
         
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 }
