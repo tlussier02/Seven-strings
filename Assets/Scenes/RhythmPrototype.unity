@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
-  ChartFile: {fileID: 4900000, guid: 136f868b908044b508aa8f34017c6c76, type: 3}
+  ChartFile: {fileID: 4900000, guid: 5bbdf6533ccb9405a8d48f76affe9944, type: 3}
 --- !u!114 &471992496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScheduledAudioPlayer
   AudioSource: {fileID: 471992500}
-  AudioClip: {fileID: 8300000, guid: 9f042ec2c140c4fefa7b2464d9442bfc, type: 3}
+  AudioClip: {fileID: 8300000, guid: 64f7ce0fa37774956ae6857fa23ff1a4, type: 3}
 --- !u!114 &471992497
 MonoBehaviour:
   m_ObjectHideFlags: 0
