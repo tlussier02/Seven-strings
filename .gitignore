@@ -104,3 +104,4 @@ InitTestScene*.unity*
 # Local IDE files
 .vscode/
 *.slnx
+.DS_Store
