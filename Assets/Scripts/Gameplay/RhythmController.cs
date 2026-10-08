@@ -11,6 +11,8 @@ public class RhythmController : MonoBehaviour
     public InputHandler InputHandler;
     public SfxPlayer SfxPlayer;
     public NoteManager NoteManager;
+    // public AnimationManager AnimationManager;
+    public HarmonyMeter HarmonyMeter;
 
     void Awake()
     {
@@ -18,6 +20,7 @@ public class RhythmController : MonoBehaviour
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
+        // AnimationManager.SetNotes(notes);
         NoteManager.ReceptorClock = ReceptorClock;
     }
 
@@ -27,6 +30,8 @@ public class RhythmController : MonoBehaviour
         InputHandler.OnInputPressed += HandleInput;
         InputHandler.OnInputPressed += SfxPlayer.PlayFor;
         NoteManager.OnJudgement += HandleJudgement;
+        // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
+        NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
     }
 
     void OnDisable()
@@ -35,6 +40,8 @@ public class RhythmController : MonoBehaviour
         InputHandler.OnInputPressed -= HandleInput;
         InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
         NoteManager.OnJudgement -= HandleJudgement;
+        // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
+        NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
     }
 
     void Update()
@@ -44,6 +51,7 @@ public class RhythmController : MonoBehaviour
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
         double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
+        // AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);
     }
 
     public void HandleBeat(NoteData note)
