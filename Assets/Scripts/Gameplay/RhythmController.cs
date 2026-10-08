@@ -9,6 +9,7 @@ public class RhythmController : MonoBehaviour
     public BeatVisual BeatVisual;
     public ChartLoader ChartLoader;
     public InputHandler InputHandler;
+    public SfxPlayer SfxPlayer;
     public NoteManager NoteManager;
     public AnimationManager AnimationManager;
 
@@ -26,6 +27,7 @@ public class RhythmController : MonoBehaviour
     {
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
+        InputHandler.OnInputPressed += SfxPlayer.PlayFor;
         NoteManager.OnJudgement += HandleJudgement;
         NoteManager.OnJudgement += AnimationManager.HandleJudgement;
     }
@@ -34,6 +36,7 @@ public class RhythmController : MonoBehaviour
     {
         ReceptorClock.OnBeat -= HandleBeat;
         InputHandler.OnInputPressed -= HandleInput;
+        InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
         NoteManager.OnJudgement -= HandleJudgement;
         NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
     }
