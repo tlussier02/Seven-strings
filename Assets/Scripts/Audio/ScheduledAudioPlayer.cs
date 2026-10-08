@@ -25,6 +25,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
         if (!IsRunning && time + 1.0f > ScheduledStartTime)
         {
             AudioSource.clip = AudioClip;
+            // Each stem will get its own AudioSource
             AudioSource.PlayScheduled(ScheduledStartTime);
             IsRunning = true;
 
