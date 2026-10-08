@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: 471992498}
   - component: {fileID: 471992497}
   - component: {fileID: 471992496}
+  - component: {fileID: 471992503}
   - component: {fileID: 471992501}
   - component: {fileID: 471992502}
   - component: {fileID: 471992495}
@@ -527,6 +528,7 @@ MonoBehaviour:
   BeatVisual: {fileID: 471992494}
   ChartLoader: {fileID: 471992495}
   InputHandler: {fileID: 471992498}
+  SfxPlayer: {fileID: 471992503}
   NoteManager: {fileID: 471992501}
   AnimationManager: {fileID: 471992502}
 --- !u!82 &471992500
@@ -657,6 +659,22 @@ MonoBehaviour:
   InputPanel: {fileID: 1520206696}
   FallDuration: 0.7
   DestroyBuffer: 5
+--- !u!114 &471992503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 471992491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1fa1bafb745460a8ee224e914a50b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  sounds:
+  - inputType: 0
+    clip: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
+  volume: 1
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ public struct KeyBinding
 
 public class InputHandler : MonoBehaviour
 {
-    public Action<InputType> OnInputPressed;
+    public event Action<InputType> OnInputPressed;
     [SerializeField] private KeyBinding[] bindings;
 
     public void Tick()
