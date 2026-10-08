@@ -50,12 +50,11 @@ public class RhythmController : MonoBehaviour
 
     public void HandleBeat(NoteData note)
     {
-        BeatVisual.FlashBeat();
+        
     }
 
     public void HandleInput(InputType input)
     {
-        BeatVisual.FlashInput();
         NoteManager.HandleInput(input, ReceptorClock.Receptor);
     }
 
