@@ -5,7 +5,7 @@ public class HarmonyMeter : MonoBehaviour
 {
     [Header("Range")]
     [SerializeField, Min(1)] private int maxHarmony = 100;
-    [SerializeField, Min(0)] private int startingHarmony = 10;
+    [SerializeField, Min(0)] private int startingHarmony = 0;
 
     [Header("Points per judgement")]
     [SerializeField] private int perfectPoints = 20;
@@ -20,7 +20,7 @@ public class HarmonyMeter : MonoBehaviour
     
     public event Action<int, int> OnHarmonyChanged;
     public event Action OnHarmonyEmpty;  // hook for a fail state later
-    public event Action OnHarmonyFull;   // hook for a "full harmony" bonus later
+    public event Action OnHarmonyFull;   // hook for a "full harmony" bonus (pop up message and chime sound)
 
     void Awake()
     {
@@ -32,8 +32,7 @@ public class HarmonyMeter : MonoBehaviour
         Current = Mathf.Clamp(startingHarmony, 0, maxHarmony);
         OnHarmonyChanged?.Invoke(Current, maxHarmony);
     }
-
-    // Signature matches NoteManager.OnJudgement, so it can subscribe directly.
+    
     public void HandleJudgement(NoteData note, InputType input, InputJudge.Judgement judgement)
     {
         Apply(PointsFor(judgement));
@@ -54,7 +53,7 @@ public class HarmonyMeter : MonoBehaviour
         Current = Mathf.Clamp(Current + delta, 0, maxHarmony);
 
         if (Current == previous)
-            return; // already pinned at 0 or max, nothing changed
+            return; 
 
         OnHarmonyChanged?.Invoke(Current, maxHarmony);
 
