@@ -17,6 +17,15 @@ public class ScheduledAudioPlayer : MonoBehaviour
         GameObject child = new GameObject("AudioPlayer");
         child.transform.parent = gameObject.transform;
         AudioSource = child.AddComponent<AudioSource>();
+        AudioSource.playOnAwake = false;
+        AudioSource.ignoreListenerPause = false;
+        SetMusicVolume(AudioVolumeSettings.MusicVolume);
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        if (AudioSource != null)
+            AudioSource.volume = Mathf.Clamp01(volume);
     }
 
     public void Tick()

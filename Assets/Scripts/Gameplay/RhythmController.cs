@@ -46,6 +46,10 @@ public class RhythmController : MonoBehaviour
 
     void Update()
     {
+        // Update still runs at timeScale zero. Freeze chart processing as well as input.
+        if (Time.timeScale == 0f || AudioListener.pause)
+            return;
+
         ScheduledAudioPlayer.Tick();
         ReceptorClock.Tick();
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
