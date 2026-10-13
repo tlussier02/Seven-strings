@@ -25,7 +25,7 @@ public class LevelMakerOverlay : Overlay
         beatsToggle.SetValueWithoutNotify(true);
         beatsToggle.RegisterValueChangedCallback(evt =>
         {
-            BeatPlacer placer = Object.FindFirstObjectByType<BeatPlacer>();
+            BeatPlacer placer = UnityEngine.Object.FindAnyObjectByType<BeatPlacer>();
             if (placer == null) return;
 
             if (evt.newValue)
@@ -38,7 +38,7 @@ public class LevelMakerOverlay : Overlay
 
     private static void Run(System.Action<BeatPlacer> action)
     {
-        BeatPlacer placer = Object.FindFirstObjectByType<BeatPlacer>();
+        BeatPlacer placer = UnityEngine.Object.FindAnyObjectByType<BeatPlacer>();
         if (placer == null)
         {
             Debug.LogWarning("No BeatPlacer in the scene.");
