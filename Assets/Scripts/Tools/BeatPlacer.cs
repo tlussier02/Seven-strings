@@ -14,6 +14,8 @@ public class BeatPlacer : MonoBehaviour
     public float SegmentLength = 10f;
     public int ExtraSegments = 5;
     public Vector3 TrackOffset;
+    
+    private bool IsShown = false;
 
     public void PlaceBeats()
     {
