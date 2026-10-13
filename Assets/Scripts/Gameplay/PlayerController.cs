@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // deltaTime can still contain the pre-pause value on the opening frame.
+        if (Time.timeScale == 0f || AudioListener.pause)
+            return;
+
         if (!ReceptorClock.FoundOvertime) 
             return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;

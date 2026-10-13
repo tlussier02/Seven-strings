@@ -9771,6 +9771,7 @@ GameObject:
   - component: {fileID: 1614196580}
   - component: {fileID: 1614196579}
   - component: {fileID: 1614196578}
+  - component: {fileID: 2142000001}
   m_Layer: 5
   m_Name: Canvas-UI
   m_TagString: Untagged
@@ -13402,6 +13403,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2080635134}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2142000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614196577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2da5832f8e9445583149754c9e74e23, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
+  gameplayInput: {fileID: 1501676712}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
