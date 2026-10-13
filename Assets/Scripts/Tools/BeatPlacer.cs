@@ -15,8 +15,6 @@ public class BeatPlacer : MonoBehaviour
     public int ExtraSegments = 5;
     public Vector3 TrackOffset;
     
-    private bool IsShown = false;
-
     public void PlaceBeats()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
