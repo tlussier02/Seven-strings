@@ -2,30 +2,71 @@ using UnityEngine;
 
 public class ScheduledAudioPlayer : MonoBehaviour
 {
-    public AudioSource AudioSource;
+    public AudioClip[] Stems;
+
+    // Fallback if stems array doesn't work
     public AudioClip AudioClip;
+    public AudioSource AudioSource { get; private set; } // delete later after testing stems layering
+    public AudioSource[] StemSources { get; private set; }
+    public int StemCount => StemSources != null ? StemSources.Length : 0;
+
     public double ScheduledStartTime { get; private set; }
     public bool IsScheduled { get; private set; }
-    private bool IsRunning;
-    
+    public bool IsRunning { get; private set; }
 
-    void Start()
+    private float musicVolume = 1f;
+    private float[] stemGains;
+
+    void Awake()
     {
         ScheduledStartTime = AudioSettings.dspTime + 2f;
         IsScheduled = true;
-        
-        GameObject child = new GameObject("AudioPlayer");
-        child.transform.parent = gameObject.transform;
-        AudioSource = child.AddComponent<AudioSource>();
-        AudioSource.playOnAwake = false;
-        AudioSource.ignoreListenerPause = false;
+
+        AudioClip[] clips = (Stems != null && Stems.Length > 0) ? Stems : new[] { AudioClip };
+        StemSources = new AudioSource[clips.Length];
+        stemGains = new float[clips.Length];
+
+        for (int i = 0; i < clips.Length; i++)
+        {
+            GameObject child = new GameObject($"Stem{i}");
+            child.transform.parent = transform;
+            AudioSource source = child.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.ignoreListenerPause = false;
+            source.clip = clips[i];
+            StemSources[i] = source;
+
+            // Base layer audible by default; StemLayerMixer takes over from here.
+            stemGains[i] = i == 0 ? 1f : 0f;
+        }
+
+        AudioSource = StemSources[0];
         SetMusicVolume(AudioVolumeSettings.MusicVolume);
     }
-
+    
     public void SetMusicVolume(float volume)
     {
-        if (AudioSource != null)
-            AudioSource.volume = Mathf.Clamp01(volume);
+        musicVolume = Mathf.Clamp01(volume);
+        for (int i = 0; i < StemCount; i++)
+            ApplyVolume(i);
+    }
+
+    //Fade in
+    public void SetStemGain(int stemIndex, float gain)
+    {
+        if (stemIndex < 0 || stemIndex >= StemCount)
+            return;
+        stemGains[stemIndex] = Mathf.Clamp01(gain);
+        ApplyVolume(stemIndex);
+    }
+
+    public float GetStemGain(int stemIndex) =>
+        stemIndex >= 0 && stemIndex < StemCount ? stemGains[stemIndex] : 0f;
+
+    private void ApplyVolume(int i)
+    {
+        if (StemSources[i] != null)
+            StemSources[i].volume = musicVolume * stemGains[i];
     }
 
     public void Tick()
@@ -33,12 +74,12 @@ public class ScheduledAudioPlayer : MonoBehaviour
         double time = AudioSettings.dspTime;
         if (!IsRunning && time + 1.0f > ScheduledStartTime)
         {
-            AudioSource.clip = AudioClip;
-            // Each stem will get its own AudioSource
-            AudioSource.PlayScheduled(ScheduledStartTime);
+            // Same DSP timestamp for every stem = sample-locked layers.
+            foreach (AudioSource source in StemSources)
+                source.PlayScheduled(ScheduledStartTime);
             IsRunning = true;
 
-            Debug.Log("Scheduled audio to start at dsp time " + ScheduledStartTime + " | DSP time: " + AudioSettings.dspTime);
+            Debug.Log($"Scheduled {StemCount} stem(s) to start at dsp time {ScheduledStartTime} | DSP time: {time}");
         }
     }
 }

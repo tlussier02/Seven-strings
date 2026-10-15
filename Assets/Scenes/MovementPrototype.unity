@@ -10382,6 +10382,7 @@ GameObject:
   - component: {fileID: 1501676705}
   - component: {fileID: 1501676704}
   - component: {fileID: 1501676715}
+  - component: {fileID: 1501676716}
   m_Layer: 0
   m_Name: RhythmController
   m_TagString: Untagged
@@ -10569,8 +10570,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab315fbe1ebc14b2e9ef2a583879c6cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScheduledAudioPlayer
-  AudioSource: {fileID: 1501676704}
-  AudioClip: {fileID: 8300000, guid: 64f7ce0fa37774956ae6857fa23ff1a4, type: 3}
+  Stems:
+  - {fileID: 8300000, guid: 0044017b2f5db4c72901229799384d93, type: 3}
+  - {fileID: 8300000, guid: 3df8c204005a04354b9c3fc9a3d4832a, type: 3}
+  AudioClip: {fileID: 0}
 --- !u!114 &1501676711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10584,7 +10587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceptorClock
   ScheduledAudioPlayer: {fileID: 1501676710}
-  LatencyCompensation: 0.06
+  LatencyCompensation: 0.02
 --- !u!114 &1501676712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10655,6 +10658,35 @@ MonoBehaviour:
   goodPoints: 10
   okPoints: 5
   missPoints: -10
+--- !u!114 &1501676716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501676703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423543484213947949cb3c6f32a20d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StemLayerMixer
+  player: {fileID: 1501676710}
+  harmonyMeter: {fileID: 1501676715}
+  chartLoader: {fileID: 1501676707}
+  fallbackBpm: 120
+  beatsPerBar: 4
+  firstBeatOffset: 0
+  stemThresholds:
+  - 0
+  - 0.35
+  - 0.75
+  hysteresis: 0.1
+  fadeInGrid: 2
+  fadeInAlignment: 0
+  fadeInBeats: 4
+  fadeOutGrid: 4
+  fadeOutBeats: 2
+  logTransitions: 1
 --- !u!1 &1534082291
 GameObject:
   m_ObjectHideFlags: 0
@@ -13413,7 +13445,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2da5832f8e9445583149754c9e74e23, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
   gameplayInput: {fileID: 1501676712}
 --- !u!1660057539 &9223372036854775807
