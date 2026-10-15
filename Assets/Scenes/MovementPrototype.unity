@@ -10556,8 +10556,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
   sounds:
   - inputType: 0
-    clip: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
-  volume: 0.2
+    clip: {fileID: 8300000, guid: 54c0f1804a822433ba8de0c2395de6cf, type: 3}
+  volume: 0.396
 --- !u!114 &1501676710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10587,7 +10587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceptorClock
   ScheduledAudioPlayer: {fileID: 1501676710}
-  LatencyCompensation: 0.02
+  LatencyCompensation: 0.06
 --- !u!114 &1501676712
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,8 @@ public class StemLayerMixer : MonoBehaviour
         StartOnGrid,   // fade begins on the boundary
         ArriveOnGrid   // fade is timed to reach full volume exactly on the boundary
     }
-
+    
+    // DEBUG SETTINGS
     [Header("References")]
     [SerializeField] private ScheduledAudioPlayer player;
     [SerializeField] private HarmonyMeter harmonyMeter;
