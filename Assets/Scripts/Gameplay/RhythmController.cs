@@ -52,6 +52,11 @@ public class RhythmController : MonoBehaviour
 
         ScheduledAudioPlayer.Tick();
         ReceptorClock.Tick();
+        // Before sync, Receptor contains accumulated lead-in time, not song time.
+        // Do not activate/judge notes or consume input until the song clock is valid.
+        if (!ReceptorClock.FoundOvertime)
+            return;
+
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
         double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);

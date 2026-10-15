@@ -6,7 +6,6 @@ public class DevTools : MonoBehaviour
 {
     // === Keyboard Shortcuts ===
     public Key ToggleOverlayKey = Key.Backquote; // The ` key (above Tab)
-    public Key ReloadSceneKey = Key.R;
     
     // The position where the player should respawn - assign this in the Inspector
     public Transform PlayerSpawn; 
@@ -27,7 +26,6 @@ public class DevTools : MonoBehaviour
     private void Update()
     {
         HandleToggleOverlay();
-        HandleReloadScene();
     }
 
     /// <summary>
@@ -35,21 +33,10 @@ public class DevTools : MonoBehaviour
     /// </summary>
     private void HandleToggleOverlay()
     {
-        if (Keyboard.current[ToggleOverlayKey].wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current[ToggleOverlayKey].wasPressedThisFrame)
         {
             // Toggle means: if visible, hide it; if hidden, show it
             visible = !visible;
-        }
-    }
-
-    /// <summary>
-    /// Checks if the player pressed the key to reload the current scene
-    /// </summary>
-    private void HandleReloadScene()
-    {
-        if (Keyboard.current[ReloadSceneKey].wasPressedThisFrame)
-        {
-            ReloadActiveScene();
         }
     }
 
@@ -107,7 +94,7 @@ public class DevTools : MonoBehaviour
     /// </summary>
     private void DrawReloadSceneButton()
     {
-        if (GUI.Button(new Rect(10, 60, 130, 25), "Reload Scene (F5)"))
+        if (GUI.Button(new Rect(10, 60, 130, 25), "Reload Scene (Debug)"))
         {
             ReloadActiveScene();
         }

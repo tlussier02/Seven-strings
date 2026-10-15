@@ -9640,7 +9640,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DevTools
   ToggleOverlayKey: 4
-  ReloadSceneKey: 32
   PlayerSpawn: {fileID: 1882387585}
 --- !u!1 &1426957377
 GameObject:
@@ -10780,6 +10779,7 @@ GameObject:
   - component: {fileID: 1614196579}
   - component: {fileID: 1614196578}
   - component: {fileID: 2142000001}
+  - component: {fileID: 2142000002}
   m_Layer: 5
   m_Name: Canvas-UI
   m_TagString: Untagged
@@ -13415,6 +13415,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2da5832f8e9445583149754c9e74e23, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
+  gameplayInput: {fileID: 1501676712}
+--- !u!114 &2142000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614196577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b6c3bcc5174d1089795cf259aa9c46, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::StartCountdownController
+  scheduledAudioPlayer: {fileID: 1501676710}
   gameplayInput: {fileID: 1501676712}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

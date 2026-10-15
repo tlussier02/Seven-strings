@@ -14,6 +14,13 @@ public class InputHandler : MonoBehaviour
     public event Action<InputType> OnInputPressed;
     [SerializeField] private KeyBinding[] bindings;
     private int suppressedFrame = -1;
+    public bool IsGameplayInputBlocked { get; private set; }
+
+    // Countdown blocking is independent of the menu's time/audio pause protections.
+    public void SetGameplayInputBlocked(bool blocked)
+    {
+        IsGameplayInputBlocked = blocked;
+    }
 
     // A menu key must not also become a gameplay press on the resume frame.
     public void SuppressCurrentFrame()
@@ -23,7 +30,7 @@ public class InputHandler : MonoBehaviour
 
     public void Tick()
     {
-        if (Time.timeScale == 0f || AudioListener.pause || suppressedFrame == Time.frameCount || Keyboard.current == null)
+        if (IsGameplayInputBlocked || Time.timeScale == 0f || AudioListener.pause || suppressedFrame == Time.frameCount || Keyboard.current == null)
             return;
 
         foreach (var binding in bindings)
