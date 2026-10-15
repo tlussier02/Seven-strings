@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Run before gameplay Update so Escape cannot leak into the rhythm input poll.
@@ -89,6 +90,18 @@ public class SettingsMenuController : MonoBehaviour
         SavePreferences();
     }
 
+    public void Restart()
+    {
+        if (!IsOpen)
+            return;
+
+        // A new round must recreate the song, chart, player and countdown together.
+        // Close first to save preferences and release the menu's global pause state.
+        string scenePath = gameObject.scene.path;
+        Close();
+        SceneManager.LoadScene(scenePath);
+    }
+
     void OnDisable()
     {
         // Scene unload or disabling the HUD must not leave global pause behind.
@@ -145,13 +158,15 @@ public class SettingsMenuController : MonoBehaviour
         backdrop.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.72f);
         overlay = backdrop.gameObject;
 
-        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 330f), Vector2.zero);
+        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 410f), Vector2.zero);
         panel.gameObject.AddComponent<Image>().color = new Color(0.09f, 0.11f, 0.16f, 1f);
-        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 120f), 28);
-        CreateVolumeControl(panel, "Master Volume", 60f, AudioVolumeSettings.MasterVolume, true);
-        CreateVolumeControl(panel, "Music Volume", -30f, AudioVolumeSettings.MusicVolume, false);
+        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 160f), 28);
+        CreateVolumeControl(panel, "Master Volume", 100f, AudioVolumeSettings.MasterVolume, true);
+        CreateVolumeControl(panel, "Music Volume", 10f, AudioVolumeSettings.MusicVolume, false);
         resumeButton = CreateButton("Resume", panel, new Vector2(180f, 44f), Close);
-        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -115f);
+        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -85f);
+        Button restartButton = CreateButton("Restart", panel, new Vector2(180f, 44f), Restart);
+        ((RectTransform)restartButton.transform).anchoredPosition = new Vector2(0f, -145f);
         overlay.SetActive(false);
     }
 

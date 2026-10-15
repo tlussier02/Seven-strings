@@ -11,6 +11,14 @@ public class BeatVisual : MonoBehaviour
 
     private Coroutine textFlashRoutine;
 
+    void Awake()
+    {
+        if (AccuracyText != null)
+            AccuracyText.text = "";
+        if (AccuracyPanelImage != null)
+            AccuracyPanelImage.color = idleColor;
+    }
+
     public void DisplayAccuracy(string accuracyText, Color color)
     {
         if (textFlashRoutine != null) StopCoroutine(textFlashRoutine);
