@@ -560,7 +560,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 640430210}
-  - {fileID: 1513522536}
   m_Father: {fileID: 957937055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -1974,6 +1973,7 @@ GameObject:
   - component: {fileID: 957937055}
   - component: {fileID: 957937057}
   - component: {fileID: 957937056}
+  - component: {fileID: 957937058}
   m_Layer: 5
   m_Name: Panel-Calibration
   m_TagString: Untagged
@@ -2041,6 +2041,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957937054}
   m_CullTransparentMesh: 1
+--- !u!114 &957937058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957937054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a44fdece3357a4c629ab6ffeed85902f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CalibrationController
+  AutoCalibrationPanel: {fileID: 1239190278}
+  MainCalibrationPanel: {fileID: 992095827}
 --- !u!1001 &987600332
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2155,7 +2169,7 @@ GameObject:
   - component: {fileID: 992095830}
   - component: {fileID: 992095829}
   m_Layer: 5
-  m_Name: Panel-ManualCalibration
+  m_Name: Panel-MainCalibration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2888,6 +2902,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1513522536}
   - {fileID: 8489932}
   - {fileID: 1005850294}
   - {fileID: 999462602}
@@ -3332,7 +3347,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1168396298}
-  m_Father: {fileID: 168796763}
+  m_Father: {fileID: 1239190279}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3382,7 +3397,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1513522538}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 957937058}
+        m_TargetAssemblyTypeName: CalibrationController, Assembly-CSharp
+        m_MethodName: Back
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1513522538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4211,7 +4238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -450, y: -115}
+  m_AnchoredPosition: {x: -650, y: -115}
   m_SizeDelta: {x: 225, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1640499301
@@ -4257,7 +4284,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1640499302}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 957937058}
+        m_TargetAssemblyTypeName: CalibrationController, Assembly-CSharp
+        m_MethodName: ShowAutoCalibrationPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1640499302
 MonoBehaviour:
   m_ObjectHideFlags: 0
