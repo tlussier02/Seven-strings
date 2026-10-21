@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2782107459197562560}
   - component: {fileID: 7380267514514866323}
   m_Layer: 5
-  m_Name: ProgressCell
+  m_Name: ProgressPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
