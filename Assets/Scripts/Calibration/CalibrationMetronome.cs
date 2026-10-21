@@ -49,7 +49,6 @@ public class CalibrationMetronome : MonoBehaviour
         if (!IsRunning) return;
         double now = AudioSettings.dspTime;
 
-        // keep clicks scheduled slightly ahead, alternating sources
         while (nextScheduledTime < now + Lookahead)
         {
             sources[sourceIndex].PlayScheduled(nextScheduledTime);
@@ -57,7 +56,6 @@ public class CalibrationMetronome : MonoBehaviour
             nextScheduledTime += Interval;
         }
 
-        // visual beat fires when the DSP clock reaches the beat time
         while (now >= nextVisualTime)
         {
             OnBeat?.Invoke();
