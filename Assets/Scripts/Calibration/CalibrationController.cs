@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,22 +7,33 @@ public class CalibrationController : MonoBehaviour
     public GameObject AutoCalibrationPanel;
     public GameObject MainCalibrationPanel;
     public Text LatencyCompensationText;
+    public CalibrationMetronome CalibrationMetronome;
     
     private CalibrationInputHandler CalibrationInputHandler;
     private CalibrationBeatVisual CalibrationBeatVisual;
 
     private float LatencyCompensation;
     private float CompensationStep = 0.01f;
+    private double TotalOffset;
+    private int TapCount;
+    private const double MaxOffset = 0.2;
+    private int BeatCount;
 
     void Awake()
     {
         CalibrationInputHandler = GetComponent<CalibrationInputHandler>();
         CalibrationBeatVisual =  GetComponent<CalibrationBeatVisual>();
+        LatencyCompensation = PlayerPrefs.GetFloat("LatencyCompensation", 0f);
         
         ShowMainCalibrationPanel();
         UpdateCompensationText();
     }
 
+    void Start()
+    {
+        CalibrationMetronome.StartMetronome();
+    }
+    
     void Update()
     {
         CalibrationInputHandler.Tick();
@@ -30,11 +42,13 @@ public class CalibrationController : MonoBehaviour
     void OnEnable()
     {
         CalibrationInputHandler.OnInputPressed += HandleInput;
+        CalibrationMetronome.OnBeat += HandleBeat;
     }
     
-    void OnDiable()
+    void OnDisable()
     {
         CalibrationInputHandler.OnInputPressed -= HandleInput;
+        CalibrationMetronome.OnBeat -= HandleBeat;
     }
     
     public void Exit()
@@ -46,6 +60,8 @@ public class CalibrationController : MonoBehaviour
     {
         ShowMainCalibrationPanel();
         CalibrationBeatVisual.ResetAutoCalibration();
+        TotalOffset = 0;
+        TapCount = 0;
     }
 
     public void IncreaseCompensation()
@@ -56,20 +72,50 @@ public class CalibrationController : MonoBehaviour
 
     public void DecreaseCompensation()
     {
-        LatencyCompensation -= CompensationStep;
+        LatencyCompensation -= Mathf.Max(CompensationStep, 0);
         UpdateCompensationText();
     }
     
-    public void ShowMainCalibrationPanel()
+    private void HandleInput()
     {
-        MainCalibrationPanel.SetActive(true);
-        AutoCalibrationPanel.SetActive(false);
-        CalibrationInputHandler.CanHandleInput = false;
-        
-        // start beat visual and audio looping
-        // update calibration value (pull from ReceptorClock? or just store copy since new scene)
-            // when updating actual latency compensation value in receptor clock,
-            // since it is in other scene we would need a player data json or txt or something to store that value
+        CalibrationBeatVisual.FlashInput();
+
+        if (TapCount >= CalibrationBeatVisual.ProgressImages.Count)
+            return;
+
+        double? offset = CalculateOffset();
+        if (!offset.HasValue) 
+            return;
+
+        TotalOffset += offset.Value;
+        TapCount++;
+        double average = TotalOffset / TapCount;
+
+        CalibrationBeatVisual.IncreaseProgress();
+        CalibrationBeatVisual.UpdateOvertimeText((float)(average * 1000.0));
+
+        if (TapCount >= CalibrationBeatVisual.ProgressImages.Count)
+        {
+            LatencyCompensation = Mathf.Max(0f, (float)average);
+            UpdateCompensationText();
+        }
+    }
+
+    private void HandleBeat()
+    {
+        CalibrationBeatVisual.FlashBeat(BeatCount++);
+    }
+
+    private double? CalculateOffset()
+    {
+        double t = AudioSettings.dspTime;
+        if (t < CalibrationMetronome.FirstBeatTime - CalibrationMetronome.Interval / 2)
+            return null;
+
+        double n = Math.Round((t - CalibrationMetronome.FirstBeatTime) / CalibrationMetronome.Interval);
+        double offset = t - (CalibrationMetronome.FirstBeatTime + n * CalibrationMetronome.Interval);
+
+        return Math.Abs(offset) > MaxOffset ? (double?)null : offset;
     }
     
     public void ShowAutoCalibrationPanel()
@@ -77,16 +123,19 @@ public class CalibrationController : MonoBehaviour
         AutoCalibrationPanel.SetActive(true);
         MainCalibrationPanel.SetActive(false);
         CalibrationInputHandler.CanHandleInput = true;
+        TotalOffset = 0;
+        TapCount = 0;
     }
-
-    private void HandleInput()
+    
+    private void ShowMainCalibrationPanel()
     {
-        CalibrationBeatVisual.FlashInput();
-        CalibrationBeatVisual.IncreaseProgress();
+        MainCalibrationPanel.SetActive(true);
+        AutoCalibrationPanel.SetActive(false);
+        CalibrationInputHandler.CanHandleInput = false;
     }
     
     private void UpdateCompensationText()
     {
-        LatencyCompensationText.text = LatencyCompensation.ToString("0.00 ms");
+        LatencyCompensationText.text = (LatencyCompensation * 1000f).ToString("0") + " ms";
     }
 }

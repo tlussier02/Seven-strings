@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Image = UnityEngine.UI.Image;
 
 public class CalibrationBeatVisual : MonoBehaviour
 {
@@ -13,7 +10,6 @@ public class CalibrationBeatVisual : MonoBehaviour
     public Image InputImage;
     public Text ProgressText;
     public Text OvertimeText;
-
     public Color IdleColor;
 
     private int CurrentProgress;
@@ -26,6 +22,12 @@ public class CalibrationBeatVisual : MonoBehaviour
         ResetProgressImages();
         UpdateProgressText();
         UpdateOvertimeText(0.00f);
+    }
+
+    public void FlashBeat(int beatCount)
+    {
+        Image img = BeatImages[beatCount % BeatImages.Count];
+        StartCoroutine(FlashImage(img, Color.white, IdleColor, 0.08f, 0.3f));
     }
 
     public void FlashInput()
@@ -44,7 +46,7 @@ public class CalibrationBeatVisual : MonoBehaviour
 
     public void UpdateOvertimeText(float overtime)
     {
-        OvertimeText.text = overtime.ToString("0.00 ms");
+        OvertimeText.text = overtime.ToString("0") + " ms";
     }
 
     private void ResetProgressImages()
@@ -57,7 +59,7 @@ public class CalibrationBeatVisual : MonoBehaviour
 
     private void UpdateProgressText()
     {
-        ProgressText.text = CurrentProgress.ToString($"0/{ProgressImages.Count}");
+        ProgressText.text = $"{CurrentProgress}/{ProgressImages.Count}";
     }
     
     private void ResetBeatImages()
