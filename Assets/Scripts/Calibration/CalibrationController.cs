@@ -139,5 +139,6 @@ public class CalibrationController : MonoBehaviour
     private void UpdateCompensationText()
     {
         LatencyCompensationText.text = (LatencyCompensation * 1000f).ToString("0") + " ms";
+        PlayerPrefs.SetFloat("LatencyCompensation", LatencyCompensation);
     }
 }
