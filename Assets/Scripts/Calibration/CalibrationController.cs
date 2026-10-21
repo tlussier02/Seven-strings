@@ -98,6 +98,7 @@ public class CalibrationController : MonoBehaviour
         {
             LatencyCompensation = Mathf.Max(0f, (float)average);
             UpdateCompensationText();
+            CalibrationBeatVisual.ProgressText.text = "Done";
         }
     }
 
@@ -114,7 +115,7 @@ public class CalibrationController : MonoBehaviour
 
         double n = Math.Round((t - CalibrationMetronome.FirstBeatTime) / CalibrationMetronome.Interval);
         double offset = t - (CalibrationMetronome.FirstBeatTime + n * CalibrationMetronome.Interval);
-
+        
         return Math.Abs(offset) > MaxOffset ? (double?)null : offset;
     }
     
@@ -125,6 +126,7 @@ public class CalibrationController : MonoBehaviour
         CalibrationInputHandler.CanHandleInput = true;
         TotalOffset = 0;
         TapCount = 0;
+        CalibrationBeatVisual.ResetAutoCalibration();
     }
     
     private void ShowMainCalibrationPanel()

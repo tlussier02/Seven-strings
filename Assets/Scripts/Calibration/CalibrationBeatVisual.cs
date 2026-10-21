@@ -13,11 +13,15 @@ public class CalibrationBeatVisual : MonoBehaviour
     public Color IdleColor;
 
     private int CurrentProgress;
-    private Coroutine ProgressFlashRoutine;
+    private List<Coroutine> ProgressRoutines = new List<Coroutine>();
     private Coroutine InputFlashRoutine;
 
     public void ResetAutoCalibration()
     {
+        foreach (Coroutine routine in ProgressRoutines)
+            if (routine != null) StopCoroutine(routine);
+        ProgressRoutines.Clear();
+        
         CurrentProgress = 0;
         ResetProgressImages();
         UpdateProgressText();
@@ -39,7 +43,7 @@ public class CalibrationBeatVisual : MonoBehaviour
     {
         if (CurrentProgress >= ProgressImages.Count)
             return;
-        ProgressFlashRoutine = StartCoroutine(FlashImage(ProgressImages[CurrentProgress], Color.white, Color.darkBlue, 0.1f, 0.5f));
+        ProgressRoutines.Add(StartCoroutine(FlashImage(ProgressImages[CurrentProgress], Color.white, Color.darkBlue, 0.1f, 0.5f)));
         CurrentProgress += 1;
         UpdateProgressText();
     }
@@ -59,7 +63,7 @@ public class CalibrationBeatVisual : MonoBehaviour
 
     private void UpdateProgressText()
     {
-        ProgressText.text = $"{CurrentProgress}/{ProgressImages.Count}";
+        ProgressText.text = $"Progress: {CurrentProgress}/{ProgressImages.Count}";
     }
     
     private void ResetBeatImages()
