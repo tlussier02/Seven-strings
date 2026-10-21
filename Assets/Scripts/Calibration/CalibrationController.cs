@@ -18,6 +18,20 @@ public class CalibrationController : MonoBehaviour
     private int TapCount;
     private const double MaxOffset = 0.2;
     private int BeatCount;
+    
+    /*
+     * Would latency compensation calculated here actually accurately apply to the main game?
+     * Looking at the Receptor Clock, latency compensation is applied alongside an inital offest that is found on audio start
+     * So compensation calculated here would be different.
+     *
+     * Also, in the main game, latency compensation affects the receptor,
+     * which in turn affects how input timing is handled.
+     * It is manually inputted, but derived from a user inputting either on the beat visual or beat audio
+     * Which raises a question: Are visuals and audio synced?
+     * They should be because visual placement is based 
+     * 
+     * Here, latency compensation is derived from 
+     */
 
     void Awake()
     {

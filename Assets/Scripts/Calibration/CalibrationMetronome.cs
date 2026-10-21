@@ -6,6 +6,7 @@ public class CalibrationMetronome : MonoBehaviour
     public AudioClip AudioBeat;
     public float Bpm = 120f;
     public double Lookahead = 0.2;
+    public double VisualDelay;
     
     public bool IsRunning { get; private set; }
     public double FirstBeatTime { get; private set; }
