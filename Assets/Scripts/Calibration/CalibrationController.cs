@@ -1,6 +1,4 @@
-using Unity.VectorGraphics;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class CalibrationController : MonoBehaviour
@@ -8,15 +6,35 @@ public class CalibrationController : MonoBehaviour
     public GameObject AutoCalibrationPanel;
     public GameObject MainCalibrationPanel;
     public Text LatencyCompensationText;
+    
+    private CalibrationInputHandler CalibrationInputHandler;
+    private CalibrationBeatVisual CalibrationBeatVisual;
 
-    private float LatencyCompensation = 0.00f;
+    private float LatencyCompensation;
     private float CompensationStep = 0.01f;
 
-    public void Awake()
+    void Awake()
     {
-        MainCalibrationPanel.SetActive(true);
-        AutoCalibrationPanel.SetActive(false);
+        CalibrationInputHandler = GetComponent<CalibrationInputHandler>();
+        CalibrationBeatVisual =  GetComponent<CalibrationBeatVisual>();
+        
+        ShowMainCalibrationPanel();
         UpdateCompensationText();
+    }
+
+    void Update()
+    {
+        CalibrationInputHandler.Tick();
+    }
+
+    void OnEnable()
+    {
+        CalibrationInputHandler.OnInputPressed += HandleInput;
+    }
+    
+    void OnDiable()
+    {
+        CalibrationInputHandler.OnInputPressed -= HandleInput;
     }
     
     public void Exit()
@@ -27,6 +45,7 @@ public class CalibrationController : MonoBehaviour
     public void Back()
     {
         ShowMainCalibrationPanel();
+        CalibrationBeatVisual.ResetAutoCalibration();
     }
 
     public void IncreaseCompensation()
@@ -45,6 +64,8 @@ public class CalibrationController : MonoBehaviour
     {
         MainCalibrationPanel.SetActive(true);
         AutoCalibrationPanel.SetActive(false);
+        CalibrationInputHandler.CanHandleInput = false;
+        
         // start beat visual and audio looping
         // update calibration value (pull from ReceptorClock? or just store copy since new scene)
             // when updating actual latency compensation value in receptor clock,
@@ -55,6 +76,13 @@ public class CalibrationController : MonoBehaviour
     {
         AutoCalibrationPanel.SetActive(true);
         MainCalibrationPanel.SetActive(false);
+        CalibrationInputHandler.CanHandleInput = true;
+    }
+
+    private void HandleInput()
+    {
+        CalibrationBeatVisual.IncreaseProgress();
+        print("space inputted");
     }
     
     private void UpdateCompensationText()

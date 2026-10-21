@@ -1,16 +1,19 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CalibrationInputHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public bool CanHandleInput { get; set; }
+    public event Action OnInputPressed;
 
-    // Update is called once per frame
-    void Update()
+    public void Tick()
     {
-        
+        if (CanHandleInput){
+            if (Keyboard.current[Key.Space].wasPressedThisFrame)
+            {
+                OnInputPressed?.Invoke();
+            }
+        }
     }
 }
