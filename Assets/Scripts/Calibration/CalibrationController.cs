@@ -81,8 +81,8 @@ public class CalibrationController : MonoBehaviour
 
     private void HandleInput()
     {
+        CalibrationBeatVisual.FlashInput();
         CalibrationBeatVisual.IncreaseProgress();
-        print("space inputted");
     }
     
     private void UpdateCompensationText()

@@ -910,11 +910,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319846887}
   m_CullTransparentMesh: 1
---- !u!1 &363881474 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8711865324602174440, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
+--- !u!114 &363881476 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 105147531666943560, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
   m_PrefabInstance: {fileID: 22348640}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &383484085
 GameObject:
   m_ObjectHideFlags: 0
@@ -2154,10 +2160,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CalibrationBeatVisual
   BeatImages:
-  - {fileID: 1447704746}
-  - {fileID: 363881474}
-  - {fileID: 1372232003}
-  - {fileID: 1816069020}
+  - {fileID: 1447704748}
+  - {fileID: 363881476}
+  - {fileID: 1372232005}
+  - {fileID: 1816069022}
   ProgressImages:
   - {fileID: 1311061211}
   - {fileID: 1713038061}
@@ -2175,9 +2181,10 @@ MonoBehaviour:
   - {fileID: 1959420997}
   - {fileID: 1436826731}
   - {fileID: 2094379600}
+  InputImage: {fileID: 383484087}
   ProgressText: {fileID: 999462603}
   OvertimeText: {fileID: 1351058727}
-  idleColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  IdleColor: {r: 0.58431375, g: 0.58431375, b: 0.58431375, a: 1}
 --- !u!1001 &987600332
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3290,11 +3297,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!1 &1372232003 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8711865324602174440, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
+--- !u!114 &1372232005 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 105147531666943560, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
   m_PrefabInstance: {fileID: 1570731566}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1375959766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3408,11 +3421,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!1 &1447704746 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8711865324602174440, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
+--- !u!114 &1447704748 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 105147531666943560, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
   m_PrefabInstance: {fileID: 642040423}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1 &1499935527
 GameObject:
   m_ObjectHideFlags: 0
@@ -5078,11 +5097,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773374525}
   m_CullTransparentMesh: 1
---- !u!1 &1816069020 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8711865324602174440, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
+--- !u!114 &1816069022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 105147531666943560, guid: df9d815e242d54ec4bfa0f0b5a883de8, type: 3}
   m_PrefabInstance: {fileID: 808444656}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1911590111
 PrefabInstance:
   m_ObjectHideFlags: 0

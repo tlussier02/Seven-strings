@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
 public class CalibrationBeatVisual : MonoBehaviour
 {
-    public List<GameObject> BeatImages;
+    public List<Image> BeatImages;
     public List<Image> ProgressImages;
+    public Image InputImage;
     public Text ProgressText;
     public Text OvertimeText;
-    
-    public Color idleColor = Color.gray;
+
+    public Color IdleColor;
 
     private int CurrentProgress;
     private Coroutine ProgressFlashRoutine;
+    private Coroutine InputFlashRoutine;
 
     public void ResetAutoCalibration()
     {
@@ -25,11 +28,16 @@ public class CalibrationBeatVisual : MonoBehaviour
         UpdateOvertimeText(0.00f);
     }
 
+    public void FlashInput()
+    {
+        InputFlashRoutine = StartCoroutine(FlashImage(InputImage, Color.white, IdleColor, 0.08f, 0.3f));
+    }
+
     public void IncreaseProgress()
     {
         if (CurrentProgress >= ProgressImages.Count)
             return;
-        ProgressFlashRoutine = StartCoroutine(FlashProgressPanel(ProgressImages[CurrentProgress], Color.white, Color.darkBlue, 0.1f, 0.5f));
+        ProgressFlashRoutine = StartCoroutine(FlashImage(ProgressImages[CurrentProgress], Color.white, Color.darkBlue, 0.1f, 0.5f));
         CurrentProgress += 1;
         UpdateProgressText();
     }
@@ -43,7 +51,7 @@ public class CalibrationBeatVisual : MonoBehaviour
     {
         foreach (var image in ProgressImages)
         {
-            image.color = idleColor;
+            image.color = IdleColor;
         }
     }
 
@@ -54,15 +62,15 @@ public class CalibrationBeatVisual : MonoBehaviour
     
     private void ResetBeatImages()
     {
-        foreach (var panel in BeatImages)
+        foreach (var image in BeatImages)
         {
-            panel.GetComponent<Image>().color = idleColor;
+            image.GetComponent<Image>().color = IdleColor;
         }
 
         CurrentProgress = 0;
     }
     
-    private IEnumerator FlashProgressPanel(Image targetImage, Color startColor, Color endColor, float flashDuration, float fadeDuration)
+    private IEnumerator FlashImage(Image targetImage, Color startColor, Color endColor, float flashDuration, float fadeDuration)
     {
         float elapsedTime = 0;
         
