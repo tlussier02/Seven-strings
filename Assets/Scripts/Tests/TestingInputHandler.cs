@@ -1,16 +1,27 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+[Serializable]
+public struct TestKeyBinding
+{
+    public InputType InputType;
+    public Key Key;
+}
 
 public class TestingInputHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public event Action<InputType> OnInputPressed;
+    [SerializeField] private TestKeyBinding[] bindings;
 
-    // Update is called once per frame
-    void Update()
+    public void Tick()
     {
-        
+        foreach (var binding in bindings)
+        {
+            if (Keyboard.current[binding.Key].wasPressedThisFrame)
+            {
+                OnInputPressed?.Invoke(binding.InputType);
+            }
+        }
     }
 }
