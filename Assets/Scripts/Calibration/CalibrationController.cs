@@ -17,7 +17,7 @@ public class CalibrationController : MonoBehaviour
     private float CompensationStep = 0.001f;
     private double TotalOffset;
     private int TapCount;
-    private const double MaxOffset = 0.2;
+    private const double MaxOffset = 0.5;
     private int BeatCount;
     
     void Awake()
@@ -88,7 +88,7 @@ public class CalibrationController : MonoBehaviour
             return;
 
         double? offset = CalculateOffset();
-        if (!offset.HasValue) 
+        if (!offset.HasValue)
             return;
 
         TotalOffset += offset.Value;
