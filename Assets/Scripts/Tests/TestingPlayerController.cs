@@ -1,12 +1,15 @@
+using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public class TestingPlayerController : MonoBehaviour
 {
     public ReceptorClock ReceptorClock;
+    public TestingInputHandler TestingInputHandler;
     public float PlayerSpeed;
     
     private Rigidbody Player;
-
+    
     void Awake()
     {
         Player = GetComponent<Rigidbody>();
@@ -15,12 +18,41 @@ public class TestingPlayerController : MonoBehaviour
 
     void Update()
     {
-        // deltaTime can still contain the pre-pause value on the opening frame.
-        if (Time.timeScale == 0f || AudioListener.pause)
-            return;
-
         if (!ReceptorClock.FoundOvertime) 
             return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
+    }
+
+    void OnEnable()
+    {
+        TestingInputHandler.OnInputPressed += HandleInput;
+    }
+
+    void OnDisable()
+    {
+        TestingInputHandler.OnInputPressed -= HandleInput;
+    }
+
+    private void HandleInput(InputType inputType)
+    {
+        switch (inputType)
+        {
+            case InputType.Right:
+                MoveRight();
+                break;
+            case InputType.Left:
+                MoveLeft();
+                break;
+        }
+    }
+
+    private void MoveRight()
+    {
+        
+    }
+    
+    private void MoveLeft()
+    {
+        
     }
 }
