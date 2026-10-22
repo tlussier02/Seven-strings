@@ -10657,8 +10657,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
   sounds:
   - inputType: 0
-    clip: {fileID: 8300000, guid: 54c0f1804a822433ba8de0c2395de6cf, type: 3}
-  volume: 0.396
+    clip: {fileID: 8300000, guid: 91a2be33e583a4a818070b9d6c2ea9a8, type: 3}
+  volume: 0.5
+  perfectJumpFlourish: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
+  flourishVolume: 0.25
 --- !u!114 &1501676710
 MonoBehaviour:
   m_ObjectHideFlags: 0
