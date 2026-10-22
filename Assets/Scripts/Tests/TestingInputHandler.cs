@@ -14,7 +14,7 @@ public class TestingInputHandler : MonoBehaviour
     public event Action<InputType> OnInputPressed;
     [SerializeField] private TestKeyBinding[] bindings;
 
-    public void Tick()
+    public void Update()
     {
         foreach (var binding in bindings)
         {
