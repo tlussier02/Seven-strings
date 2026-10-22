@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CalibrationController : MonoBehaviour
@@ -30,7 +31,8 @@ public class CalibrationController : MonoBehaviour
      * Which raises a question: Are visuals and audio synced?
      * They should be because visual placement is based 
      * 
-     * Here, latency compensation is derived from 
+     * Here, latency compensation is derived from tapping on the audio.
+     * So here and in the main game, should the visuals also be offset to match up with teh audio and the adjusted inputs
      */
 
     void Awake()
@@ -67,7 +69,10 @@ public class CalibrationController : MonoBehaviour
     
     public void Exit()
     {
+        PlayerPrefs.SetFloat("LatencyCompensation", LatencyCompensation);
+        PlayerPrefs.Save();
         
+        SceneManager.LoadScene("MovementPrototype");
     }
 
     public void Back()
@@ -86,7 +91,7 @@ public class CalibrationController : MonoBehaviour
 
     public void DecreaseCompensation()
     {
-        LatencyCompensation -= Mathf.Max(CompensationStep, 0);
+        LatencyCompensation -= CompensationStep;
         UpdateCompensationText();
     }
     
@@ -152,7 +157,8 @@ public class CalibrationController : MonoBehaviour
     
     private void UpdateCompensationText()
     {
+        LatencyCompensation = Mathf.Max(0f, LatencyCompensation);
+        CalibrationMetronome.VisualDelay = LatencyCompensation;
         LatencyCompensationText.text = (LatencyCompensation * 1000f).ToString("0") + " ms";
-        PlayerPrefs.SetFloat("LatencyCompensation", LatencyCompensation);
     }
 }

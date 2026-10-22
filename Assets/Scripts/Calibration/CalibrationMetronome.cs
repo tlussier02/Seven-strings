@@ -29,6 +29,25 @@ public class CalibrationMetronome : MonoBehaviour
             sources[i].playOnAwake = false;
         }
     }
+    
+    void Update()
+    {
+        if (!IsRunning) return;
+        double now = AudioSettings.dspTime;
+
+        while (nextScheduledTime < now + Lookahead)
+        {
+            sources[sourceIndex].PlayScheduled(nextScheduledTime);
+            sourceIndex = (sourceIndex + 1) % sources.Length;
+            nextScheduledTime += Interval;
+        }
+
+        while (now >= nextVisualTime + VisualDelay)
+        {
+            OnBeat?.Invoke();
+            nextVisualTime += Interval;
+        }
+    }
 
     public void StartMetronome()
     {
@@ -43,24 +62,5 @@ public class CalibrationMetronome : MonoBehaviour
         IsRunning = false;
         foreach (AudioSource source in sources) 
             source.Stop();
-    }
-
-    void Update()
-    {
-        if (!IsRunning) return;
-        double now = AudioSettings.dspTime;
-
-        while (nextScheduledTime < now + Lookahead)
-        {
-            sources[sourceIndex].PlayScheduled(nextScheduledTime);
-            sourceIndex = (sourceIndex + 1) % sources.Length;
-            nextScheduledTime += Interval;
-        }
-
-        while (now >= nextVisualTime)
-        {
-            OnBeat?.Invoke();
-            nextVisualTime += Interval;
-        }
     }
 }
