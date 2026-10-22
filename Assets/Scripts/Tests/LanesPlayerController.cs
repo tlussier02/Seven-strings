@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
-public class TestingPlayerController : MonoBehaviour
+public class LanesPlayerController : MonoBehaviour
 {
     public TestingInputHandler TestingInputHandler;
     public Transform PathSegment;
