@@ -54,7 +54,7 @@ public class LanesPlayerController : MonoBehaviour
             return;
         CurrentLane = target;
 
-        float targetX = CenterX + (CurrentLane - 1) * (LaneWidth / 4);
+        float targetX = CenterX + (CurrentLane - 1) * LaneWidth;
         LaneTween?.Kill();
         LaneTween = transform.DOMoveX(targetX, LaneChangeDuration).SetEase(Ease.OutQuad);
     }
