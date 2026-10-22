@@ -1,25 +1,33 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class TurnPlayerController : MonoBehaviour
 {
     public TestingInputHandler TestingInputHandler;
     public Transform PathSegment;
     public float PlayerSpeed;
-    public float LaneChangeDuration = 0.15f;
+    public float TurnDuration = 0.15f;
     
-    private int CurrentLane = 1;
     private float LaneWidth;
     private float CenterX;
+    private float TargetYaw;
+    private Tween TurnTween;
     
     void Awake()
     {
-        CenterX =  transform.position.x;
+        CenterX = transform.position.x;
         LaneWidth = PathSegment.localScale.x;
+        TargetYaw = transform.eulerAngles.y;
     }
 
     void Update()
     {
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
+    }
+
+    void OnDestroy()
+    {
+        TurnTween?.Kill();
     }
 
     void OnEnable()
@@ -47,7 +55,9 @@ public class TurnPlayerController : MonoBehaviour
 
     private void Turn(int direction)
     {
-        
+        TargetYaw += 90f * direction;
+        TurnTween?.Kill();
+        TurnTween = transform.DORotate(new Vector3(0f, TargetYaw, 0f), TurnDuration).SetEase(Ease.OutQuad);
     }
 
     private void TurnRight()
