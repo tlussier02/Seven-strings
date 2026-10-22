@@ -4,22 +4,24 @@ using DG.Tweening;
 
 public class TestingPlayerController : MonoBehaviour
 {
-    public ReceptorClock ReceptorClock;
     public TestingInputHandler TestingInputHandler;
+    public Transform PathSegment;
     public float PlayerSpeed;
+    public float LaneChangeDuration = 0.15f;
     
-    private Rigidbody Player;
+    private int CurrentLane = 1;
+    private float LaneWidth;
+    private float CenterX;
+    private Tween LaneTween;
     
     void Awake()
     {
-        Player = GetComponent<Rigidbody>();
-
+        CenterX =  transform.position.x;
+        LaneWidth = PathSegment.localScale.x;
     }
 
     void Update()
     {
-        if (!ReceptorClock.FoundOvertime) 
-            return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 
@@ -46,13 +48,25 @@ public class TestingPlayerController : MonoBehaviour
         }
     }
 
+    private void ChangeLane(int direction)
+    {
+        int target = Mathf.Clamp(CurrentLane + direction, 0, 2);
+        if (target == CurrentLane) 
+            return;
+        CurrentLane = target;
+
+        float targetX = CenterX + (CurrentLane - 1) * (LaneWidth / 4);
+        LaneTween?.Kill();
+        LaneTween = transform.DOMoveX(targetX, LaneChangeDuration).SetEase(Ease.OutQuad);
+    }
+
     private void MoveRight()
     {
-        
+        ChangeLane(1);
     }
     
     private void MoveLeft()
     {
-        
+        ChangeLane(-1);
     }
 }
