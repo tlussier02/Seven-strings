@@ -3,7 +3,7 @@ using DG.Tweening;
 
 public class LanesPlayerController : MonoBehaviour
 {
-    public TestingInputHandler TestingInputHandler;
+    public InputHandler InputHandler;
     public ReceptorClock ReceptorClock;
     public Transform PathSegment;
     public float PlayerSpeed;
@@ -31,12 +31,12 @@ public class LanesPlayerController : MonoBehaviour
 
     void OnEnable()
     {
-        TestingInputHandler.OnInputPressed += HandleInput;
+        InputHandler.OnInputPressed += HandleInput;
     }
 
     void OnDisable()
     {
-        TestingInputHandler.OnInputPressed -= HandleInput;
+        InputHandler.OnInputPressed -= HandleInput;
     }
 
     private void HandleInput(InputType inputType)
