@@ -17,7 +17,7 @@ public class InputJudge : MonoBehaviour
 
     private static readonly (double threshold, Judgement judgement)[] JudgementThresholds =
     {
-        (0.025, Judgement.Perfect),
+        (0.03, Judgement.Perfect),
         (0.05, Judgement.Great),
         (0.0875, Judgement.Good),
         (0.125, Judgement.Ok)

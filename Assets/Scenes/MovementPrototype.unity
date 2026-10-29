@@ -10043,15 +10043,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BeatPlacer
   ChartLoader: {fileID: 1501676707}
-  Player: {fileID: 1882387587}
+  Player: {fileID: 0}
   BeatPrefab: {fileID: 5708602795544896056, guid: c0ee903c7075b4f53b6c67d0c01aa51c, type: 3}
   TrackParent: {fileID: 341197234}
-  TrackSegmentPrefab: {fileID: 1498159619389528091, guid: 885793a846ff4443b8f2e6f0c4e83025, type: 3}
-  TrackMaterialA: {fileID: 2100000, guid: 3646eb8484b4f4edf832ba65ab9a84f7, type: 2}
-  TrackMaterialB: {fileID: 2100000, guid: 3fc0371e7b40e4790a8c414441e22397, type: 2}
-  SegmentLength: 10
-  ExtraSegments: 5
-  TrackOffset: {x: 0, y: -1.5, z: -10}
+  LaneSegmentPrefab: {fileID: 0}
+  LaneMaterialA: {fileID: 0}
+  LaneMaterialB: {fileID: 0}
+  LaneOffset: {x: 0, y: 0, z: 0}
+  ExtraStartSegments: 2
+  ExtraEndSegments: 5
+  BeatsPerSegment: 1
 --- !u!1 &1468950268
 GameObject:
   m_ObjectHideFlags: 0

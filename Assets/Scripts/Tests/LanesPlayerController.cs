@@ -3,7 +3,8 @@ using DG.Tweening;
 
 public class LanesPlayerController : MonoBehaviour
 {
-    public TestingInputHandler TestingInputHandler;
+    public InputHandler InputHandler;
+    public ReceptorClock ReceptorClock;
     public Transform PathSegment;
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
@@ -21,17 +22,21 @@ public class LanesPlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f || AudioListener.pause)
+            return;
+        if (!ReceptorClock.FoundOvertime) 
+            return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 
     void OnEnable()
     {
-        TestingInputHandler.OnInputPressed += HandleInput;
+        InputHandler.OnInputPressed += HandleInput;
     }
 
     void OnDisable()
     {
-        TestingInputHandler.OnInputPressed -= HandleInput;
+        InputHandler.OnInputPressed -= HandleInput;
     }
 
     private void HandleInput(InputType inputType)
@@ -49,7 +54,7 @@ public class LanesPlayerController : MonoBehaviour
 
     private void ChangeLane(int direction)
     {
-        int target = Mathf.Clamp(CurrentLane + direction, 0, 2);
+        int target = Mathf.Clamp(CurrentLane + direction, 0, 4); // increased lanes from 3 to 5 so player can "fall off" of track
         if (target == CurrentLane) 
             return;
         CurrentLane = target;

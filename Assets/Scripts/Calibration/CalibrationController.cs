@@ -57,7 +57,7 @@ public class CalibrationController : MonoBehaviour
         PlayerPrefs.SetFloat("LatencyCompensation", LatencyCompensation);
         PlayerPrefs.Save();
         
-        SceneManager.LoadScene("MovementPrototype");
+        SceneManager.LoadScene("3dLanes");
     }
 
     public void Back()
