@@ -15,8 +15,7 @@ public class BeatPlacer : MonoBehaviour
     public Vector3 LaneOffset;
     public int ExtraStartSegments = 2;
     public int ExtraEndSegments = 5;
-    private float LaneWidth => LaneSegmentPrefab.transform.localScale.x;
-    private float SegmentLength => LaneSegmentPrefab.transform.localScale.z;
+    public float BeatsPerSegment = 1f;
 
     [ContextMenu("Place Beats")]
     public void PlaceBeats()
@@ -39,8 +38,13 @@ public class BeatPlacer : MonoBehaviour
             DestroyImmediate(TrackParent.GetChild(i).gameObject);
 
         List<NoteData> notes = ChartLoader.LoadChart();
+
+        Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
+        float laneWidth = prefabScale.x;
+        float segmentLength = (60f / ChartLoader.Bpm) * Player.PlayerSpeed * BeatsPerSegment;
+
         float totalDistance = (float)notes[notes.Count - 1].Time * Player.PlayerSpeed;
-        int forwardCount = (int)(totalDistance / SegmentLength) + 1 + ExtraEndSegments;
+        int forwardCount = (int)(totalDistance / segmentLength) + 1 + ExtraEndSegments;
 
         Vector3 start = Player.transform.position;
         Vector3 forward = Player.transform.forward;
@@ -52,10 +56,11 @@ public class BeatPlacer : MonoBehaviour
             for (int lane = 0; lane < 3; lane++)
             {
                 Vector3 pos = start
-                              + forward * (i * SegmentLength + SegmentLength / 2f)
-                              + right * ((lane - 1) * LaneWidth)
+                              + forward * (i * segmentLength + segmentLength / 2f)
+                              + right * ((lane - 1) * laneWidth)
                               + LaneOffset;
                 GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
+                segment.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, segmentLength);
                 segment.name = $"Track_{i}_Lane{lane}";
                 segment.GetComponentInChildren<Renderer>().sharedMaterial =
                     ((n + lane) % 2 == 0) ? LaneMaterialA : LaneMaterialB;
