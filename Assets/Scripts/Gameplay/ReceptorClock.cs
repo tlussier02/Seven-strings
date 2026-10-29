@@ -6,15 +6,20 @@ public class ReceptorClock : MonoBehaviour
 {
     public ScheduledAudioPlayer ScheduledAudioPlayer;
     public double Receptor { get; private set; }
-    public double NextNoteTime { get; private set; }
     public double LastNoteTime { get; private set; }
-    public double LatencyCompensation; // need to create a way to manually calibrate and adjust
-    public event Action<NoteData> OnBeat; //jumping between Note and Beat naming. pick one
+    public event Action<NoteData> OnBeat;
     public NoteData? NextNote => CurrentNoteIndex < Notes.Count ? Notes[CurrentNoteIndex] : null;
     public bool FoundOvertime { get; private set; }
     
     private List<NoteData> Notes;
+    private double NextNoteTime;
     private int CurrentNoteIndex;
+    private double LatencyCompensation;
+
+    void Awake()
+    {
+        LatencyCompensation = PlayerPrefs.GetFloat("LatencyCompensation", 0f);
+    }
 
     public void Tick()
     {
