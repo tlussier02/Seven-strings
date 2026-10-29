@@ -10562,8 +10562,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScheduledAudioPlayer
   Stems:
-  - {fileID: 8300000, guid: 0044017b2f5db4c72901229799384d93, type: 3}
-  - {fileID: 8300000, guid: 3df8c204005a04354b9c3fc9a3d4832a, type: 3}
+  - {fileID: 8300000, guid: 46d6b574216034a06a069db65d05dd30, type: 3}
+  - {fileID: 8300000, guid: c4118ac31e6ff4cbc9e85867eb10d0bd, type: 3}
+  - {fileID: 8300000, guid: d68045d7a21fd44fcbe3aeab40322c3f, type: 3}
 --- !u!114 &1501676711
 MonoBehaviour:
   m_ObjectHideFlags: 0
