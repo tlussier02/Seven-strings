@@ -54,7 +54,7 @@ public class LanesPlayerController : MonoBehaviour
 
     private void ChangeLane(int direction)
     {
-        int target = Mathf.Clamp(CurrentLane + direction, 0, 2);
+        int target = Mathf.Clamp(CurrentLane + direction, 0, 4); // increased lanes from 3 to 5 so player can "fall off" of track
         if (target == CurrentLane) 
             return;
         CurrentLane = target;
