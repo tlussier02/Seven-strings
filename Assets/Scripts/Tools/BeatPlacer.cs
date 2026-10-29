@@ -14,8 +14,7 @@ public class BeatPlacer : MonoBehaviour
     public float SegmentLength = 10f;
     public int ExtraSegments = 5;
     public Vector3 TrackOffset;
-
-    [ContextMenu("Place Beats")]
+    
     public void PlaceBeats()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -29,7 +28,6 @@ public class BeatPlacer : MonoBehaviour
         }
     }
     
-    [ContextMenu("Place Track")]
     public void PlaceTrack()
     {
         for (int i = TrackParent.childCount - 1; i >= 0; i--)

@@ -3,6 +3,10 @@ using UnityEngine;
 public class ScheduledAudioPlayer : MonoBehaviour
 {
     public AudioClip[] Stems;
+
+    // Fallback if stems array doesn't work
+    public AudioClip AudioClip;
+    public AudioSource AudioSource { get; private set; } // delete later after testing stems layering
     public AudioSource[] StemSources { get; private set; }
     public int StemCount => StemSources != null ? StemSources.Length : 0;
 
@@ -18,7 +22,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
         ScheduledStartTime = AudioSettings.dspTime + 2f;
         IsScheduled = true;
 
-        AudioClip[] clips = Stems;
+        AudioClip[] clips = (Stems != null && Stems.Length > 0) ? Stems : new[] { AudioClip };
         StemSources = new AudioSource[clips.Length];
         stemGains = new float[clips.Length];
 
@@ -35,7 +39,8 @@ public class ScheduledAudioPlayer : MonoBehaviour
             // Base layer audible by default; StemLayerMixer takes over from here.
             stemGains[i] = i == 0 ? 1f : 0f;
         }
-        
+
+        AudioSource = StemSources[0];
         SetMusicVolume(AudioVolumeSettings.MusicVolume);
     }
     

@@ -32,7 +32,6 @@ public class RhythmController : MonoBehaviour
         NoteManager.OnJudgement += HandleJudgement;
         // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
         NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
-        NoteManager.OnJudgement += SfxPlayer.HandleJudgement;
     }
 
     void OnDisable()
@@ -43,7 +42,6 @@ public class RhythmController : MonoBehaviour
         NoteManager.OnJudgement -= HandleJudgement;
         // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
-        NoteManager.OnJudgement -= SfxPlayer.HandleJudgement;
     }
 
     void Update()
@@ -61,7 +59,7 @@ public class RhythmController : MonoBehaviour
 
         NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
         InputHandler.Tick();
-        // double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
+        double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
         // AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);
     }
 
