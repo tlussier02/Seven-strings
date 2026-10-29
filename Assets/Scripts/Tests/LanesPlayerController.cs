@@ -4,6 +4,7 @@ using DG.Tweening;
 public class LanesPlayerController : MonoBehaviour
 {
     public TestingInputHandler TestingInputHandler;
+    public ReceptorClock ReceptorClock;
     public Transform PathSegment;
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
@@ -21,6 +22,10 @@ public class LanesPlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f || AudioListener.pause)
+            return;
+        if (!ReceptorClock.FoundOvertime) 
+            return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 
