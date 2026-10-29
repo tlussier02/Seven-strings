@@ -8,12 +8,15 @@ public class BeatPlacer : MonoBehaviour
     public LanesPlayerController Player;
     public GameObject BeatPrefab;
     public Transform TrackParent;
-    public GameObject TrackSegmentPrefab;
-    public Material TrackMaterialA;
-    public Material TrackMaterialB;
-    public float SegmentLength = 10f;
-    public int ExtraSegments = 5;
-    public Vector3 TrackOffset;
+    public GameObject LaneSegmentPrefab;
+    public Material LaneMaterialA;
+    public Material LaneMaterialB;
+    
+    public Vector3 LaneOffset;
+    public int ExtraStartSegments = 2;
+    public int ExtraEndSegments = 5;
+    private float LaneWidth => LaneSegmentPrefab.transform.localScale.x;
+    private float SegmentLength => LaneSegmentPrefab.transform.localScale.z;
 
     [ContextMenu("Place Beats")]
     public void PlaceBeats()
@@ -36,18 +39,27 @@ public class BeatPlacer : MonoBehaviour
             DestroyImmediate(TrackParent.GetChild(i).gameObject);
 
         List<NoteData> notes = ChartLoader.LoadChart();
-        float totalDistance = (float)notes[notes.Count() - 1].Time * Player.PlayerSpeed;
-        int count = (int)(totalDistance / SegmentLength) + 1 + ExtraSegments;
+        float totalDistance = (float)notes[notes.Count - 1].Time * Player.PlayerSpeed;
+        int forwardCount = (int)(totalDistance / SegmentLength) + 1 + ExtraEndSegments;
 
         Vector3 start = Player.transform.position;
         Vector3 forward = Player.transform.forward;
+        Vector3 right = Player.transform.right;
 
-        for (int i = 0; i < count; i++)
+        for (int n = 0; n < ExtraStartSegments + forwardCount; n++)
         {
-            Vector3 pos = start + forward * (i * SegmentLength + SegmentLength / 2f) + TrackOffset;
-            GameObject segment = Instantiate(TrackSegmentPrefab, pos, Player.transform.rotation, TrackParent);
-            segment.GetComponentInChildren<Renderer>().sharedMaterial = (i % 2 == 0) ? TrackMaterialA : TrackMaterialB;
+            int i = n - ExtraStartSegments;
+            for (int lane = 0; lane < 3; lane++)
+            {
+                Vector3 pos = start
+                              + forward * (i * SegmentLength + SegmentLength / 2f)
+                              + right * ((lane - 1) * LaneWidth)
+                              + LaneOffset;
+                GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
+                segment.name = $"Track_{i}_Lane{lane}";
+                segment.GetComponentInChildren<Renderer>().sharedMaterial =
+                    ((n + lane) % 2 == 0) ? LaneMaterialA : LaneMaterialB;
+            }
         }
     }
-    
 }
