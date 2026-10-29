@@ -12442,6 +12442,8 @@ GameObject:
   - component: {fileID: 1882387582}
   - component: {fileID: 1882387586}
   - component: {fileID: 1882387587}
+  - component: {fileID: 2142000003}
+  - component: {fileID: 2142000004}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -13567,6 +13569,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StartCountdownController
   scheduledAudioPlayer: {fileID: 1501676710}
   gameplayInput: {fileID: 1501676712}
+--- !u!114 &2142000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882387581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a1e1961de64f12a468e114486bb427, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayReset
+--- !u!114 &2142000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882387581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f25cbaf72f4819b64ab904e1507f51, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFallDetector
+  fallThresholdY: -5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

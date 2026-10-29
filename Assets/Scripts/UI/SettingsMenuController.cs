@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Run before gameplay Update so Escape cannot leak into the rhythm input poll.
@@ -95,11 +94,9 @@ public class SettingsMenuController : MonoBehaviour
         if (!IsOpen)
             return;
 
-        // A new round must recreate the song, chart, player and countdown together.
-        // Close first to save preferences and release the menu's global pause state.
-        string scenePath = gameObject.scene.path;
+        // Save preferences and restore the cursor before unloading the menu.
         Close();
-        SceneManager.LoadScene(scenePath);
+        GameplayReset.RestartCurrentGameplayScene();
     }
 
     void OnDisable()
