@@ -5,13 +5,18 @@ using UnityEngine;
 public struct InputSfx
 {
     public InputType inputType;
-    public AudioClip clip; // turn into an array to randomly pick a sfx variation in PlayFor
+    public AudioClip clip; 
 }
 
 public class SfxPlayer : MonoBehaviour
 {
     [SerializeField] private InputSfx[] sounds;
     [SerializeField, Range(0f, 1f)] private float volume = 1f;
+
+    [Header("Perfect Jump Flourish")]
+    [Tooltip("Layered on top of the normal jump sound when a jump is judged Perfect (e.g. jump_v1).")]
+    [SerializeField] private AudioClip perfectJumpFlourish;
+    [SerializeField, Range(0f, 1f)] private float flourishVolume = 1f;
     
     private AudioSource audioSource;
 
@@ -30,12 +35,20 @@ public class SfxPlayer : MonoBehaviour
     {
         foreach (InputSfx sound in sounds)
         {
-            // pick an AudioClip[] Clips at random
+            
             if (sound.inputType == input && sound.clip != null)
             {
                 audioSource.PlayOneShot(sound.clip, volume);
-                return; // first matching entry wins
+                return; 
             }
         }
+    }
+
+    // Signature matches NoteManager.OnJudgement. Fires on the same frame as the key press,
+    // so the flourish lands together with the base jump sound from PlayFor.
+    public void HandleJudgement(NoteData note, InputType input, InputJudge.Judgement judgement)
+    {
+        if (input == InputType.Jump && judgement == InputJudge.Judgement.Perfect && perfectJumpFlourish != null)
+            audioSource.PlayOneShot(perfectJumpFlourish, flourishVolume);
     }
 }
