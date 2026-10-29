@@ -5,7 +5,7 @@ using UnityEngine;
 public class BeatPlacer : MonoBehaviour
 {
     public ChartLoader ChartLoader;
-    public PlayerController Player;
+    public LanesPlayerController Player;
     public GameObject BeatPrefab;
     public Transform TrackParent;
     public GameObject TrackSegmentPrefab;
