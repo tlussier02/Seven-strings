@@ -14,7 +14,7 @@ public class CalibrationController : MonoBehaviour
     private CalibrationBeatVisual CalibrationBeatVisual;
 
     private float LatencyCompensation;
-    private float CompensationStep = 0.001f;
+    private float CompensationStep = 0.005f;
     private double TotalOffset;
     private int TapCount;
     private const double MaxOffset = 0.5;
