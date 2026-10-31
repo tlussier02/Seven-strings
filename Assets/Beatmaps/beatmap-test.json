@@ -1,0 +1,188 @@
+{
+	"bgm": "lvl1_stem0.wav",
+	"bpm": "120",
+	"offset": "0",
+	"charts": [
+		{
+			"uuid": "6c39c5c0-4b12-4070-9f00-5a6798f51560",
+			"name": "Level 1 Test",
+			"laneCount": 3,
+			"notes": [
+				{
+					"uuid": "8398aebf-c56f-4316-86f3-44043fd828b7",
+					"songPos": 2000,
+					"beat": 4,
+					"lane": 2
+				},
+				{
+					"uuid": "775079f3-ddb7-4df1-ac17-69c69d2e5fcb",
+					"songPos": 4000,
+					"beat": 8,
+					"lane": 2
+				},
+				{
+					"uuid": "b5696c77-a55b-49f6-83b4-39a17ed53424",
+					"songPos": 6500,
+					"beat": 13,
+					"lane": 2
+				},
+				{
+					"uuid": "a2d5b85a-93b6-4939-88e1-5216d5e7f3b8",
+					"songPos": 7250,
+					"beat": 14.5,
+					"lane": 2
+				},
+				{
+					"uuid": "3200338d-da80-4003-ab9e-234efdced0b4",
+					"songPos": 7375,
+					"beat": 14.75,
+					"lane": 2
+				},
+				{
+					"uuid": "2aba365c-c935-477f-8019-7300f29667be",
+					"songPos": 8000,
+					"beat": 16,
+					"lane": 2
+				},
+				{
+					"uuid": "2143f582-8b1f-4bde-b59c-f9c37abe3685",
+					"songPos": 10500,
+					"beat": 21,
+					"lane": 2
+				},
+				{
+					"uuid": "7a2750c9-c42b-4a3d-83f3-6d44cd555415",
+					"songPos": 10500,
+					"beat": 21,
+					"lane": 3
+				},
+				{
+					"uuid": "a7074ebe-f34a-472a-9a7c-36cfbdc3edb9",
+					"songPos": 11250,
+					"beat": 22.5,
+					"lane": 3
+				},
+				{
+					"uuid": "e5fb05bf-a95d-4d59-9be0-747b6e6030d0",
+					"songPos": 11250,
+					"beat": 22.5,
+					"lane": 2
+				},
+				{
+					"uuid": "d74fdbae-531b-4afb-af05-4255bedd02ef",
+					"songPos": 12000,
+					"beat": 24,
+					"lane": 2
+				},
+				{
+					"uuid": "5e9001a5-40ee-41a4-8649-5c3500006f7a",
+					"songPos": 14500,
+					"beat": 29,
+					"lane": 2
+				},
+				{
+					"uuid": "f968e48f-4bb0-4dc8-b033-f3243e67d1c0",
+					"songPos": 14500,
+					"beat": 29,
+					"lane": 1
+				},
+				{
+					"uuid": "365f7873-ca77-4e5e-ba75-4b03ab56100b",
+					"songPos": 15250,
+					"beat": 30.5,
+					"lane": 1
+				},
+				{
+					"uuid": "4b17be94-772d-4499-8c49-6b52e8ed1a5c",
+					"songPos": 16000,
+					"beat": 32,
+					"lane": 1
+				},
+				{
+					"uuid": "d8165e84-c364-4a2a-a06b-0fa5302aa180",
+					"songPos": 17000,
+					"beat": 34,
+					"lane": 1
+				},
+				{
+					"uuid": "2f10fdec-fd66-4677-865e-3df8f927f086",
+					"songPos": 17750,
+					"beat": 35.5,
+					"lane": 1
+				},
+				{
+					"uuid": "f44a7682-d63d-44ff-89f3-a47c5a977d8a",
+					"songPos": 17750,
+					"beat": 35.5,
+					"lane": 2
+				},
+				{
+					"uuid": "3a232b67-b477-49ab-9bcd-a645b4c36f60",
+					"songPos": 18000,
+					"beat": 36,
+					"lane": 2
+				},
+				{
+					"uuid": "b6728fb6-59f4-46f1-bd9a-2587e9eb6416",
+					"songPos": 18000,
+					"beat": 36,
+					"lane": 3
+				},
+				{
+					"uuid": "74c0f71f-d5c5-4190-860c-12214f0de2cf",
+					"songPos": 19000,
+					"beat": 38,
+					"lane": 3
+				},
+				{
+					"uuid": "8c0a0700-8970-4275-aea4-012f891014a5",
+					"songPos": 19125,
+					"beat": 38.25,
+					"lane": 3
+				}
+			],
+			"links": [
+				{
+					"uuid": "0539be00-559a-4f50-be37-9f109350bb6d",
+					"startNote": "a2d5b85a-93b6-4939-88e1-5216d5e7f3b8",
+					"endNote": "3200338d-da80-4003-ab9e-234efdced0b4"
+				},
+				{
+					"uuid": "69172473-e8f7-453f-9a2d-645ef32fb731",
+					"startNote": "2143f582-8b1f-4bde-b59c-f9c37abe3685",
+					"endNote": "7a2750c9-c42b-4a3d-83f3-6d44cd555415"
+				},
+				{
+					"uuid": "b7d54a0e-29c7-4302-bedd-bf263b3e3831",
+					"startNote": "a7074ebe-f34a-472a-9a7c-36cfbdc3edb9",
+					"endNote": "e5fb05bf-a95d-4d59-9be0-747b6e6030d0"
+				},
+				{
+					"uuid": "07cb56ae-4b04-4573-a722-0fc389fc4e88",
+					"startNote": "5e9001a5-40ee-41a4-8649-5c3500006f7a",
+					"endNote": "f968e48f-4bb0-4dc8-b033-f3243e67d1c0"
+				},
+				{
+					"uuid": "68207c5e-9207-4628-905a-98b01733dc33",
+					"startNote": "4b17be94-772d-4499-8c49-6b52e8ed1a5c",
+					"endNote": "d8165e84-c364-4a2a-a06b-0fa5302aa180"
+				},
+				{
+					"uuid": "ded10a31-a051-4748-ad3a-517247803772",
+					"startNote": "2f10fdec-fd66-4677-865e-3df8f927f086",
+					"endNote": "f44a7682-d63d-44ff-89f3-a47c5a977d8a"
+				},
+				{
+					"uuid": "86b6a724-0900-4120-8c90-2bcc7fc21e15",
+					"startNote": "3a232b67-b477-49ab-9bcd-a645b4c36f60",
+					"endNote": "b6728fb6-59f4-46f1-bd9a-2587e9eb6416"
+				},
+				{
+					"uuid": "598204c1-0a3f-4718-9cc5-fb4fad60e049",
+					"startNote": "74c0f71f-d5c5-4190-860c-12214f0de2cf",
+					"endNote": "8c0a0700-8970-4275-aea4-012f891014a5"
+				}
+			]
+		}
+	]
+}
