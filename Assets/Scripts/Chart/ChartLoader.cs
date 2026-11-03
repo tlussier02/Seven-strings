@@ -56,56 +56,54 @@ public class ChartLoader : MonoBehaviour
         BeatMap beatMapJson = JsonUtility.FromJson<BeatMap>(ChartFile.text);
         List<NoteData> notes  = new List<NoteData>();
         Bpm = int.Parse(beatMapJson.bpm);
-        
-        foreach (Chart chart in beatMapJson.charts)
+        Chart chart = beatMapJson.charts[0]; // assuming there is only one chart per song
+    
+        foreach (Note note in chart.notes)
         {
-            foreach (Note note in chart.notes)
+            NoteData noteData = new NoteData();
+            noteData.Id = note.uuid;
+            noteData.Time = note.songPos / 1000.0;
+            noteData.EndTime = noteData.Time;
+            noteData.Lane = note.lane;
+            noteData.Input = InputType.Jump;
+
+            bool isEnd = false;
+            foreach (Link link in chart.links)
             {
-                NoteData noteData = new NoteData();
-                noteData.Id = note.uuid;
-                noteData.Time = note.songPos / 1000.0;
-                noteData.EndTime = noteData.Time;
-                noteData.Lane = note.lane;
-                noteData.Input = InputType.Jump;
-
-                bool isEnd = false;
-                foreach (Link link in chart.links)
-                {
-                    if (note.uuid == link.endNote)
-                        isEnd = true;
-                    if (link.startNote != note.uuid)
-                        continue;
-
-                    Note startNote = GetNote(chart.notes, link.startNote);
-                    Note endNote = GetNote(chart.notes, link.endNote);
-                    
-                    if (startNote == null || endNote == null)
-                        continue;
-                    
-                    // lane change
-                    if (startNote.beat == endNote.beat)
-                        noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
-                    // roll
-                    else if (endNote.beat - startNote.beat <= 0.25)
-                        noteData.Input = InputType.Roll;
-                    // hold
-                    else if (endNote.songPos - startNote.songPos < 5000)
-                    {
-                        noteData.Input = InputType.Hold;
-                        noteData.EndTime = endNote.songPos / 1000.0;
-                    }
-                    // QTE
-                    else
-                    {
-                        noteData.Input = InputType.QTE;
-                        noteData.EndTime = endNote.songPos / 1000.0;
-                    }
-                }
-
-                if (isEnd)
+                if (note.uuid == link.endNote)
+                    isEnd = true;
+                if (link.startNote != note.uuid)
                     continue;
-                notes.Add(noteData);
+
+                Note startNote = GetNote(chart.notes, link.startNote);
+                Note endNote = GetNote(chart.notes, link.endNote);
+                
+                if (startNote == null || endNote == null)
+                    continue;
+                
+                // lane change
+                if (startNote.beat == endNote.beat)
+                    noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
+                // roll
+                else if (endNote.beat - startNote.beat <= 0.25)
+                    noteData.Input = InputType.Roll;
+                // hold
+                else if (endNote.songPos - startNote.songPos < 5000)
+                {
+                    noteData.Input = InputType.Hold;
+                    noteData.EndTime = endNote.songPos / 1000.0;
+                }
+                // QTE
+                else
+                {
+                    noteData.Input = InputType.QTE;
+                    noteData.EndTime = endNote.songPos / 1000.0;
+                }
             }
+
+            if (isEnd)
+                continue;
+            notes.Add(noteData);
         }
 
         return notes;
