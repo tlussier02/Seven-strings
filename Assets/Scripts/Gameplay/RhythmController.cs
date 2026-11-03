@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RhythmController : MonoBehaviour
 {
-    public ScheduledAudioPlayer ScheduledAudioPlayer;
+    public ScheduledAudioPlayer ScheduledAudioPlayer; // should use GetComponent to auto initialize objects
     public ReceptorClock ReceptorClock;
     public InputJudge InputJudge;
     public BeatVisual BeatVisual;
