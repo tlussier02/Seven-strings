@@ -43541,7 +43541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
-  ChartFile: {fileID: 4900000, guid: b4bf9873a9b77487a96f0d1fca3674ee, type: 3}
+  ChartFile: {fileID: 4900000, guid: 86d16f78b71fb4949ba3a2aa22b5f204, type: 3}
 --- !u!114 &634558635
 MonoBehaviour:
   m_ObjectHideFlags: 0
