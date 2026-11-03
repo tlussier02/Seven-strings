@@ -74,7 +74,7 @@ public class NoteManager : MonoBehaviour
         ActiveNotes.Add(new ActiveNote
         {
             Note = note,
-            PendingInputs = new List<InputType>(note.InputTypes)
+            //PendingInputs = new List<InputType>(note.InputTypes)
         });
     }
 }
