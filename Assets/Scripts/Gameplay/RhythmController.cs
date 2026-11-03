@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RhythmController : MonoBehaviour
 {
-    public ScheduledAudioPlayer ScheduledAudioPlayer; // should use GetComponent to auto initialize objects
+    public ScheduledAudioPlayer ScheduledAudioPlayer;
     public ReceptorClock ReceptorClock;
     public InputJudge InputJudge;
     public BeatVisual BeatVisual;
@@ -16,7 +16,17 @@ public class RhythmController : MonoBehaviour
 
     void Awake()
     {
+        ScheduledAudioPlayer = GetComponent<ScheduledAudioPlayer>();
+        ReceptorClock = GetComponent<ReceptorClock>();
+        InputJudge = GetComponent<InputJudge>();
+        BeatVisual = GetComponent<BeatVisual>();
+        ChartLoader = GetComponent<ChartLoader>();
+        InputHandler = GetComponent<InputHandler>();
+        SfxPlayer = GetComponent<SfxPlayer>();
+        NoteManager = GetComponent<NoteManager>();
+        HarmonyMeter = GetComponent<HarmonyMeter>();
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
+        
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
