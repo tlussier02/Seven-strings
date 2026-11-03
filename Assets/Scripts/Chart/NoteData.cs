@@ -14,7 +14,7 @@ public struct NoteData
 {
     public string Id;
     public double Time;
-    public double EndTime; // only for held notes
+    public double EndTime; // only for held notes and qte
     public InputType Input;
     public int Lane;
     public bool IsHold => Input == InputType.Hold;
