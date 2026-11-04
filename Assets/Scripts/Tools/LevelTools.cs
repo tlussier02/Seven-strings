@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BeatPlacer : MonoBehaviour
+public class LevelTools : MonoBehaviour
 {
     public ChartLoader ChartLoader;
     public PlayerController Player;
     public GameObject BeatPrefab;
     public Transform TrackParent;
+    public Transform BeatParent;
     public GameObject LaneSegmentPrefab;
     public Material LaneMaterialA;
     public Material LaneMaterialB;
@@ -16,18 +17,18 @@ public class BeatPlacer : MonoBehaviour
     public int ExtraStartSegments = 2;
     public int ExtraEndSegments = 5;
     public float BeatsPerSegment = 1f;
-
+    
     [ContextMenu("Place Beats")]
     public void PlaceBeats()
     {
-        for (int i = transform.childCount - 1; i >= 0; i--)
-            DestroyImmediate(transform.GetChild(i).gameObject);
+        for (int i = BeatParent.childCount - 1; i >= 0; i--)
+            DestroyImmediate(BeatParent.GetChild(i).gameObject);
 
         foreach (NoteData note in ChartLoader.LoadChart())
         {
             Vector3 pos = BeatPrefab.transform.position;
             pos.z = Player.transform.position.z + (float)(note.Time * Player.PlayerSpeed);
-            Instantiate(BeatPrefab, pos, BeatPrefab.transform.rotation, transform);
+            Instantiate(BeatPrefab, pos, BeatPrefab.transform.rotation, BeatParent);
         }
     }
     
@@ -36,9 +37,9 @@ public class BeatPlacer : MonoBehaviour
     {
         for (int i = TrackParent.childCount - 1; i >= 0; i--)
             DestroyImmediate(TrackParent.GetChild(i).gameObject);
-
+        
         List<NoteData> notes = ChartLoader.LoadChart();
-
+        
         Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
         float laneWidth = prefabScale.x;
         float segmentLength = (60f / ChartLoader.Bpm) * Player.PlayerSpeed * BeatsPerSegment;

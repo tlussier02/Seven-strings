@@ -25,27 +25,27 @@ public class LevelMakerOverlay : Overlay
         beatsToggle.SetValueWithoutNotify(true);
         beatsToggle.RegisterValueChangedCallback(evt =>
         {
-            BeatPlacer placer = UnityEngine.Object.FindAnyObjectByType<BeatPlacer>();
-            if (placer == null) return;
+            LevelTools levelTools = UnityEngine.Object.FindAnyObjectByType<LevelTools>();
+            if (levelTools == null) return;
 
             if (evt.newValue)
-                SceneVisibilityManager.instance.Show(placer.gameObject, true);
+                SceneVisibilityManager.instance.Show(levelTools.gameObject, true);
             else
-                SceneVisibilityManager.instance.Hide(placer.gameObject, true);
+                SceneVisibilityManager.instance.Hide(levelTools.gameObject, true);
         });
         return beatsToggle;
     }
 
-    private static void Run(System.Action<BeatPlacer> action)
+    private static void Run(System.Action<LevelTools> action)
     {
-        BeatPlacer placer = UnityEngine.Object.FindAnyObjectByType<BeatPlacer>();
-        if (placer == null)
+        LevelTools levelTools = UnityEngine.Object.FindAnyObjectByType<LevelTools>();
+        if (levelTools == null)
         {
             Debug.LogWarning("No BeatPlacer in the scene.");
             return;
         }
 
-        action(placer);
-        EditorSceneManager.MarkSceneDirty(placer.gameObject.scene);
+        action(levelTools);
+        EditorSceneManager.MarkSceneDirty(levelTools.gameObject.scene);
     }
 }

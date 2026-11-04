@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
     
-    private int CurrentLane = 1;
+    private int CurrentLane = 2;
     private float LaneWidth;
     private float CenterX;
     private Tween LaneTween;
