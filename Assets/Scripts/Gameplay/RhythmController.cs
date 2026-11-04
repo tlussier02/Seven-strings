@@ -41,6 +41,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
         InputHandler.OnInputPressed += SfxPlayer.PlayFor;
+        InputHandler.OnInputReleased += HandleInput;
         NoteManager.OnJudgement += HandleJudgement;
         // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
         NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
@@ -52,6 +53,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat -= HandleBeat;
         InputHandler.OnInputPressed -= HandleInput;
         InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
+        InputHandler.OnInputReleased -= HandleInput;
         NoteManager.OnJudgement -= HandleJudgement;
         // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
