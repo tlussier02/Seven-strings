@@ -43,12 +43,6 @@ public class ChartLoader : MonoBehaviour
 {
     public TextAsset ChartFile; // should ChartLoader hold the chart or should all references be passed to RhythmController
     public int Bpm { get;  private set; }
-
-    // delete after testing
-    void Start()
-    {
-        PrintNotes(LoadChart());
-    }
     
     public List<NoteData> LoadChart()
     {
@@ -120,13 +114,5 @@ public class ChartLoader : MonoBehaviour
                 return note;
         }
         return null;
-    }
-
-    private void PrintNotes(List<NoteData> notes)
-    {
-        foreach (NoteData note in notes)
-        {
-            print($"Id: {note.Id}\nTime: {note.Time}\tEnd Time: {note.EndTime}\nInput: {note.Input}\nLane: {note.Lane}\n\n");
-        }
     }
 }
