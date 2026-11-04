@@ -42,7 +42,7 @@ public class BeatMap
 
 public class ChartLoader : MonoBehaviour
 {
-    public TextAsset ChartFile;
+    public TextAsset ChartFile; // should ChartLoader hold the chart or should all references be passed to RhythmController
     public int Bpm { get;  private set; }
 
     // delete after testing
