@@ -70,7 +70,7 @@ public class NoteManager : MonoBehaviour
     {
         foreach (ActiveNote active in ActiveNotes)
         {
-            if (active.Note.Time == note.Time)
+            if (active.Note.Id == note.Id)
                 return true;
         }
         return false;
