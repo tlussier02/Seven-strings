@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 
 [System.Serializable]
@@ -64,7 +63,7 @@ public class ChartLoader : MonoBehaviour
             noteData.Id = note.uuid;
             noteData.Time = note.songPos / 1000.0;
             noteData.EndTime = noteData.Time;
-            noteData.Lane = note.lane;
+            noteData.Lane = note.lane - 1;
             noteData.Input = InputType.Jump;
 
             bool isEnd = false;
@@ -103,13 +102,16 @@ public class ChartLoader : MonoBehaviour
 
             if (isEnd)
                 continue;
+
+            if (noteData.Input == InputType.QTE)
+                continue;
             notes.Add(noteData);
         }
-
+        
+        notes.Sort((x, y) => x.Time.CompareTo(y.Time));
         return notes;
     }
-
-    [CanBeNull]
+    
     private Note GetNote(Note[] notes, string uuid)
     {
         foreach (Note note in notes)
