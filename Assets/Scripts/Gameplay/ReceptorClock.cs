@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ReceptorClock : MonoBehaviour
 {
-    public ScheduledAudioPlayer ScheduledAudioPlayer;
+    public ScheduledAudioPlayer ScheduledAudioPlayer { get; set; }
     public double Receptor { get; private set; }
     public double LastNoteTime { get; private set; }
     public event Action<NoteData> OnBeat;

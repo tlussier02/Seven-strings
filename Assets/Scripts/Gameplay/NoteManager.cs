@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
-    public ReceptorClock ReceptorClock;
-    public InputJudge InputJudge;
+    public ReceptorClock ReceptorClock { get; set; }
+    public InputJudge InputJudge { get; set; }
     public float ActivationWindow = 0.4f;
     public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
 
     private double ExpiryWindow => InputJudge.WidestThreshold + 0.01;
     private List<NoteData> Notes;
-    private List<ActiveNote> ActiveNotes;
+    private List<ActiveNote> ActiveNotes = new List<ActiveNote>();
 
     private struct ActiveNote
     {

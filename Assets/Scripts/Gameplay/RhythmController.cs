@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class RhythmController : MonoBehaviour
 {
-    public ScheduledAudioPlayer ScheduledAudioPlayer;
-    public ReceptorClock ReceptorClock;
-    public InputJudge InputJudge;
-    public BeatVisual BeatVisual;
-    public ChartLoader ChartLoader;
-    public InputHandler InputHandler;
-    public SfxPlayer SfxPlayer;
-    public NoteManager NoteManager;
-    // public AnimationManager AnimationManager;
-    public HarmonyMeter HarmonyMeter;
+    private ScheduledAudioPlayer ScheduledAudioPlayer;
+    private ReceptorClock ReceptorClock;
+    private InputJudge InputJudge;
+    private BeatVisual BeatVisual;
+    private ChartLoader ChartLoader;
+    private InputHandler InputHandler;
+    private SfxPlayer SfxPlayer;
+    private NoteManager NoteManager;
+    // private AnimationManager AnimationManager;
+    private HarmonyMeter HarmonyMeter;
 
     void Awake()
     {
@@ -25,13 +25,15 @@ public class RhythmController : MonoBehaviour
         SfxPlayer = GetComponent<SfxPlayer>();
         NoteManager = GetComponent<NoteManager>();
         HarmonyMeter = GetComponent<HarmonyMeter>();
+        
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
+        NoteManager.ReceptorClock = ReceptorClock;
+        NoteManager.InputJudge = InputJudge;
         
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
         // AnimationManager.SetNotes(notes);
-        NoteManager.ReceptorClock = ReceptorClock;
     }
 
     void OnEnable()

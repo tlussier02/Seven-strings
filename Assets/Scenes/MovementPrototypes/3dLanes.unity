@@ -43333,14 +43333,16 @@ MonoBehaviour:
   bindings:
   - InputType: 0
     Key: 1
-  - InputType: 0
-    Key: 15
-  - InputType: 0
-    Key: 18
+  - InputType: 1
+    Key: 33
   - InputType: 2
     Key: 15
   - InputType: 3
     Key: 18
+  - InputType: 4
+    Key: 51
+  - InputType: 5
+    Key: 31
 --- !u!114 &634558628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43554,8 +43556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c61353a1f035403d97a0eb33c3a8e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteManager
-  ReceptorClock: {fileID: 634558637}
-  InputJudge: {fileID: 634558632}
   ActivationWindow: 0.6
 --- !u!114 &634558636
 MonoBehaviour:
@@ -43587,7 +43587,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8663ab21ce024696854f973b6ee5848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReceptorClock
-  ScheduledAudioPlayer: {fileID: 634558628}
 --- !u!114 &634558638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43600,15 +43599,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3711630b5a0440aaa34ba1cb988dc4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RhythmController
-  ScheduledAudioPlayer: {fileID: 634558628}
-  ReceptorClock: {fileID: 634558637}
-  InputJudge: {fileID: 634558632}
-  BeatVisual: {fileID: 634558633}
-  ChartLoader: {fileID: 634558634}
-  InputHandler: {fileID: 634558627}
-  SfxPlayer: {fileID: 634558636}
-  NoteManager: {fileID: 634558635}
-  HarmonyMeter: {fileID: 634558629}
 --- !u!4 &634558639
 Transform:
   m_ObjectHideFlags: 0
