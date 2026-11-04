@@ -246,7 +246,7 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &925378791
+--- !u!1 &1076804506
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,43 +254,332 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 925378792}
-  - component: {fileID: 925378793}
+  - component: {fileID: 1076804519}
+  - component: {fileID: 1076804517}
+  - component: {fileID: 1076804516}
+  - component: {fileID: 1076804515}
+  - component: {fileID: 1076804514}
+  - component: {fileID: 1076804513}
+  - component: {fileID: 1076804512}
+  - component: {fileID: 1076804511}
+  - component: {fileID: 1076804510}
+  - component: {fileID: 1076804509}
+  - component: {fileID: 1076804508}
+  - component: {fileID: 1076804507}
+  - component: {fileID: 1076804520}
   m_Layer: 0
-  m_Name: ChartLoader
+  m_Name: RhythmController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &925378792
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925378791}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.61256, y: -567.21246, z: 350.44107}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &925378793
+--- !u!114 &1076804507
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925378791}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423543484213947949cb3c6f32a20d3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StemLayerMixer
+  player: {fileID: 1076804515}
+  harmonyMeter: {fileID: 1076804508}
+  chartLoader: {fileID: 1076804512}
+  fallbackBpm: 120
+  beatsPerBar: 4
+  firstBeatOffset: 0
+  stemThresholds:
+  - 0
+  - 0.35
+  - 0.75
+  hysteresis: 0.1
+  fadeInGrid: 2
+  fadeInAlignment: 0
+  fadeInBeats: 4
+  fadeOutGrid: 4
+  fadeOutBeats: 2
+  logTransitions: 1
+--- !u!114 &1076804508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ecaf7d72a2d447b99752c0d6ed6a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HarmonyMeter
+  maxHarmony: 500
+  startingHarmony: 0
+  perfectPoints: 20
+  greatPoints: 15
+  goodPoints: 10
+  okPoints: 5
+  missPoints: -10
+--- !u!82 &1076804509
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1076804510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f828ffee306744c608b53a82bbb41ffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputJudge
+--- !u!114 &1076804511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 340c85c6db5d14f35841f20cf887db95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BeatVisual
+  AccuracyPanelImage: {fileID: 0}
+  AccuracyText: {fileID: 0}
+  idleColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+--- !u!114 &1076804512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
   ChartFile: {fileID: 4900000, guid: 86d16f78b71fb4949ba3a2aa22b5f204, type: 3}
+--- !u!114 &1076804513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c61353a1f035403d97a0eb33c3a8e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NoteManager
+  ReceptorClock: {fileID: 1076804516}
+  InputJudge: {fileID: 1076804510}
+  ActivationWindow: 0.6
+--- !u!114 &1076804514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b1fa1bafb745460a8ee224e914a50b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  sounds:
+  - inputType: 0
+    clip: {fileID: 8300000, guid: 91a2be33e583a4a818070b9d6c2ea9a8, type: 3}
+  volume: 0.5
+  perfectJumpFlourish: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
+  flourishVolume: 0.25
+--- !u!114 &1076804515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab315fbe1ebc14b2e9ef2a583879c6cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScheduledAudioPlayer
+  Stems:
+  - {fileID: 8300000, guid: 46d6b574216034a06a069db65d05dd30, type: 3}
+  - {fileID: 8300000, guid: c4118ac31e6ff4cbc9e85867eb10d0bd, type: 3}
+  - {fileID: 8300000, guid: d68045d7a21fd44fcbe3aeab40322c3f, type: 3}
+--- !u!114 &1076804516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8663ab21ce024696854f973b6ee5848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReceptorClock
+  ScheduledAudioPlayer: {fileID: 1076804515}
+--- !u!114 &1076804517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b67527e776a1433482316ed0e328948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputHandler
+  bindings:
+  - InputType: 0
+    Key: 1
+  - InputType: 0
+    Key: 15
+  - InputType: 0
+    Key: 18
+  - InputType: 2
+    Key: 15
+  - InputType: 3
+    Key: 18
+--- !u!4 &1076804519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1076804520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076804506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3711630b5a0440aaa34ba1cb988dc4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RhythmController
+  ScheduledAudioPlayer: {fileID: 0}
+  ReceptorClock: {fileID: 0}
+  InputJudge: {fileID: 0}
+  BeatVisual: {fileID: 0}
+  ChartLoader: {fileID: 0}
+  InputHandler: {fileID: 0}
+  SfxPlayer: {fileID: 0}
+  NoteManager: {fileID: 0}
+  HarmonyMeter: {fileID: 0}
 --- !u!1 &1322692542
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,4 +678,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1322692545}
   - {fileID: 176053909}
-  - {fileID: 925378792}
+  - {fileID: 1076804519}
