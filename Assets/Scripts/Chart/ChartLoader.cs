@@ -43,13 +43,15 @@ public class ChartLoader : MonoBehaviour
 {
     public TextAsset ChartFile; // should ChartLoader hold the chart or should all references be passed to RhythmController
     public int Bpm { get;  private set; }
+    public int SubBeats { get;  private set; }
     
     public List<NoteData> LoadChart()
     {
         BeatMap beatMapJson = JsonUtility.FromJson<BeatMap>(ChartFile.text);
         List<NoteData> notes  = new List<NoteData>();
-        Bpm = int.Parse(beatMapJson.bpm);
         Chart chart = beatMapJson.charts[0]; // assuming there is only one chart per song
+        Bpm = int.Parse(beatMapJson.bpm);
+        SubBeats = (int)(1 / chart.notes.Min(x => Math.Truncate(x.beat)));
     
         foreach (Note note in chart.notes)
         {
@@ -78,7 +80,7 @@ public class ChartLoader : MonoBehaviour
                 if (startNote.beat == endNote.beat)
                     noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
                 // roll
-                else if (endNote.beat - startNote.beat <= 0.25)
+                else if (endNote.beat - startNote.beat <= 1/SubBeats)
                     noteData.Input = InputType.Roll;
                 // hold
                 else if (endNote.songPos - startNote.songPos < 5000)
