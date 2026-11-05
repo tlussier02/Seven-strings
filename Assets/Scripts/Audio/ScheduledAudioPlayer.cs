@@ -10,8 +10,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
     public double ScheduledStartTime { get; private set; }
     public bool IsScheduled { get; private set; }
     public bool IsRunning { get; private set; }
-    public double MaxLength { get;  private set; }
-
+    
     private float musicVolume = 1f;
     private float[] stemGains;
 
@@ -23,7 +22,6 @@ public class ScheduledAudioPlayer : MonoBehaviour
         AudioClip[] clips = Stems;
         StemSources = new AudioSource[clips.Length];
         stemGains = new float[clips.Length];
-        MaxLength = clips.Max(x => x.length);
 
         for (int i = 0; i < clips.Length; i++)
         {
@@ -79,5 +77,10 @@ public class ScheduledAudioPlayer : MonoBehaviour
 
             Debug.Log($"Scheduled {StemCount} stem(s) to start at dsp time {ScheduledStartTime} | DSP time: {time}");
         }
+    }
+
+    public float GetMaxLength()
+    {
+        return Stems != null && Stems.Length > 0 ? Stems.Max(x => x != null ? x.length : 0f) : 0f;
     }
 }
