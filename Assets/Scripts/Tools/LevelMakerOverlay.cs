@@ -26,12 +26,15 @@ public class LevelMakerOverlay : Overlay
         beatsToggle.RegisterValueChangedCallback(evt =>
         {
             LevelTools levelTools = UnityEngine.Object.FindAnyObjectByType<LevelTools>();
-            if (levelTools == null) return;
+            if (levelTools == null || levelTools.BeatParent == null)
+                return;
+            
+            GameObject beatParent = levelTools.BeatParent.gameObject;
 
             if (evt.newValue)
-                SceneVisibilityManager.instance.Show(levelTools.gameObject, true);
+                SceneVisibilityManager.instance.Show(beatParent, true);
             else
-                SceneVisibilityManager.instance.Hide(levelTools.gameObject, true);
+                SceneVisibilityManager.instance.Hide(beatParent, true);
         });
         return beatsToggle;
     }
