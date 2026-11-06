@@ -19,13 +19,20 @@ public class LevelTools : MonoBehaviour
     public int SegmentsPerBeat = 8;
     public int ExtraStartSegments = 2;
     public int ExtraEndSegments = 5;
-    public int TurnBufferSteps = 4;
+    public int LaneChangeBuffer = 4;
     public float JumpLengthBeats = 1f;
     public int JumpGapInsetSteps = 1;
     public float RollLengthBeats = 1f;
     public float ObstacleHeight = 1.5f;
     
     private float BeatsPerSegment => 1 / SegmentsPerBeat;
+
+    [ContextMenu("Clear All")]
+    public void ClearTracks()
+    {
+        ClearChildren(TrackParent);
+        ClearChildren(BeatParent);
+    }
     
     [ContextMenu("Place Beats")]
     public void PlaceBeats()
@@ -43,12 +50,12 @@ public class LevelTools : MonoBehaviour
                                 + right * ((note.Lane - 1) * laneWidth);
             pos.y = BeatPrefab.transform.position.y;
             GameObject beat = Instantiate(BeatPrefab, pos, BeatPrefab.transform.rotation, BeatParent);
-            beat.name = $"{note.Input}_{note.Time:F2}";
+            beat.name = $"{note.Input}_{note.Time}";
             if (note.IsHold)
                 beat.transform.localScale = new Vector3(beat.transform.localScale.x, beat.transform.localScale.y, length);
         }
     }
-
+    
     [ContextMenu("Place Track")]
     public void PlaceTrack()
     {
@@ -58,86 +65,175 @@ public class LevelTools : MonoBehaviour
 
         double secondsPerStep = 60.0 / ChartLoader.Bpm / SegmentsPerBeat;
         float segmentLength = (float)(secondsPerStep * Player.PlayerSpeed);
-        Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
-        float laneWidth = prefabScale.x;
 
-        int lastStep = (int)System.Math.Round(notes[notes.Count - 1].Time / secondsPerStep);
-        int audioSteps = ScheduledAudioPlayer != null
-            ? (int)System.Math.Ceiling(ScheduledAudioPlayer.GetMaxLength() / secondsPerStep) : 0;
-        int totalSteps = Mathf.Max(lastStep, audioSteps) + ExtraEndSegments;
+        TrackLayout layout = BuildLayout(notes, secondsPerStep);
+        SpawnTiles(layout, segmentLength);
+        SpawnObstacles(layout, segmentLength);
+    }
+    
+    private struct RollObstacle
+    {
+        public int StartStep;
+        public int LengthSteps;
+        public int Lane;
+    }
 
-        byte[] mask = new byte[totalSteps];
-        bool[] gap = new bool[totalSteps];
-        var obstacles = new List<(int start, int length, int lane)>();
+    private class TrackLayout
+    {
+        public int TotalSteps;
+        public bool[,] HasTrack;
+        public bool[] IsGap;
+        public List<RollObstacle> Obstacles = new List<RollObstacle>();
 
-        int lane = 1, cursor = 0;
+        public TrackLayout(int totalSteps)
+        {
+            TotalSteps = totalSteps;
+            HasTrack = new bool[totalSteps, 3];
+            IsGap = new bool[totalSteps];
+        }
+
+        public void MarkTrack(int step, int lane)
+        {
+            if (step >= 0 && step < TotalSteps)
+                HasTrack[step, lane] = true;
+        }
+
+        public void MarkGap(int step)
+        {
+            if (step >= 0 && step < TotalSteps)
+                IsGap[step] = true;
+        }
+    }
+
+    private TrackLayout BuildLayout(List<NoteData> notes, double secondsPerStep)
+    {
+        TrackLayout layout = new TrackLayout(CalculateTotalSteps(notes, secondsPerStep));
+        int currentLane = 1;
+        int fillStep = 0;
+
         foreach (NoteData note in notes)
         {
-            double stepsF = note.Time / secondsPerStep;
-            int s = (int)System.Math.Round(stepsF);
-            if (System.Math.Abs(stepsF - s) > 0.01)
-                Debug.LogWarning($"Note {note.Id} is off the {SegmentsPerBeat}-per-beat grid");
+            int noteStep = TimeToStep(note.Time, secondsPerStep);
 
-            for (; cursor < s && cursor < totalSteps; cursor++)
-                mask[cursor] |= (byte)(1 << lane);
-
-            if (note.Lane != lane)
-                Debug.LogWarning($"Note {note.Id} ({note.Input}) is in lane {note.Lane} but the path is in lane {lane}");
+            for (; fillStep < noteStep; fillStep++)
+                layout.MarkTrack(fillStep, currentLane);
 
             switch (note.Input)
             {
                 case InputType.Left:
                 case InputType.Right:
-                    int target = Mathf.Clamp(lane + (note.Input == InputType.Right ? 1 : -1), 0, 2);
-                    if (target == lane) Debug.LogWarning($"{note.Input} at {note.Time:F2}s has no lane to move into");
-                    byte both = (byte)((1 << lane) | (1 << target));
-                    for (int k = Mathf.Max(0, s - TurnBufferSteps); k <= Mathf.Min(totalSteps - 1, s + TurnBufferSteps); k++)
-                        mask[k] |= both;
-                    lane = target;
+                    currentLane = AddLaneChange(layout, note, noteStep, currentLane);
                     break;
-
                 case InputType.Jump:
-                    int jumpSteps = Mathf.RoundToInt(JumpLengthBeats * SegmentsPerBeat);
-                    for (int k = s + JumpGapInsetSteps; k < s + jumpSteps - JumpGapInsetSteps && k < totalSteps; k++)
-                        gap[k] = true;
+                    AddJumpGap(layout, noteStep);
                     break;
-
                 case InputType.Roll:
-                    obstacles.Add((s, Mathf.RoundToInt(RollLengthBeats * SegmentsPerBeat), lane));
+                    AddRollObstacle(layout, noteStep, currentLane);
                     break;
             }
         }
-        for (; cursor < totalSteps; cursor++)
-            mask[cursor] |= (byte)(1 << lane);
 
-        Vector3 start = Player.transform.position;
-        Vector3 forward = Player.transform.forward;
-        Vector3 right = Player.transform.right;
+        for (; fillStep < layout.TotalSteps; fillStep++)
+            layout.MarkTrack(fillStep, currentLane);
 
-        for (int s = -ExtraStartSegments; s < totalSteps; s++)
+        return layout;
+    }
+
+    private int CalculateTotalSteps(List<NoteData> notes, double secondsPerStep)
+    {
+        int lastNoteStep = TimeToStep(notes[notes.Count - 1].Time, secondsPerStep);
+        int audioLengthSteps = 0;
+        
+        if (ScheduledAudioPlayer != null)
+            audioLengthSteps = (int)System.Math.Ceiling(ScheduledAudioPlayer.GetMaxLength() / secondsPerStep);
+        
+        return Mathf.Max(lastNoteStep, audioLengthSteps) + ExtraEndSegments;
+    }
+
+    private int TimeToStep(double time, double secondsPerStep)
+    {
+        return (int)System.Math.Round(time / secondsPerStep);
+    }
+
+    private int AddLaneChange(TrackLayout layout, NoteData note, int noteStep, int currentLane)
+    {
+        int targetLane = Mathf.Clamp(currentLane + (note.Input == InputType.Right ? 1 : -1), 0, 2);
+
+        if (targetLane == currentLane)
+            Debug.LogWarning($"{note.Input} at {note.Time:F2}s has no lane to move into");
+
+        for (int step = noteStep - LaneChangeBuffer; step <= noteStep + LaneChangeBuffer; step++)
         {
-            if (s >= 0 && gap[s]) continue;
-            byte m = s < 0 ? (byte)(1 << 1) : mask[s];
-            for (int l = 0; l < 3; l++)
+            layout.MarkTrack(step, currentLane);
+            layout.MarkTrack(step, targetLane);
+        }
+        return targetLane;
+    }
+
+    private void AddJumpGap(TrackLayout layout, int noteStep)
+    {
+        int jumpLengthSteps = Mathf.RoundToInt(JumpLengthBeats * SegmentsPerBeat);
+        for (int step = noteStep + JumpGapInsetSteps; step < noteStep + jumpLengthSteps - JumpGapInsetSteps; step++)
+            layout.MarkGap(step);
+    }
+
+    private void AddRollObstacle(TrackLayout layout, int noteStep, int lane)
+    {
+        layout.Obstacles.Add(new RollObstacle
+        {
+            StartStep = noteStep,
+            LengthSteps = Mathf.RoundToInt(RollLengthBeats * SegmentsPerBeat),
+            Lane = lane
+        });
+    }
+
+    private void SpawnTiles(TrackLayout layout, float segmentLength)
+    {
+        Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
+
+        for (int step = -ExtraStartSegments; step < layout.TotalSteps; step++)
+        {
+            if (step >= 0 && layout.IsGap[step])
+                continue;
+
+            for (int lane = 0; lane < 3; lane++)
             {
-                if ((m & (1 << l)) == 0) continue;
-                Vector3 pos = start + forward * (s * segmentLength + segmentLength / 2f)
-                                    + right * ((l - 1) * laneWidth) + LaneOffset;
-                GameObject seg = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
-                seg.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, segmentLength);
-                seg.name = $"Track_{s}_Lane{l}";
-                seg.GetComponentInChildren<Renderer>().sharedMaterial = ((s + l) & 1) == 0 ? LaneMaterialA : LaneMaterialB;
+                bool placeTile = step < 0 ? lane == 1 : layout.HasTrack[step, lane];
+                
+                if (!placeTile) 
+                    continue;
+
+                Vector3 pos = TrackPosition(step * segmentLength + segmentLength / 2f, lane);
+                GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
+                segment.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, segmentLength);
+                segment.name = $"Track_{step}_Lane{lane}";
+                segment.GetComponentInChildren<Renderer>().sharedMaterial =
+                    ((step + lane) & 1) == 0 ? LaneMaterialA : LaneMaterialB;
             }
         }
+    }
 
-        foreach (var o in obstacles)
+    private void SpawnObstacles(TrackLayout layout, float segmentLength)
+    {
+        float laneWidth = LaneSegmentPrefab.transform.localScale.x;
+
+        foreach (RollObstacle obstacle in layout.Obstacles)
         {
-            float length = o.length * segmentLength;
-            Vector3 pos = start + forward * (o.start * segmentLength + length / 2f)
-                                + right * ((o.lane - 1) * laneWidth) + LaneOffset + Vector3.up * ObstacleHeight;
-            GameObject obj = Instantiate(RollObstaclePrefab, pos, Player.transform.rotation, TrackParent);
-            obj.transform.localScale = new Vector3(laneWidth, obj.transform.localScale.y, length);
+            float length = obstacle.LengthSteps * segmentLength;
+            Vector3 pos = TrackPosition(obstacle.StartStep * segmentLength + length / 2f, obstacle.Lane)
+                          + Vector3.up * ObstacleHeight;
+            GameObject obstacleObject = Instantiate(RollObstaclePrefab, pos, Player.transform.rotation, TrackParent);
+            obstacleObject.transform.localScale = new Vector3(laneWidth, obstacleObject.transform.localScale.y, length);
         }
+    }
+
+    private Vector3 TrackPosition(float distance, int lane)
+    {
+        float laneWidth = LaneSegmentPrefab.transform.localScale.x;
+        return Player.transform.position
+             + Player.transform.forward * distance
+             + Player.transform.right * ((lane - 1) * laneWidth)
+             + LaneOffset;
     }
 
     private static void ClearChildren(Transform parent)
