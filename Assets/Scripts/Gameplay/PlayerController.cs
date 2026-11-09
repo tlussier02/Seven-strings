@@ -5,19 +5,26 @@ public class PlayerController : MonoBehaviour
 {
     public InputHandler InputHandler;
     public ReceptorClock ReceptorClock;
-    public Transform PathSegment;
+    public LevelTools LevelTools { get; private set; }
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
+    public float JumpHeight = 1.5f;
     
+    private Transform LaneSegment;
     private int CurrentLane = 1;
     private float LaneWidth;
     private float CenterX;
+    private float GroundY;
     private Tween LaneTween;
+    private Tween JumpTween;
     
     void Awake()
     {
+        LevelTools = FindObjectOfType<LevelTools>();
+        LaneSegment = LevelTools.LaneSegmentPrefab.transform;
         CenterX =  transform.position.x;
-        LaneWidth = PathSegment.localScale.x;
+        LaneWidth = LaneSegment.localScale.x;
+        GroundY = transform.position.y;
     }
 
     void Update()
@@ -49,7 +56,30 @@ public class PlayerController : MonoBehaviour
             case InputType.Left:
                 MoveLeft();
                 break;
+            case InputType.Jump:
+                Jump();
+                break;
+            case InputType.Roll:
+                Roll();
+                break;
         }
+    }
+
+    private void Jump()
+    {
+        if (JumpTween != null && JumpTween.IsActive() && JumpTween.IsPlaying())
+            return;
+        
+        float jumpDuration = LevelTools.JumpLengthBeats * (60f / LevelTools.ChartLoader.Bpm);
+
+        JumpTween?.Kill();
+        transform.position = new Vector3(transform.position.x, GroundY, transform.position.z);
+        JumpTween = transform.DOMoveY(GroundY + JumpHeight, jumpDuration / 2f).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
+    }
+
+    private void Roll()
+    {
+        
     }
 
     private void ChangeLane(int direction)
