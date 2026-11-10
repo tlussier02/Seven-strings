@@ -73,7 +73,7 @@ public class RhythmController : MonoBehaviour
         if (!ReceptorClock.FoundOvertime)
             return;
 
-        NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
+        NoteManager.Tick(ReceptorClock.Receptor);
         InputHandler.Tick();
         // double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
         // AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);

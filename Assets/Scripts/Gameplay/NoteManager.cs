@@ -9,35 +9,61 @@ public class NoteManager : MonoBehaviour
     public float ActivationWindow = 0.4f;
     public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
 
-    private double ExpiryWindow => InputJudge.WidestThreshold + 0.01;
     private List<NoteData> Notes;
+    private int NextActivateIndex;
     private List<ActiveNote> ActiveNotes = new List<ActiveNote>();
+    private readonly Dictionary<string, (double early, double late)> NoteWindows = new Dictionary<string, (double early, double late)>();
+    private double ExpiryWindow => InputJudge.WidestThreshold + 0.01;
 
     private struct ActiveNote
     {
         public NoteData Note;
         public bool Pressed;
     }
-
+    
     public void SetNotes(List<NoteData> chartNotes)
     {
         Notes = chartNotes;
         ActiveNotes.Clear();
+        NoteWindows.Clear();
+
+        for (int i = 0; i < Notes.Count; i++)
+        {
+            double early = ActivationWindow;
+            double late = ExpiryWindow;
+
+            for (int j = i - 1; j >= 0; j--)
+                if (Notes[j].Input == Notes[i].Input)
+                {
+                    early = Math.Min(early, (Notes[i].Time - Notes[j].Time) / 2.0);
+                    break;
+                }
+
+            for (int j = i + 1; j < Notes.Count; j++)
+                if (Notes[j].Input == Notes[i].Input)
+                {
+                    late = Math.Min(late, (Notes[j].Time - Notes[i].Time) / 2.0);
+                    break;
+                }
+
+            NoteWindows[Notes[i].Id] = (early, late);
+        }
     }
 
-    public void Tick(double receptor, NoteData? upcomingNote)
+    public void Tick(double receptor)
     {
-        if (upcomingNote.HasValue && !IsActive(upcomingNote.Value) && receptor >= upcomingNote.Value.Time - ActivationWindow)
+        while (NextActivateIndex < Notes.Count && receptor >= Notes[NextActivateIndex].Time - NoteWindows[Notes[NextActivateIndex].Id].early)
         {
-            Activate(upcomingNote.Value);
+            Activate(Notes[NextActivateIndex]);
+            NextActivateIndex++;
         }
-
+        
         // expired note
         for (int i = ActiveNotes.Count - 1; i >= 0; i--)
         {
             ActiveNote active = ActiveNotes[i];
-            double expireAt = (active.Note.IsHold && active.Pressed ? active.Note.EndTime : active.Note.Time) + ExpiryWindow;
-            
+            double expireAt = (active.Note.IsHold && active.Pressed ? active.Note.EndTime : active.Note.Time)
+                              + NoteWindows[active.Note.Id].late;            
             if (receptor < expireAt)
                 continue;
             
@@ -64,16 +90,6 @@ public class NoteManager : MonoBehaviour
             ActiveNotes[i] = active;
             return;
         }
-    }
-
-    private bool IsActive(NoteData note)
-    {
-        foreach (ActiveNote active in ActiveNotes)
-        {
-            if (active.Note.Id == note.Id)
-                return true;
-        }
-        return false;
     }
 
     private void Activate(NoteData note)
