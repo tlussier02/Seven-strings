@@ -1,61 +1,119 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+[System.Serializable]
+public class Note
+{
+    public string uuid;
+    public double songPos;
+    public double beat;
+    public int lane;
+}
+
+[System.Serializable]
+public class Link
+{
+    public string uuid;
+    public string startNote;
+    public string endNote;
+}
+
+[System.Serializable]
+public class Chart
+{
+    public string uuid;
+    public string name;
+    public int laneCount;
+    public Note[] notes;
+    public Link[] links;
+}
+
+[System.Serializable]
+public class BeatMap
+{
+    public string bgm;
+    public string bpm;
+    public string offset;
+    public Chart[] charts;
+}
 
 public class ChartLoader : MonoBehaviour
 {
-    public TextAsset ChartFile;
+    public TextAsset ChartFile; // should ChartLoader hold the chart or should all references be passed to RhythmController
     public float Bpm { get; private set; }
-    public List<NoteData> Notes { get; private set; }
-    
+    public double MinSubBeat = 0.25;
+
     public List<NoteData> LoadChart()
     {
-        Notes = new List<NoteData>();
-        string[] lines = ChartFile.text.Split('\n');
-
-        string[] bpmRow = lines[0].Split(',');
-        Bpm = float.Parse(bpmRow[1].Trim());
-        double secondsPerBeat = 60.0 / Bpm;
-
-        for (int i = 0; i < lines.Length - 1; i++)
+        BeatMap beatMapJson = JsonUtility.FromJson<BeatMap>(ChartFile.text);
+        List<NoteData> notes  = new List<NoteData>();
+        Chart chart = beatMapJson.charts[0]; // assuming there is only one chart per song
+        Bpm = float.Parse(beatMapJson.bpm, System.Globalization.CultureInfo.InvariantCulture);
+    
+        foreach (Note note in chart.notes)
         {
-            if (!lines[i].StartsWith("Beat"))
+            NoteData noteData = new NoteData();
+            noteData.Id = note.uuid;
+            noteData.Time = note.songPos / 1000.0;
+            noteData.EndTime = noteData.Time;
+            noteData.Lane = note.lane - 1;
+            noteData.Input = InputType.Jump;
+
+            bool isEnd = false;
+            foreach (Link link in chart.links)
+            {
+                if (note.uuid == link.endNote)
+                    isEnd = true;
+                if (link.startNote != note.uuid)
+                    continue;
+
+                Note startNote = GetNote(chart.notes, link.startNote);
+                Note endNote = GetNote(chart.notes, link.endNote);
+                
+                if (startNote == null || endNote == null)
+                    continue;
+                
+                // lane change
+                if (startNote.beat == endNote.beat)
+                    noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
+                // roll
+                else if (endNote.beat - startNote.beat <= MinSubBeat)
+                    noteData.Input = InputType.Roll;
+                // hold
+                else if (endNote.songPos - startNote.songPos < 5000)
+                {
+                    noteData.Input = InputType.Hold;
+                    noteData.EndTime = endNote.songPos / 1000.0;
+                }
+                // QTE
+                else
+                {
+                    noteData.Input = InputType.QTE;
+                    noteData.EndTime = endNote.songPos / 1000.0;
+                }
+            }
+
+            if (isEnd)
                 continue;
 
-            string[] beatCells = lines[i].TrimEnd('\r').Split(',');
-            string[] inputCells = lines[i + 1].TrimEnd('\r').Split(',');
-
-            for (int j = 1; j < beatCells.Length && j < inputCells.Length; j++)
-            {
-                string inputCell = inputCells[j].Trim();
-                
-                if (inputCell.Length == 0)
-                    continue;
-
-                List<InputType> parsedInputTypes = new List<InputType>();
-                foreach (string rawInput in inputCell.Split(','))
-                {
-                    string rawInputText = rawInput.Trim();
-                    int pFrom = rawInputText.IndexOf('(') + 1;
-                    int pTo = rawInputText.IndexOf(')');
-                    string inputText = rawInputText.Substring(pFrom, pTo - pFrom);
-                    if (!Enum.TryParse(inputText, true, out InputType parsedInput)) 
-                    {
-                        Debug.LogWarning($"Unrecognized input '{inputText}' at row {i}, column {j}");
-                        continue;
-                    }
-                    parsedInputTypes.Add(parsedInput);
-                }
-
-                if (parsedInputTypes.Count == 0)
-                    continue;
-
-                double beat = double.Parse(beatCells[j].Trim());
-                double time = (beat - 1) * secondsPerBeat;
-                Notes.Add(new NoteData { Time = time, InputTypes = parsedInputTypes });
-            }
+            if (noteData.Input == InputType.QTE)
+                continue;
+            notes.Add(noteData);
         }
-
-        return Notes;
+        
+        notes.Sort((x, y) => x.Time.CompareTo(y.Time));
+        return notes;
+    }
+    
+    private Note GetNote(Note[] notes, string uuid)
+    {
+        foreach (Note note in notes)
+        {
+            if (note.uuid == uuid)
+                return note;
+        }
+        return null;
     }
 }

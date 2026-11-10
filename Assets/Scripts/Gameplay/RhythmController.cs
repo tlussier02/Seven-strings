@@ -3,25 +3,37 @@ using UnityEngine;
 
 public class RhythmController : MonoBehaviour
 {
-    public ScheduledAudioPlayer ScheduledAudioPlayer;
-    public ReceptorClock ReceptorClock;
-    public InputJudge InputJudge;
-    public BeatVisual BeatVisual;
-    public ChartLoader ChartLoader;
-    public InputHandler InputHandler;
-    public SfxPlayer SfxPlayer;
-    public NoteManager NoteManager;
-    // public AnimationManager AnimationManager;
-    public HarmonyMeter HarmonyMeter;
+    private ScheduledAudioPlayer ScheduledAudioPlayer;
+    private ReceptorClock ReceptorClock;
+    private InputJudge InputJudge;
+    private BeatVisual BeatVisual;
+    private ChartLoader ChartLoader;
+    private InputHandler InputHandler;
+    private SfxPlayer SfxPlayer;
+    private NoteManager NoteManager;
+    // private AnimationManager AnimationManager;
+    private HarmonyMeter HarmonyMeter;
 
     void Awake()
     {
+        ScheduledAudioPlayer = GetComponent<ScheduledAudioPlayer>();
+        ReceptorClock = GetComponent<ReceptorClock>();
+        InputJudge = GetComponent<InputJudge>();
+        BeatVisual = GetComponent<BeatVisual>();
+        ChartLoader = GetComponent<ChartLoader>();
+        InputHandler = GetComponent<InputHandler>();
+        SfxPlayer = GetComponent<SfxPlayer>();
+        NoteManager = GetComponent<NoteManager>();
+        HarmonyMeter = GetComponent<HarmonyMeter>();
+        
         ReceptorClock.ScheduledAudioPlayer = ScheduledAudioPlayer;
+        NoteManager.ReceptorClock = ReceptorClock;
+        NoteManager.InputJudge = InputJudge;
+        
         List<NoteData> notes = ChartLoader.LoadChart();
         ReceptorClock.SetNotes(notes);
         NoteManager.SetNotes(notes);
         // AnimationManager.SetNotes(notes);
-        NoteManager.ReceptorClock = ReceptorClock;
     }
 
     void OnEnable()
@@ -29,6 +41,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
         InputHandler.OnInputPressed += SfxPlayer.PlayFor;
+        InputHandler.OnInputReleased += HandleInput;
         NoteManager.OnJudgement += HandleJudgement;
         // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
         NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
@@ -40,6 +53,7 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat -= HandleBeat;
         InputHandler.OnInputPressed -= HandleInput;
         InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
+        InputHandler.OnInputReleased -= HandleInput;
         NoteManager.OnJudgement -= HandleJudgement;
         // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
@@ -59,7 +73,7 @@ public class RhythmController : MonoBehaviour
         if (!ReceptorClock.FoundOvertime)
             return;
 
-        NoteManager.Tick(ReceptorClock.Receptor, ReceptorClock.NextNote);
+        NoteManager.Tick(ReceptorClock.Receptor);
         InputHandler.Tick();
         // double preSyncTime = AudioSettings.dspTime - (ScheduledAudioPlayer.ScheduledStartTime + ReceptorClock.LatencyCompensation);
         // AnimationManager.Tick(ReceptorClock.Receptor, ReceptorClock.FoundOvertime, preSyncTime);

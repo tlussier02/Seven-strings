@@ -12,6 +12,7 @@ public struct KeyBinding
 public class InputHandler : MonoBehaviour
 {
     public event Action<InputType> OnInputPressed;
+    public event Action<InputType> OnInputReleased;
     [SerializeField] private KeyBinding[] bindings;
     private int suppressedFrame = -1;
     public bool IsGameplayInputBlocked { get; private set; }
@@ -36,9 +37,10 @@ public class InputHandler : MonoBehaviour
         foreach (var binding in bindings)
         {
             if (Keyboard.current[binding.Key].wasPressedThisFrame)
-            {
                 OnInputPressed?.Invoke(binding.InputType);
-            }
+            
+            if (Keyboard.current[binding.Key].wasReleasedThisFrame)
+                OnInputReleased?.Invoke(binding.InputType);
         }
     }
 }
