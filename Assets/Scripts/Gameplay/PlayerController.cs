@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public LevelTools LevelTools { get; private set; }
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
-    public float JumpHeight = 1.5f;
+    public float JumpHeight = 2f;
     
     private Transform LaneSegment;
     private int CurrentLane = 1;
@@ -84,6 +84,9 @@ public class PlayerController : MonoBehaviour
 
     private void ChangeLane(int direction)
     {
+        if (LaneTween != null && LaneTween.IsActive() && LaneTween.IsPlaying())
+            return;
+        
         int target = Mathf.Clamp(CurrentLane + direction, 0, 4); // increased lanes from 3 to 5 so player can "fall off" of track
         if (target == CurrentLane) 
             return;
