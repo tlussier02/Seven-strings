@@ -17,6 +17,7 @@ public struct NoteData
     public double EndTime; // only for held notes and qte
     public InputType Input;
     public int Lane;
+    public bool IsCheckpoint;
     public bool IsHold => Input == InputType.Hold;
 }
 
