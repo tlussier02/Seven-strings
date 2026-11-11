@@ -60,6 +60,7 @@ public class ChartLoader : MonoBehaviour
             noteData.EndTime = noteData.Time;
             noteData.Lane = note.lane - 1;
             noteData.Input = InputType.Jump;
+            noteData.IsCheckpoint = false;
 
             bool isEnd = false;
             foreach (Link link in chart.links)
@@ -75,9 +76,13 @@ public class ChartLoader : MonoBehaviour
                 if (startNote == null || endNote == null)
                     continue;
                 
-                // lane change
                 if (startNote.beat == endNote.beat)
-                    noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
+                    // checkpoint
+                    if (Math.Abs(startNote.lane - endNote.lane) == 2)
+                        noteData.IsCheckpoint = true;
+                    // lane change
+                    else
+                        noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
                 // roll
                 else if (endNote.beat - startNote.beat <= MinSubBeat)
                     noteData.Input = InputType.Roll;
