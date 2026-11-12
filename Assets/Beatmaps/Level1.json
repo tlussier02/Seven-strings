@@ -1,5 +1,5 @@
 {
-	"bgm": "full-level1.wav",
+	"bgm": "",
 	"bpm": "120",
 	"offset": "0",
 	"charts": [
@@ -705,31 +705,43 @@
 					"lane": 3
 				},
 				{
-					"uuid": "56e61552-8449-46ba-a2b9-2c2c763ed360",
+					"uuid": "4732797c-4c37-4878-bb66-21328454753e",
 					"songPos": 59500,
 					"beat": 119,
-					"lane": 2
+					"lane": 3
 				},
 				{
-					"uuid": "87391e57-0a3f-44a6-9385-e27dc0ed6b6a",
-					"songPos": 60000,
-					"beat": 120,
-					"lane": 2
-				},
-				{
-					"uuid": "a394df89-a667-4db7-99f2-2478ca05ba92",
+					"uuid": "5be3e710-728f-46ac-8f69-db106180e6c5",
 					"songPos": 60000,
 					"beat": 120,
 					"lane": 3
 				},
 				{
-					"uuid": "70abbe1c-405c-4afe-b0e3-09b755883fe5",
+					"uuid": "1b97b023-dc3b-42f6-8f4d-3ea66a6150bf",
+					"songPos": 60000,
+					"beat": 120,
+					"lane": 2
+				},
+				{
+					"uuid": "630610cb-7855-4fa0-9d5d-4a79ead9f195",
+					"songPos": 60250,
+					"beat": 120.5,
+					"lane": 2
+				},
+				{
+					"uuid": "425a8d13-127c-4b2d-aba3-b3351a04efc8",
+					"songPos": 60250,
+					"beat": 120.5,
+					"lane": 1
+				},
+				{
+					"uuid": "59dc9d48-4955-48fb-b14a-b3637ba3c4e6",
 					"songPos": 60500,
 					"beat": 121,
-					"lane": 3
+					"lane": 1
 				},
 				{
-					"uuid": "d9e8156b-f2ab-4ca9-8694-422cd96ce68d",
+					"uuid": "a81b6de8-5812-48c0-b515-16dd5879d348",
 					"songPos": 60500,
 					"beat": 121,
 					"lane": 2
@@ -920,16 +932,6 @@
 					"endNote": "c725eb40-83fd-441a-af73-76ca4125b4df"
 				},
 				{
-					"uuid": "813a3cc2-c8b9-439f-92a4-5bdb7d8d930d",
-					"startNote": "87391e57-0a3f-44a6-9385-e27dc0ed6b6a",
-					"endNote": "a394df89-a667-4db7-99f2-2478ca05ba92"
-				},
-				{
-					"uuid": "02d1c78a-db06-48a5-88df-3dd0317551c5",
-					"startNote": "70abbe1c-405c-4afe-b0e3-09b755883fe5",
-					"endNote": "d9e8156b-f2ab-4ca9-8694-422cd96ce68d"
-				},
-				{
 					"uuid": "129a9f32-12ab-4efe-9218-8e03c06a6626",
 					"startNote": "04258942-f99f-4d74-8c6b-2c2623771673",
 					"endNote": "d78c58af-1299-4cbd-b925-9729558f3414"
@@ -1018,6 +1020,21 @@
 					"uuid": "b089b738-d95e-415b-9ed7-f9dd0bccf8c8",
 					"startNote": "7e9ecf31-3390-4334-82dc-b80df22fe74b",
 					"endNote": "e8fbb2d2-5579-4e08-a6ac-02b563c0fde7"
+				},
+				{
+					"uuid": "b58087d4-26a4-4c90-94df-777464ea6e78",
+					"startNote": "5be3e710-728f-46ac-8f69-db106180e6c5",
+					"endNote": "1b97b023-dc3b-42f6-8f4d-3ea66a6150bf"
+				},
+				{
+					"uuid": "53e6385f-7ea3-4d60-9627-1c6fc21f1c39",
+					"startNote": "630610cb-7855-4fa0-9d5d-4a79ead9f195",
+					"endNote": "425a8d13-127c-4b2d-aba3-b3351a04efc8"
+				},
+				{
+					"uuid": "37447025-af83-451d-8ce8-6b6e690f218a",
+					"startNote": "59dc9d48-4955-48fb-b14a-b3637ba3c4e6",
+					"endNote": "a81b6de8-5812-48c0-b515-16dd5879d348"
 				}
 			]
 		}
