@@ -6,19 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/RhythmPrototype.unity
+    path: Assets/Scenes/Prototypes/RhythmPrototype.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
-    path: Assets/Scenes/MovementPrototype.unity
+    path: Assets/Scenes/Prototypes/MovementPrototype.unity
     guid: 5637b83afcdf847f7849d6b7e9c9d980
   - enabled: 1
     path: Assets/Scenes/Calibration.unity
     guid: 84ee704577bf54e3d84976e5774dab13
-  - enabled: 1
-    path: Assets/Scenes/MovementPrototypes/3dLanes.unity
+  - enabled: 0
+    path: Assets/Scenes/Prototypes/3dLanes.unity
     guid: 77a2d98e84f594d38934a6fab7b51caf
   - enabled: 0
-    path: Assets/Scenes/MovementPrototypes/3dTurn.unity
+    path: Assets/Scenes/Prototypes/3dTurn.unity
     guid: 94eb81b20679d42579a40cac6948bd1b
+  - enabled: 1
+    path: Assets/Scenes/ChartLoading.unity
+    guid: 9db586cfb043d4b008a4606c6e8e7336
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
