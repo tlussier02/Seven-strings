@@ -10,6 +10,7 @@ public class LevelTools : MonoBehaviour
     public GameObject BeatPrefab;
     public GameObject LaneSegmentPrefab;
     public GameObject RollObstaclePrefab;
+    public GameObject CheckpointPrefab;
     public Transform TrackParent;
     public Transform BeatParent;
     public Material LaneMaterialA;
@@ -69,6 +70,7 @@ public class LevelTools : MonoBehaviour
         TrackLayout layout = BuildLayout(notes, secondsPerStep);
         SpawnTiles(layout, segmentLength);
         SpawnObstacles(layout, segmentLength);
+        SpawnCheckpoints();
     }
     
     private struct RollObstacle
@@ -117,7 +119,10 @@ public class LevelTools : MonoBehaviour
 
             for (; fillStep < noteStep; fillStep++)
                 layout.MarkTrack(fillStep, currentLane);
-
+            
+            if (!note.IsCheckpoint && note.Lane != currentLane)
+                Debug.LogWarning($"Note {note.Id} ({note.Input}) at {note.Time:F2}s is in lane {note.Lane} but the path is in lane {currentLane}");
+           
             switch (note.Input)
             {
                 case InputType.Left:
@@ -226,7 +231,20 @@ public class LevelTools : MonoBehaviour
             obstacleObject.transform.localScale = new Vector3(laneWidth, obstacleObject.transform.localScale.y, length);
         }
     }
+    
+    private void SpawnCheckpoints()
+    {
+        float laneWidth = LaneSegmentPrefab.transform.localScale.x;
 
+        foreach (double time in ChartLoader.Checkpoints)
+        {
+            Vector3 pos = TrackPosition((float)(time * Player.PlayerSpeed), 1);
+            pos.y = CheckpointPrefab.transform.position.y;
+            GameObject marker = Instantiate(CheckpointPrefab, pos, Player.transform.rotation, TrackParent);
+            marker.transform.localScale = new Vector3(laneWidth * 3f, marker.transform.localScale.y, marker.transform.localScale.z);
+        }
+    }
+    
     private Vector3 TrackPosition(float distance, int lane)
     {
         float laneWidth = LaneSegmentPrefab.transform.localScale.x;
