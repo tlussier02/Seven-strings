@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     
     void Awake()
     {
-        LevelTools = FindObjectOfType<LevelTools>();
+        LevelTools = FindAnyObjectByType<LevelTools>();
         LaneSegment = LevelTools.LaneSegmentPrefab.transform;
         CenterX =  transform.position.x;
         LaneWidth = LaneSegment.localScale.x;
