@@ -43,6 +43,7 @@ public class ChartLoader : MonoBehaviour
 {
     public TextAsset ChartFile; // should ChartLoader hold the chart or should all references be passed to RhythmController
     public float Bpm { get; private set; }
+    public List<double> Checkpoints { get; private set; }
     public double MinSubBeat = 0.25;
 
     public List<NoteData> LoadChart()
@@ -51,6 +52,7 @@ public class ChartLoader : MonoBehaviour
         List<NoteData> notes  = new List<NoteData>();
         Chart chart = beatMapJson.charts[0]; // assuming there is only one chart per song
         Bpm = float.Parse(beatMapJson.bpm, System.Globalization.CultureInfo.InvariantCulture);
+        Checkpoints = new List<double>();
     
         foreach (Note note in chart.notes)
         {
@@ -63,12 +65,15 @@ public class ChartLoader : MonoBehaviour
             noteData.IsCheckpoint = false;
 
             bool isEnd = false;
+            bool isStart = false;
             foreach (Link link in chart.links)
             {
                 if (note.uuid == link.endNote)
                     isEnd = true;
                 if (link.startNote != note.uuid)
                     continue;
+                
+                isStart = true;
 
                 Note startNote = GetNote(chart.notes, link.startNote);
                 Note endNote = GetNote(chart.notes, link.endNote);
@@ -99,16 +104,23 @@ public class ChartLoader : MonoBehaviour
                     noteData.EndTime = endNote.songPos / 1000.0;
                 }
             }
-
-            if (isEnd)
+            
+            if (isEnd && !isStart)
                 continue;
 
+            if (noteData.IsCheckpoint)
+            {
+                Checkpoints.Add(noteData.Time);
+                continue;
+            }
             if (noteData.Input == InputType.QTE)
                 continue;
+            
             notes.Add(noteData);
         }
         
         notes.Sort((x, y) => x.Time.CompareTo(y.Time));
+        Checkpoints.Sort();
         return notes;
     }
     
