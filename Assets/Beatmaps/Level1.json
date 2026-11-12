@@ -411,15 +411,15 @@
 					"lane": 2
 				},
 				{
-					"uuid": "d737324e-2955-4e98-bae9-74f4b5952621",
-					"songPos": 44000,
-					"beat": 88,
+					"uuid": "663f746e-e71d-47f7-bb23-7210c053fc41",
+					"songPos": 44500,
+					"beat": 89,
 					"lane": 1
 				},
 				{
-					"uuid": "9dec98b7-3acf-40f7-a145-194867062be7",
-					"songPos": 44000,
-					"beat": 88,
+					"uuid": "0b026c71-69a6-4807-ad27-87d7849d7f60",
+					"songPos": 44500,
+					"beat": 89,
 					"lane": 3
 				},
 				{
@@ -882,11 +882,6 @@
 					"endNote": "d39f791e-c1b2-49e6-bb56-318c68c05f76"
 				},
 				{
-					"uuid": "619ef30b-9a35-4021-b38b-2fa3a5f8bdea",
-					"startNote": "d737324e-2955-4e98-bae9-74f4b5952621",
-					"endNote": "9dec98b7-3acf-40f7-a145-194867062be7"
-				},
-				{
 					"uuid": "469c5e78-cca1-4a41-8f21-ff2cb5f6867f",
 					"startNote": "59895189-414e-4f45-ac09-f7c253e2c1ca",
 					"endNote": "5a44ef12-4ed7-4fd0-99b5-db3477b6d436"
@@ -1035,6 +1030,11 @@
 					"uuid": "37447025-af83-451d-8ce8-6b6e690f218a",
 					"startNote": "59dc9d48-4955-48fb-b14a-b3637ba3c4e6",
 					"endNote": "a81b6de8-5812-48c0-b515-16dd5879d348"
+				},
+				{
+					"uuid": "dfff90de-3160-463e-9860-4e53ad14220d",
+					"startNote": "663f746e-e71d-47f7-bb23-7210c053fc41",
+					"endNote": "0b026c71-69a6-4807-ad27-87d7849d7f60"
 				}
 			]
 		}
