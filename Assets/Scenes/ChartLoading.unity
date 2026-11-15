@@ -136615,6 +136615,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2132841071}
   - component: {fileID: 2132841070}
+  - component: {fileID: 2132841080}
+  - component: {fileID: 2132841081}
   - component: {fileID: 2132841060}
   - component: {fileID: 2132841059}
   - component: {fileID: 2132841069}
@@ -137836,3 +137838,31 @@ SceneRoots:
   - {fileID: 2132841071}
   - {fileID: 590317151}
   - {fileID: 1431680900}
+--- !u!114 &2132841080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132841058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa6cbd38a774c0cb967ff7d1272e996, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  player: {fileID: 590317152}
+  rhythm: {fileID: 2132841070}
+  useChartSpawns: 1
+--- !u!114 &2132841081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132841058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a3a0444f20a4ea291b7da6051b013ad, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  checkpoint: {fileID: 2132841080}

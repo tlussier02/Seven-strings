@@ -24,16 +24,16 @@ public class ReceptorClock : MonoBehaviour
     public void Tick()
     {
         double time = AudioSettings.dspTime;
-        Receptor +=  Time.deltaTime;
+        Receptor = ScheduledAudioPlayer.SongOffset + time
+            - (ScheduledAudioPlayer.ScheduledStartTime + LatencyCompensation);
         
         if (!FoundOvertime && time >= ScheduledAudioPlayer.ScheduledStartTime + LatencyCompensation)
         {
-            double overtime = time - (ScheduledAudioPlayer.ScheduledStartTime + LatencyCompensation);
-            Receptor = overtime;
+            // The same DSP reference drives audio and chart, including the seek offset.
             FoundOvertime = true;
         }
         
-        if (FoundOvertime && Receptor >= NextNoteTime && CurrentNoteIndex < Notes.Count)
+        while (FoundOvertime && Receptor >= NextNoteTime && CurrentNoteIndex < Notes.Count)
         {
             OnBeat?.Invoke(Notes[CurrentNoteIndex]);
             LastNoteTime = NextNoteTime;
@@ -46,12 +46,20 @@ public class ReceptorClock : MonoBehaviour
         }
     }
     
+    public void Seek(double songTime)
+    {
+        FoundOvertime = false;
+        Receptor = songTime;
+        LastNoteTime = songTime;
+        CurrentNoteIndex = Notes.FindIndex(note => note.Time >= songTime);
+        if (CurrentNoteIndex < 0) CurrentNoteIndex = Notes.Count;
+        NextNoteTime = CurrentNoteIndex < Notes.Count ? Notes[CurrentNoteIndex].Time : double.PositiveInfinity;
+    }
+
     public void SetNotes(List<NoteData> notes)
     {
         Notes = notes;
-        CurrentNoteIndex = 0;
-        
-        NextNoteTime = Notes[CurrentNoteIndex].Time;
+        Seek(0d);
         // might have to define LastBeatTime
     }
 }

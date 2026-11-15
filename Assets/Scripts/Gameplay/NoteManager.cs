@@ -23,7 +23,8 @@ public class NoteManager : MonoBehaviour
     
     public void SetNotes(List<NoteData> chartNotes)
     {
-        Notes = chartNotes;
+        Notes = chartNotes.FindAll(note => !note.IsCheckpoint);
+        NextActivateIndex = 0;
         ActiveNotes.Clear();
         NoteWindows.Clear();
 
@@ -50,6 +51,13 @@ public class NoteManager : MonoBehaviour
         }
     }
 
+    public void Seek(double songTime)
+    {
+        ActiveNotes.Clear();
+        NextActivateIndex = Notes.FindIndex(note => note.Time >= songTime);
+        if (NextActivateIndex < 0) NextActivateIndex = Notes.Count;
+    }
+
     public void Tick(double receptor)
     {
         while (NextActivateIndex < Notes.Count && receptor >= Notes[NextActivateIndex].Time - NoteWindows[Notes[NextActivateIndex].Id].early)
@@ -67,12 +75,6 @@ public class NoteManager : MonoBehaviour
             if (receptor < expireAt)
                 continue;
 
-            // checkpoint
-            if (active.Note.IsCheckpoint && active.Note.Time >= receptor)
-            {
-                
-            }
-            
             if (!active.Pressed)
                 OnJudgement?.Invoke(active.Note, active.Note.Input, InputJudge.Judgement.Miss);
            

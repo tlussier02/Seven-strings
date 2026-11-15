@@ -6,13 +6,7 @@ public class PlayerFallDetector : MonoBehaviour
 {
     [SerializeField] private float fallThresholdY = -5f;
 
-    private GameplayReset gameplayReset;
     private bool resetTriggered;
-
-    void Awake()
-    {
-        gameplayReset = GetComponent<GameplayReset>();
-    }
 
     void LateUpdate()
     {
@@ -25,6 +19,6 @@ public class PlayerFallDetector : MonoBehaviour
 
         // Latch until scene unload; a fall can request only one restart.
         resetTriggered = true;
-        gameplayReset.ResetGameplay();
+        GameplayReset.RequestRestart();
     }
 }

@@ -27,7 +27,15 @@ public class SfxPlayer : MonoBehaviour
         child.transform.parent = transform;
         audioSource = child.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        SetSfxVolume(AudioVolumeSettings.SfxVolume);
         audioSource.spatialBlend = 0f; // 2D sound
+    }
+
+    public void SetSfxVolume(float value) => audioSource.volume = Mathf.Clamp01(value);
+
+    public void PlayEffect(AudioClip clip)
+    {
+        if (clip != null) audioSource.PlayOneShot(clip, volume);
     }
 
     // Signature matches Action<InputType>, so it can subscribe directly to InputHandler.OnInputPressed

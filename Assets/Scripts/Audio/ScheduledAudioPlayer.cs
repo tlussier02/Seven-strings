@@ -7,6 +7,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
     public AudioSource[] StemSources { get; private set; }
     public int StemCount => StemSources != null ? StemSources.Length : 0;
 
+    public double SongOffset { get; private set; }
     public double ScheduledStartTime { get; private set; }
     public bool IsScheduled { get; private set; }
     public bool IsRunning { get; private set; }
@@ -63,6 +64,21 @@ public class ScheduledAudioPlayer : MonoBehaviour
     {
         if (StemSources[i] != null)
             StemSources[i].volume = musicVolume * stemGains[i];
+    }
+
+    public void ScheduleFrom(double songTime)
+    {
+        SongOffset = songTime;
+        ScheduledStartTime = AudioSettings.dspTime + 2d;
+        IsScheduled = true;
+        IsRunning = false;
+        foreach (AudioSource source in StemSources)
+        {
+            source.Stop();
+            if (source.clip == null) continue;
+            source.timeSamples = (int)System.Math.Min(source.clip.samples - 1,
+                System.Math.Round(songTime * source.clip.frequency));
+        }
     }
 
     public void Tick()
