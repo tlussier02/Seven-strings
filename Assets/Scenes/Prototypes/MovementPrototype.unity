@@ -10516,7 +10516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b91b579e219477782ba73bec424555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChartLoader
-  ChartFile: {fileID: 4900000, guid: 5bbdf6533ccb9405a8d48f76affe9944, type: 3}
+  ChartFile: {fileID: 4900000, guid: 0ae87768cba94364b54a1c9d277a58fa, type: 3}
 --- !u!114 &1501676708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12108,6 +12108,7 @@ GameObject:
   - component: {fileID: 1882387587}
   - component: {fileID: 2142000003}
   - component: {fileID: 2142000004}
+  - component: {fileID: 2142000005}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -13594,6 +13595,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFallDetector
   fallThresholdY: -5
+--- !u!114 &2142000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882387581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa6cbd38a774c0cb967ff7d1272e996, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CheckpointManager
+  checkpointId: mid_track
+  checkpointSpawn: {fileID: 2142000007}
+  player: {fileID: 1882387587}
+  rhythm: {fileID: 1501676713}
+  spawnLane: 1
+--- !u!1 &2142000006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2142000007}
+  m_Layer: 0
+  m_Name: CheckpointSpawn_mid_track
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!4 &2142000007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142000006}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 150}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -13605,3 +13649,4 @@ SceneRoots:
   - {fileID: 1882387585}
   - {fileID: 1501676714}
   - {fileID: 1413708887}
+  - {fileID: 2142000007}

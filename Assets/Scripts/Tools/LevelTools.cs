@@ -46,6 +46,7 @@ public class LevelTools : MonoBehaviour
 
         foreach (NoteData note in ChartLoader.LoadChart())
         {
+            if (note.IsCheckpoint) continue;
             float length = (float)((note.EndTime - note.Time) * Player.PlayerSpeed);
             Vector3 pos = start + forward * ((float)(note.Time * Player.PlayerSpeed) + length / 2f)
                                 + right * ((note.Lane - 1) * laneWidth);
@@ -115,6 +116,7 @@ public class LevelTools : MonoBehaviour
 
         foreach (NoteData note in notes)
         {
+            if (note.IsCheckpoint) continue;
             int noteStep = TimeToStep(note.Time, secondsPerStep);
 
             for (; fillStep < noteStep; fillStep++)

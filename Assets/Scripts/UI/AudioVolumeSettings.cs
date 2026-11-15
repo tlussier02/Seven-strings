@@ -6,6 +6,9 @@ public static class AudioVolumeSettings
     public const string MasterVolumeKey = "SevenStrings.MasterVolume";
     public const string MusicVolumeKey = "SevenStrings.MusicVolume";
 
+    public const string SfxVolumeKey = "SevenStrings.SfxVolume";
+    public static float SfxVolume => Load(SfxVolumeKey);
+
     public static float MasterVolume => Load(MasterVolumeKey);
     public static float MusicVolume => Load(MusicVolumeKey);
 

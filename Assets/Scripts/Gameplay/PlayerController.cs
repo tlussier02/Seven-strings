@@ -10,20 +10,33 @@ public class PlayerController : MonoBehaviour
     public float LaneChangeDuration = 0.15f;
     public float JumpHeight = 2f;
     
-    private Transform LaneSegment;
+    [SerializeField] private float fallbackLaneWidth = 10f;
+    [SerializeField] private float fallbackJumpDuration = 0.5f;
     private int CurrentLane = 1;
     private float LaneWidth;
     private float CenterX;
     private float GroundY;
+    private Transform LaneSegment;
     private Tween LaneTween;
     private Tween JumpTween;
     
     void Awake()
     {
         LevelTools = FindAnyObjectByType<LevelTools>();
-        LaneSegment = LevelTools.LaneSegmentPrefab.transform;
-        CenterX =  transform.position.x;
-        LaneWidth = LaneSegment.localScale.x;
+
+        if (InputHandler == null)
+            InputHandler = FindFirstObjectByType<InputHandler>();
+
+        LaneSegment = LevelTools != null && LevelTools.LaneSegmentPrefab != null
+            ? LevelTools.LaneSegmentPrefab.transform
+            : null;
+
+        CenterX = transform.position.x;
+
+        LaneWidth = LaneSegment != null
+            ? LaneSegment.localScale.x
+            : fallbackLaneWidth;
+
         GroundY = transform.position.y;
     }
 
@@ -65,12 +78,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        LaneTween?.Kill();
+        JumpTween?.Kill();
+    }
+
+    public void RestoreCheckpoint(Transform spawn, int lane)
+    {
+        LaneTween?.Kill();
+        JumpTween?.Kill();
+        CurrentLane = lane;
+        CenterX = spawn.position.x - (lane - 1) * LaneWidth;
+        GroundY = spawn.position.y;
+        transform.SetPositionAndRotation(spawn.position, spawn.rotation);
+        if (TryGetComponent<Rigidbody>(out var body))
+        {
+            body.position = spawn.position;
+            body.rotation = spawn.rotation;
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+        }
+        Physics.SyncTransforms();
+    }
+
     private void Jump()
     {
         if (JumpTween != null && JumpTween.IsActive() && JumpTween.IsPlaying())
             return;
         
-        float jumpDuration = LevelTools.JumpLengthBeats * (60f / LevelTools.ChartLoader.Bpm);
+        float jumpDuration = LevelTools != null && LevelTools.ChartLoader != null
+            ? LevelTools.JumpLengthBeats * (60f / LevelTools.ChartLoader.Bpm) : fallbackJumpDuration;
 
         JumpTween?.Kill();
         transform.position = new Vector3(transform.position.x, GroundY, transform.position.z);
