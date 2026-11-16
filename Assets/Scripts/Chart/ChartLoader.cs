@@ -110,8 +110,9 @@ public class ChartLoader : MonoBehaviour
 
             if (noteData.IsCheckpoint)
             {
+                // Keep the event in the clock timeline for checkpoint discovery/restore.
+                // NoteManager filters it out of judgement; LevelTools uses Checkpoints for markers.
                 Checkpoints.Add(noteData.Time);
-                continue;
             }
             if (noteData.Input == InputType.QTE)
                 continue;
