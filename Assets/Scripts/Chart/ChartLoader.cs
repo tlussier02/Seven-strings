@@ -58,6 +58,7 @@ public class ChartLoader : MonoBehaviour
         {
             NoteData noteData = new NoteData();
             noteData.Id = note.uuid;
+            noteData.Beat = note.beat;
             noteData.Time = note.songPos / 1000.0;
             noteData.EndTime = noteData.Time;
             noteData.Lane = note.lane - 1;
@@ -81,13 +82,13 @@ public class ChartLoader : MonoBehaviour
                 if (startNote == null || endNote == null)
                     continue;
                 
-                if (startNote.beat == endNote.beat)
-                    // checkpoint
-                    if (Math.Abs(startNote.lane - endNote.lane) == 2)
-                        noteData.IsCheckpoint = true;
-                    // lane change
-                    else
-                        noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
+                if (Math.Abs(startNote.lane - endNote.lane) < 0)
+                {
+                    // direction of lane change / turn
+                    noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
+                    // turn
+                    noteData.IsTurn = Math.Abs(startNote.lane - endNote.lane) == 2;
+                }
                 // roll
                 else if (endNote.beat - startNote.beat <= MinSubBeat)
                     noteData.Input = InputType.Roll;
@@ -98,7 +99,7 @@ public class ChartLoader : MonoBehaviour
                     noteData.EndTime = endNote.songPos / 1000.0;
                 }
                 // QTE
-                else
+                else if (endNote.songPos - startNote.songPos >= 5000)
                 {
                     noteData.Input = InputType.QTE;
                     noteData.EndTime = endNote.songPos / 1000.0;
@@ -108,11 +109,6 @@ public class ChartLoader : MonoBehaviour
             if (isEnd && !isStart)
                 continue;
 
-            if (noteData.IsCheckpoint)
-            {
-                Checkpoints.Add(noteData.Time);
-                continue;
-            }
             if (noteData.Input == InputType.QTE)
                 continue;
             
@@ -120,6 +116,19 @@ public class ChartLoader : MonoBehaviour
         }
         
         notes.Sort((x, y) => x.Time.CompareTo(y.Time));
+        
+        for (int i = 0; i < notes.Count - 1; i++)
+        {
+            NoteData a = notes[i];
+            NoteData b = notes[i + 1];
+            if (a.IsTurn && b.IsTurn && (a.Input != b.Input) && (b.Beat - a.Beat <= MinSubBeat))
+            {
+                Checkpoints.Add(a.Time);
+                notes.RemoveRange(i, 2);
+                i--;
+            }
+        }
+        
         Checkpoints.Sort();
         return notes;
     }
