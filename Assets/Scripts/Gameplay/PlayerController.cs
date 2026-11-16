@@ -19,13 +19,19 @@ public class PlayerController : MonoBehaviour
     private Transform LaneSegment;
     private Tween LaneTween;
     private Tween JumpTween;
+    private InputHandler subscribedInput;
     
     void Awake()
     {
         LevelTools = FindAnyObjectByType<LevelTools>();
 
         if (InputHandler == null)
-            InputHandler = FindFirstObjectByType<InputHandler>();
+            InputHandler = ReceptorClock != null
+                ? ReceptorClock.GetComponent<InputHandler>()
+                : FindFirstObjectByType<InputHandler>();
+
+        if (ReceptorClock == null && InputHandler != null)
+            ReceptorClock = InputHandler.GetComponent<ReceptorClock>();
 
         LaneSegment = LevelTools != null && LevelTools.LaneSegmentPrefab != null
             ? LevelTools.LaneSegmentPrefab.transform
@@ -44,19 +50,27 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.timeScale == 0f || AudioListener.pause)
             return;
-        if (!ReceptorClock.FoundOvertime) 
+        if (ReceptorClock == null || !ReceptorClock.FoundOvertime)
             return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 
     void OnEnable()
     {
-        InputHandler.OnInputPressed += HandleInput;
+        if (InputHandler == null)
+        {
+            Debug.LogError("PlayerController requires the gameplay InputHandler.", this);
+            return;
+        }
+        subscribedInput = InputHandler;
+        subscribedInput.OnInputPressed += HandleInput;
     }
 
     void OnDisable()
     {
-        InputHandler.OnInputPressed -= HandleInput;
+        if (subscribedInput != null)
+            subscribedInput.OnInputPressed -= HandleInput;
+        subscribedInput = null;
     }
 
     private void HandleInput(InputType inputType)

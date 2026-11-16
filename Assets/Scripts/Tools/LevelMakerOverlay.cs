@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Overlays;
 using UnityEditor.SceneManagement;
@@ -52,3 +53,4 @@ public class LevelMakerOverlay : Overlay
         EditorSceneManager.MarkSceneDirty(levelTools.gameObject.scene);
     }
 }
+#endif
