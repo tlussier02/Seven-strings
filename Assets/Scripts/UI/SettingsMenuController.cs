@@ -17,6 +17,7 @@ public class SettingsMenuController : MonoBehaviour
     private Button settingsButton;
     private Button resumeButton;
     private Font font;
+    private Text controlSchemeLabel;
     private float previousTimeScale;
     private bool previousAudioPause;
     private CursorLockMode previousCursorLock;
@@ -72,6 +73,7 @@ public class SettingsMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         settingsButton.gameObject.SetActive(false);
+        controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
         overlay.SetActive(true);
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
@@ -165,16 +167,26 @@ public class SettingsMenuController : MonoBehaviour
         backdrop.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.72f);
         overlay = backdrop.gameObject;
 
-        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 490f), Vector2.zero);
+        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 530f), Vector2.zero);
         panel.gameObject.AddComponent<Image>().color = new Color(0.09f, 0.11f, 0.16f, 1f);
-        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 205f), 28);
+        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 230f), 28);
         CreateVolumeControl(panel, "Master Volume", 150f, AudioVolumeSettings.MasterVolume, AudioVolumeSettings.MasterVolumeKey);
         CreateVolumeControl(panel, "Music Volume", 60f, AudioVolumeSettings.MusicVolume, AudioVolumeSettings.MusicVolumeKey);
         CreateVolumeControl(panel, "Sound Effects Volume", -30f, AudioVolumeSettings.SfxVolume, AudioVolumeSettings.SfxVolumeKey);
+        Button schemeButton = CreateButton("Control Scheme: " + InputHandler.ControlSchemeName, panel,
+            new Vector2(400f, 42f), () =>
+            {
+                InputHandler.SetControlScheme(InputHandler.SelectedControlScheme == ControlScheme.CurrentControls
+                    ? ControlScheme.WASDControls : ControlScheme.CurrentControls);
+                controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
+                preferencesDirty = true;
+            });
+        ((RectTransform)schemeButton.transform).anchoredPosition = new Vector2(0f, -105f);
+        controlSchemeLabel = schemeButton.GetComponentInChildren<Text>();
         resumeButton = CreateButton("Resume", panel, new Vector2(180f, 44f), Close);
-        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -135f);
+        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -170f);
         Button restartButton = CreateButton("Restart", panel, new Vector2(180f, 44f), Restart);
-        ((RectTransform)restartButton.transform).anchoredPosition = new Vector2(0f, -195f);
+        ((RectTransform)restartButton.transform).anchoredPosition = new Vector2(0f, -230f);
         overlay.SetActive(false);
     }
 

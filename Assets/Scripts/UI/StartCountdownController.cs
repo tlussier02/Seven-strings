@@ -11,6 +11,7 @@ public class StartCountdownController : MonoBehaviour
 
     private GameObject uiRoot;
     private Text countdownText;
+    private Text controlsText;
     private double leadInDuration;
     private bool finished;
 
@@ -38,6 +39,8 @@ public class StartCountdownController : MonoBehaviour
     {
         if (finished || !scheduledAudioPlayer.IsScheduled)
             return;
+
+        controlsText.text = InputHandler.ControlSchemeName + "\n\n" + InputHandler.ControlInstructions;
 
         double remainingTime = scheduledAudioPlayer.ScheduledStartTime - AudioSettings.dspTime;
         if (remainingTime <= 0d)
@@ -106,6 +109,30 @@ public class StartCountdownController : MonoBehaviour
         countdownText.color = Color.white;
         countdownText.raycastTarget = false;
         countdownText.text = "3";
+        GameObject panel = new GameObject("Countdown Controls", typeof(RectTransform), typeof(Image));
+        RectTransform panelRect = (RectTransform)panel.transform;
+        panelRect.SetParent(uiRoot.transform, false);
+        panelRect.anchorMin = panelRect.anchorMax = panelRect.pivot = new Vector2(0f, 0.5f);
+        panelRect.anchoredPosition = new Vector2(20f, 0f);
+        panelRect.sizeDelta = new Vector2(250f, 230f);
+        Image background = panel.GetComponent<Image>();
+        background.color = new Color(0.04f, 0.06f, 0.1f, 0.85f);
+        background.raycastTarget = false;
+        GameObject instructions = new GameObject("Selected Controls", typeof(RectTransform), typeof(Text));
+        RectTransform instructionsRect = (RectTransform)instructions.transform;
+        instructionsRect.SetParent(panelRect, false);
+        instructionsRect.anchorMin = Vector2.zero;
+        instructionsRect.anchorMax = Vector2.one;
+        instructionsRect.offsetMin = new Vector2(16f, 12f);
+        instructionsRect.offsetMax = new Vector2(-16f, -12f);
+        controlsText = instructions.GetComponent<Text>();
+        controlsText.font = countdownText.font;
+        controlsText.fontSize = 22;
+        controlsText.color = Color.white;
+        controlsText.alignment = TextAnchor.MiddleLeft;
+        controlsText.raycastTarget = false;
+        controlsText.text = InputHandler.ControlSchemeName + "\n\n" + InputHandler.ControlInstructions;
+
         Shadow shadow = label.GetComponent<Shadow>();
         shadow.effectColor = new Color(0f, 0f, 0f, 0.9f);
         shadow.effectDistance = new Vector2(3f, -3f);
