@@ -1,0 +1,219 @@
+{
+  "bgm": "lvl1_stem0.wav",
+  "bpm": "120",
+  "offset": "0",
+  "charts": [
+    {
+      "uuid": "6c39c5c0-4b12-4070-9f00-5a6798f51560",
+      "name": "Movement Prototype",
+      "laneCount": 3,
+      "notes": [
+        {
+          "uuid": "movement_jump_0",
+          "songPos": 2000.0,
+          "beat": 4.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_1",
+          "songPos": 4000.0,
+          "beat": 8.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_2",
+          "songPos": 6500.0,
+          "beat": 13.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_3",
+          "songPos": 7250.0,
+          "beat": 14.5,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_4",
+          "songPos": 8000.0,
+          "beat": 16.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_5",
+          "songPos": 10500.0,
+          "beat": 21.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_6",
+          "songPos": 11250.0,
+          "beat": 22.5,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_7",
+          "songPos": 12000.0,
+          "beat": 24.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_8",
+          "songPos": 14000.0,
+          "beat": 28.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_9",
+          "songPos": 15500.0,
+          "beat": 31.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_10",
+          "songPos": 15750.0,
+          "beat": 31.5,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_11",
+          "songPos": 16000.0,
+          "beat": 32.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_12",
+          "songPos": 17750.0,
+          "beat": 35.5,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_13",
+          "songPos": 18000.0,
+          "beat": 36.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_14",
+          "songPos": 19000.0,
+          "beat": 38.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_15",
+          "songPos": 20500.0,
+          "beat": 41.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_16",
+          "songPos": 21500.0,
+          "beat": 43.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_17",
+          "songPos": 22500.0,
+          "beat": 45.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_18",
+          "songPos": 23500.0,
+          "beat": 47.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_19",
+          "songPos": 24500.0,
+          "beat": 49.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_20",
+          "songPos": 25750.0,
+          "beat": 51.5,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_21",
+          "songPos": 26000.0,
+          "beat": 52.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_22",
+          "songPos": 27000.0,
+          "beat": 54.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_23",
+          "songPos": 28000.0,
+          "beat": 56.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_24",
+          "songPos": 28500.0,
+          "beat": 57.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_25",
+          "songPos": 29000.0,
+          "beat": 58.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_26",
+          "songPos": 29500.0,
+          "beat": 59.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_27",
+          "songPos": 30000.0,
+          "beat": 60.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_28",
+          "songPos": 30500.0,
+          "beat": 61.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_29",
+          "songPos": 31000.0,
+          "beat": 62.0,
+          "lane": 2
+        },
+        {
+          "uuid": "movement_jump_30",
+          "songPos": 31500.0,
+          "beat": 63.0,
+          "lane": 2
+        },
+        {
+          "uuid": "mid_track",
+          "songPos": 10000,
+          "beat": 20,
+          "lane": 1
+        },
+        {
+          "uuid": "mid_track_end",
+          "songPos": 10000,
+          "beat": 20,
+          "lane": 3
+        }
+      ],
+      "links": [
+        {
+          "uuid": "mid_track_link",
+          "startNote": "mid_track",
+          "endNote": "mid_track_end"
+        }
+      ]
+    }
+  ]
+}
