@@ -82,7 +82,7 @@ public class ChartLoader : MonoBehaviour
                 if (startNote == null || endNote == null)
                     continue;
                 
-                if (Math.Abs(startNote.lane - endNote.lane) < 0)
+                if (Math.Abs(startNote.beat - endNote.beat) <= 0)
                 {
                     // direction of lane change / turn
                     noteData.Input = startNote.lane < endNote.lane ? InputType.Right : InputType.Left;
