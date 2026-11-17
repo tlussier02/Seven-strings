@@ -8,6 +8,8 @@
 			"name": "Level 1 Test",
 			"laneCount": 3,
 			"notes": [
+                {"uuid": "main-checkpoint-10-start", "songPos": 10000, "beat": 20, "lane": 1},
+                {"uuid": "main-checkpoint-10-end", "songPos": 10000, "beat": 20, "lane": 3},
 				{
 					"uuid": "8398aebf-c56f-4316-86f3-44043fd828b7",
 					"songPos": 2000,
@@ -142,6 +144,7 @@
 				}
 			],
 			"links": [
+                {"uuid": "main-checkpoint-10-link", "startNote": "main-checkpoint-10-start", "endNote": "main-checkpoint-10-end"},
 				{
 					"uuid": "0539be00-559a-4f50-be37-9f109350bb6d",
 					"startNote": "a2d5b85a-93b6-4939-88e1-5216d5e7f3b8",

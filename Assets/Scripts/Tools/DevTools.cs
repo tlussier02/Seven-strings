@@ -162,11 +162,7 @@ public class DevTools : MonoBehaviour
     /// </summary>
     private void ReloadActiveScene()
     {
-        // Get the current scene
-        Scene scene = SceneManager.GetActiveScene();
-        
-        // Load it again (this resets everything in the scene)
-        SceneManager.LoadScene(scene.name);
+        GameplayReset.RequestRestart();
     }
 
     /// <summary>

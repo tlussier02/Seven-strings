@@ -63,7 +63,7 @@ public class StemLayerMixer : MonoBehaviour
         }
     }
 
-    double SongZeroDsp => player.ScheduledStartTime + firstBeatOffset;
+    double SongZeroDsp => player.ScheduledStartTime - player.SongOffset + firstBeatOffset;
 
     void OnEnable()  => harmonyMeter.OnHarmonyChanged += HandleHarmonyChanged;
     void OnDisable() => harmonyMeter.OnHarmonyChanged -= HandleHarmonyChanged;

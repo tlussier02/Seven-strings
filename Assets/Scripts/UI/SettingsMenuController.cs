@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 // Run before gameplay Update so Escape cannot leak into the rhythm input poll.
@@ -16,6 +17,7 @@ public class SettingsMenuController : MonoBehaviour
     private Button settingsButton;
     private Button resumeButton;
     private Font font;
+    private Text controlSchemeLabel;
     private float previousTimeScale;
     private bool previousAudioPause;
     private CursorLockMode previousCursorLock;
@@ -28,6 +30,14 @@ public class SettingsMenuController : MonoBehaviour
         AudioListener.volume = AudioVolumeSettings.MasterVolume;
         font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         BuildUI();
+        // ChartLoading has no authored EventSystem. Keep pointer/navigation input alive
+        // with the menu, while reusing an existing scene EventSystem when present.
+        if (FindFirstObjectByType<EventSystem>() == null)
+        {
+            var events = new GameObject("Settings EventSystem", typeof(EventSystem));
+            events.transform.SetParent(uiRoot.transform, false);
+            events.AddComponent<InputSystemUIInputModule>().AssignDefaultActions();
+        }
     }
 
     void OnEnable()
@@ -63,6 +73,7 @@ public class SettingsMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         settingsButton.gameObject.SetActive(false);
+        controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
         overlay.SetActive(true);
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
@@ -96,7 +107,7 @@ public class SettingsMenuController : MonoBehaviour
 
         // Save preferences and restore the cursor before unloading the menu.
         Close();
-        GameplayReset.RestartCurrentGameplayScene();
+        GameplayReset.RequestRestart();
     }
 
     void OnDisable()
@@ -138,7 +149,8 @@ public class SettingsMenuController : MonoBehaviour
         uiRoot = new GameObject("Settings UI", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         Canvas canvas = uiRoot.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 100;
+        canvas.sortingOrder = 1000;
+        canvas.overrideSorting = true;
         CanvasScaler scaler = uiRoot.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(960f, 540f);
@@ -155,19 +167,30 @@ public class SettingsMenuController : MonoBehaviour
         backdrop.gameObject.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.72f);
         overlay = backdrop.gameObject;
 
-        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 410f), Vector2.zero);
+        RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 530f), Vector2.zero);
         panel.gameObject.AddComponent<Image>().color = new Color(0.09f, 0.11f, 0.16f, 1f);
-        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 160f), 28);
-        CreateVolumeControl(panel, "Master Volume", 100f, AudioVolumeSettings.MasterVolume, true);
-        CreateVolumeControl(panel, "Music Volume", 10f, AudioVolumeSettings.MusicVolume, false);
+        CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 230f), 28);
+        CreateVolumeControl(panel, "Master Volume", 150f, AudioVolumeSettings.MasterVolume, AudioVolumeSettings.MasterVolumeKey);
+        CreateVolumeControl(panel, "Music Volume", 60f, AudioVolumeSettings.MusicVolume, AudioVolumeSettings.MusicVolumeKey);
+        CreateVolumeControl(panel, "Sound Effects Volume", -30f, AudioVolumeSettings.SfxVolume, AudioVolumeSettings.SfxVolumeKey);
+        Button schemeButton = CreateButton("Control Scheme: " + InputHandler.ControlSchemeName, panel,
+            new Vector2(400f, 42f), () =>
+            {
+                InputHandler.SetControlScheme(InputHandler.SelectedControlScheme == ControlScheme.CurrentControls
+                    ? ControlScheme.WASDControls : ControlScheme.CurrentControls);
+                controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
+                preferencesDirty = true;
+            });
+        ((RectTransform)schemeButton.transform).anchoredPosition = new Vector2(0f, -105f);
+        controlSchemeLabel = schemeButton.GetComponentInChildren<Text>();
         resumeButton = CreateButton("Resume", panel, new Vector2(180f, 44f), Close);
-        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -85f);
+        ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -170f);
         Button restartButton = CreateButton("Restart", panel, new Vector2(180f, 44f), Restart);
-        ((RectTransform)restartButton.transform).anchoredPosition = new Vector2(0f, -145f);
+        ((RectTransform)restartButton.transform).anchoredPosition = new Vector2(0f, -230f);
         overlay.SetActive(false);
     }
 
-    private void CreateVolumeControl(Transform parent, string label, float y, float initialValue, bool master)
+    private void CreateVolumeControl(Transform parent, string label, float y, float initialValue, string preferenceKey)
     {
         Text title = CreateText(label, parent, new Vector2(260f, 30f), new Vector2(-60f, y), 20);
         title.alignment = TextAnchor.MiddleLeft;
@@ -183,10 +206,12 @@ public class SettingsMenuController : MonoBehaviour
         Stretch(track);
         track.offsetMin = new Vector2(0f, 12f);
         track.offsetMax = new Vector2(0f, -12f);
-        track.gameObject.AddComponent<Image>().color = new Color(0.25f, 0.28f, 0.34f);
+        track.gameObject.AddComponent<Image>().raycastTarget = false;
+        track.GetComponent<Image>().color = new Color(0.25f, 0.28f, 0.34f);
         RectTransform fill = CreateRect("Fill", track, Vector2.zero, Vector2.zero);
         Stretch(fill);
-        fill.gameObject.AddComponent<Image>().color = new Color(0.35f, 0.75f, 0.95f);
+        fill.gameObject.AddComponent<Image>().raycastTarget = false;
+        fill.GetComponent<Image>().color = new Color(0.35f, 0.75f, 0.95f);
         RectTransform handleArea = CreateRect("Handle Area", sliderRect, Vector2.zero, Vector2.zero);
         Stretch(handleArea);
         handleArea.offsetMin = new Vector2(9f, 0f);
@@ -203,14 +228,19 @@ public class SettingsMenuController : MonoBehaviour
         {
             percentage.text = Mathf.RoundToInt(value) + "%";
             float volume = value / 100f;
-            if (master)
+            if (preferenceKey == AudioVolumeSettings.MasterVolumeKey)
                 AudioListener.volume = volume;
-            else
+            else if (preferenceKey == AudioVolumeSettings.MusicVolumeKey)
             {
-                foreach (ScheduledAudioPlayer player in FindObjectsByType<ScheduledAudioPlayer>())
+                foreach (ScheduledAudioPlayer player in FindObjectsByType<ScheduledAudioPlayer>(FindObjectsSortMode.None))
                     player.SetMusicVolume(volume);
             }
-            PlayerPrefs.SetFloat(master ? AudioVolumeSettings.MasterVolumeKey : AudioVolumeSettings.MusicVolumeKey, volume);
+            else
+            {
+                foreach (SfxPlayer player in FindObjectsByType<SfxPlayer>(FindObjectsSortMode.None))
+                    player.SetSfxVolume(volume);
+            }
+            PlayerPrefs.SetFloat(preferenceKey, volume);
             preferencesDirty = true;
         });
     }

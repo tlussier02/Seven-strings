@@ -10,20 +10,39 @@ public class PlayerController : MonoBehaviour
     public float LaneChangeDuration = 0.15f;
     public float JumpHeight = 2f;
     
-    private Transform LaneSegment;
+    [SerializeField] private float fallbackLaneWidth = 10f;
+    [SerializeField] private float fallbackJumpDuration = 0.5f;
     private int CurrentLane = 1;
     private float LaneWidth;
     private float CenterX;
     private float GroundY;
+    private Transform LaneSegment;
     private Tween LaneTween;
     private Tween JumpTween;
+    private InputHandler subscribedInput;
     
     void Awake()
     {
-        LevelTools = FindObjectOfType<LevelTools>();
-        LaneSegment = LevelTools.LaneSegmentPrefab.transform;
-        CenterX =  transform.position.x;
-        LaneWidth = LaneSegment.localScale.x;
+        LevelTools = FindAnyObjectByType<LevelTools>();
+
+        if (InputHandler == null)
+            InputHandler = ReceptorClock != null
+                ? ReceptorClock.GetComponent<InputHandler>()
+                : FindFirstObjectByType<InputHandler>();
+
+        if (ReceptorClock == null && InputHandler != null)
+            ReceptorClock = InputHandler.GetComponent<ReceptorClock>();
+
+        LaneSegment = LevelTools != null && LevelTools.LaneSegmentPrefab != null
+            ? LevelTools.LaneSegmentPrefab.transform
+            : null;
+
+        CenterX = transform.position.x;
+
+        LaneWidth = LaneSegment != null
+            ? LaneSegment.localScale.x
+            : fallbackLaneWidth;
+
         GroundY = transform.position.y;
     }
 
@@ -31,19 +50,27 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.timeScale == 0f || AudioListener.pause)
             return;
-        if (!ReceptorClock.FoundOvertime) 
+        if (ReceptorClock == null || !ReceptorClock.FoundOvertime)
             return;
         transform.position += transform.forward * PlayerSpeed * Time.deltaTime;
     }
 
     void OnEnable()
     {
-        InputHandler.OnInputPressed += HandleInput;
+        if (InputHandler == null)
+        {
+            Debug.LogError("PlayerController requires the gameplay InputHandler.", this);
+            return;
+        }
+        subscribedInput = InputHandler;
+        subscribedInput.OnInputPressed += HandleInput;
     }
 
     void OnDisable()
     {
-        InputHandler.OnInputPressed -= HandleInput;
+        if (subscribedInput != null)
+            subscribedInput.OnInputPressed -= HandleInput;
+        subscribedInput = null;
     }
 
     private void HandleInput(InputType inputType)
@@ -65,12 +92,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        LaneTween?.Kill();
+        JumpTween?.Kill();
+    }
+
+    public void RestoreCheckpoint(Transform spawn, int lane)
+    {
+        LaneTween?.Kill();
+        JumpTween?.Kill();
+        CurrentLane = lane;
+        CenterX = spawn.position.x - (lane - 1) * LaneWidth;
+        GroundY = spawn.position.y;
+        transform.SetPositionAndRotation(spawn.position, spawn.rotation);
+        if (TryGetComponent<Rigidbody>(out var body))
+        {
+            body.position = spawn.position;
+            body.rotation = spawn.rotation;
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+        }
+        Physics.SyncTransforms();
+    }
+
     private void Jump()
     {
         if (JumpTween != null && JumpTween.IsActive() && JumpTween.IsPlaying())
             return;
         
-        float jumpDuration = LevelTools.JumpLengthBeats * (60f / LevelTools.ChartLoader.Bpm);
+        float jumpDuration = LevelTools != null && LevelTools.ChartLoader != null
+            ? LevelTools.JumpLengthBeats * (60f / LevelTools.ChartLoader.Bpm) : fallbackJumpDuration;
 
         JumpTween?.Kill();
         transform.position = new Vector3(transform.position.x, GroundY, transform.position.z);
