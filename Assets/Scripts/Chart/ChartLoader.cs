@@ -123,9 +123,11 @@ public class ChartLoader : MonoBehaviour
             NoteData b = notes[i + 1];
             if (a.IsTurn && b.IsTurn && (a.Input != b.Input) && (b.Beat - a.Beat <= MinSubBeat))
             {
+                a.IsCheckpoint = true;
+                a.IsTurn = false;
+                notes[i] = a;
+                notes.RemoveAt(i + 1);
                 Checkpoints.Add(a.Time);
-                notes.RemoveRange(i, 2);
-                i--;
             }
         }
         
