@@ -34,7 +34,7 @@ public class CheckpointManager : MonoBehaviour
                     + player.transform.right * ((lane - 1) * width), player.transform.rotation);
                 chartSpawns[note.Id] = (spawn, lane);
             }
-            else if (note.Input == InputType.Left || note.Input == InputType.Right)
+            else if (!note.IsTurn && (note.Input == InputType.Left || note.Input == InputType.Right))
                 lane = Mathf.Clamp(lane + (note.Input == InputType.Right ? 1 : -1), 0, 2);
         }
     }
