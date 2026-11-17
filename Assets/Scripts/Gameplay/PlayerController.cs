@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
         if (InputHandler == null)
             InputHandler = ReceptorClock != null
                 ? ReceptorClock.GetComponent<InputHandler>()
-                : FindFirstObjectByType<InputHandler>();
+                : FindAnyObjectByType<InputHandler>();
 
         if (ReceptorClock == null && InputHandler != null)
             ReceptorClock = InputHandler.GetComponent<ReceptorClock>();

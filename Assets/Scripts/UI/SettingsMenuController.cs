@@ -32,7 +32,7 @@ public class SettingsMenuController : MonoBehaviour
         BuildUI();
         // ChartLoading has no authored EventSystem. Keep pointer/navigation input alive
         // with the menu, while reusing an existing scene EventSystem when present.
-        if (FindFirstObjectByType<EventSystem>() == null)
+        if (FindAnyObjectByType<EventSystem>() == null)
         {
             var events = new GameObject("Settings EventSystem", typeof(EventSystem));
             events.transform.SetParent(uiRoot.transform, false);
@@ -232,12 +232,12 @@ public class SettingsMenuController : MonoBehaviour
                 AudioListener.volume = volume;
             else if (preferenceKey == AudioVolumeSettings.MusicVolumeKey)
             {
-                foreach (ScheduledAudioPlayer player in FindObjectsByType<ScheduledAudioPlayer>(FindObjectsSortMode.None))
+                foreach (ScheduledAudioPlayer player in FindObjectsByType<ScheduledAudioPlayer>())
                     player.SetMusicVolume(volume);
             }
             else
             {
-                foreach (SfxPlayer player in FindObjectsByType<SfxPlayer>(FindObjectsSortMode.None))
+                foreach (SfxPlayer player in FindObjectsByType<SfxPlayer>())
                     player.SetSfxVolume(volume);
             }
             PlayerPrefs.SetFloat(preferenceKey, volume);

@@ -24,7 +24,7 @@ public class GameplayReset : MonoBehaviour
     {
         if (restarting) return;
         Scene scene = SceneManager.GetActiveScene();
-        CheckpointManager checkpoint = FindFirstObjectByType<CheckpointManager>();
+        CheckpointManager checkpoint = FindAnyObjectByType<CheckpointManager>();
         pendingScene = scene.path;
         pendingCheckpoint = checkpoint != null && checkpoint.gameObject.scene == scene && checkpoint.HasCheckpoint
             ? checkpoint.CheckpointId : null;

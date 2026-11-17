@@ -20,7 +20,7 @@ public class CheckpointManager : MonoBehaviour
     void Awake()
     {
         if (!useChartSpawns) return;
-        LevelTools level = FindFirstObjectByType<LevelTools>();
+        LevelTools level = FindAnyObjectByType<LevelTools>();
         Vector3 origin = player.transform.position;
         int lane = 1;
         float width = level.LaneSegmentPrefab.transform.localScale.x;
