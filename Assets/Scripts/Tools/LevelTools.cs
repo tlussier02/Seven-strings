@@ -122,6 +122,9 @@ public class LevelTools : MonoBehaviour
             for (; fillStep < noteStep; fillStep++)
                 layout.MarkTrack(fillStep, currentLane);
             
+            if (note.IsTurn)
+                continue;
+            
             if (!note.IsCheckpoint && note.Lane != currentLane)
                 Debug.LogWarning($"Note {note.Id} ({note.Input}) at {note.Time:F2}s is in lane {note.Lane} but the path is in lane {currentLane}");
            
