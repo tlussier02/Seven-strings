@@ -46,6 +46,9 @@ public class RhythmController : MonoBehaviour
         // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
         NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
         NoteManager.OnJudgement += SfxPlayer.HandleJudgement;
+        InputHandler.OnInputReleased += NoteManager.HandleRelease;
+        NoteManager.OnHoldStarted += SfxPlayer.StartHoldSustain;
+        NoteManager.OnHoldEnded += SfxPlayer.StopHoldSustain;
     }
 
     void OnDisable()
@@ -58,6 +61,9 @@ public class RhythmController : MonoBehaviour
         // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
         NoteManager.OnJudgement -= SfxPlayer.HandleJudgement;
+        InputHandler.OnInputReleased -= NoteManager.HandleRelease;
+        NoteManager.OnHoldStarted -= SfxPlayer.StartHoldSustain;
+        NoteManager.OnHoldEnded -= SfxPlayer.StopHoldSustain;
     }
 
     void Update()
