@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Tween LaneTween;
     private Tween JumpTween;
     private InputHandler subscribedInput;
-    
+
     void Awake()
     {
         LevelTools = FindAnyObjectByType<LevelTools>();
@@ -33,6 +33,9 @@ public class PlayerController : MonoBehaviour
 
         if (ReceptorClock == null && InputHandler != null)
             ReceptorClock = InputHandler.GetComponent<ReceptorClock>();
+
+        if (LevelTools != null)
+            PlayerSpeed = LevelTools.GetRequiredSpeed();
 
         LaneSegment = LevelTools != null && LevelTools.LaneSegmentPrefab != null
             ? LevelTools.LaneSegmentPrefab.transform

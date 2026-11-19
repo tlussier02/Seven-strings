@@ -44,6 +44,11 @@ public class LevelTools : MonoBehaviour
         public float Length;
     }
     
+    private void Start()
+    {
+        PlaceTrack();
+    }
+    
     [ContextMenu("Clear All")]
     public void ClearTracks()
     {
@@ -99,7 +104,7 @@ public class LevelTools : MonoBehaviour
     {
         public int TotalSteps;
         public bool[,] HasTrack;
-        public bool[] IsGap;
+        public bool[,] IsGap;
         public List<RollObstacle> Obstacles = new List<RollObstacle>();
         public List<InsetSegment> InsetSegments = new List<InsetSegment>();
         public List<InsetSegment> LaneChangeSegments = new List<InsetSegment>();
@@ -108,7 +113,7 @@ public class LevelTools : MonoBehaviour
         {
             TotalSteps = totalSteps;
             HasTrack = new bool[totalSteps, 3];
-            IsGap = new bool[totalSteps];
+            IsGap = new bool[totalSteps, 3];
         }
 
         public void MarkTrack(int step, int lane)
@@ -117,10 +122,10 @@ public class LevelTools : MonoBehaviour
                 HasTrack[step, lane] = true;
         }
 
-        public void MarkGap(int step)
+        public void MarkGap(int step, int lane)
         {
             if (step >= 0 && step < TotalSteps)
-                IsGap[step] = true;
+                IsGap[step, lane] = true;
         }
     }
 
@@ -189,6 +194,7 @@ public class LevelTools : MonoBehaviour
             Debug.LogWarning($"{note.Input} at {note.Time:F2}s has no lane to move into");
 
         layout.MarkTrack(noteStep, currentLane);
+        layout.IsGap[noteStep, currentLane] = false;
         
         float insetLength = InsetSegments * SegmentSize;
         float boundary = noteStep * SegmentSize;
@@ -223,7 +229,7 @@ public class LevelTools : MonoBehaviour
         }
 
         for (int step = firstGap; step <= lastGap; step++)
-            layout.MarkGap(step);
+            layout.MarkGap(step, lane);
 
         if (InsetSegments <= 0)
             return;
@@ -280,12 +286,9 @@ public class LevelTools : MonoBehaviour
 
         for (int step = -ExtraStartSegments; step < layout.TotalSteps; step++)
         {
-            if (step >= 0 && layout.IsGap[step])
-                continue;
-
             for (int lane = 0; lane < 3; lane++)
             {
-                bool placeTile = step < 0 ? lane == 1 : layout.HasTrack[step, lane];
+                bool placeTile = step < 0 ? lane == 1 : layout.HasTrack[step, lane] && !layout.IsGap[step, lane];
 
                 if (!placeTile)
                     continue;
@@ -358,5 +361,10 @@ public class LevelTools : MonoBehaviour
     {
         for (int i = parent.childCount - 1; i >= 0; i--)
             DestroyImmediate(parent.GetChild(i).gameObject);
+    }
+
+    public float GetRequiredSpeed()
+    {
+        return RequiredSpeed;
     }
 }
