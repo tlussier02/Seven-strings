@@ -25997,7 +25997,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 235918680}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -146137,7 +146137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NoteManager
   ActivationWindow: 0.6
-  EndSustainAtNoteEnd: 0
 --- !u!114 &2132841068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146153,23 +146152,25 @@ MonoBehaviour:
   sounds:
   - inputType: 0
     clip: {fileID: 8300000, guid: 91a2be33e583a4a818070b9d6c2ea9a8, type: 3}
-    volume: 0.52
+    volume: 0.5
   - inputType: 1
     clip: {fileID: 8300000, guid: 66c897784f85c45af8a2d07f99ab4bfd, type: 3}
-    volume: 1
+    volume: 0.6
   - inputType: 2
     clip: {fileID: 8300000, guid: 0c33f499b046442b9b25863a001b70eb, type: 3}
-    volume: 1
+    volume: 0.9
   - inputType: 3
     clip: {fileID: 8300000, guid: 0c33f499b046442b9b25863a001b70eb, type: 3}
-    volume: 1
+    volume: 0.9
   volume: 1
   perfectFlourish: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
-  flourishVolume: 0.14
+  flourishVolume: 0.15
   holdSustainClip: {fileID: 8300000, guid: f85798f13f48d4088bdf834ae0bb57ee, type: 3}
-  holdSustainVolume: 0.2
-  loopHoldSustain: 1
-  holdReleaseFade: 0.2
+  holdSustainVolume: 0.15
+  holdReleaseFade: 0.25
+  checkpointSound: {fileID: 8300000, guid: 17c5f4eae41ae46838dac004d302a24e, type: 3}
+  checkpointVolume: 0.45
+  checkpointManager: {fileID: 0}
 --- !u!114 &2132841069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146247,8 +146248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpoint: {fileID: 2132841080}
-  activationSound: {fileID: 8300000, guid: 17c5f4eae41ae46838dac004d302a24e, type: 3}
-  activationVolume: 0.42
   duration: 3
 --- !u!1 &2133802062
 GameObject:

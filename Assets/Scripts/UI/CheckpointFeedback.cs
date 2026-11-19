@@ -5,9 +5,6 @@ using UnityEngine.UI;
 public class CheckpointFeedback : MonoBehaviour
 {
     [SerializeField] private CheckpointManager checkpoint;
-    [SerializeField] private AudioClip activationSound;
-    [Tooltip("Volume for the checkpoint sound only. Multiplied by the SfxPlayer's shared Volume. 1 = unchanged.")]
-    [SerializeField, Range(0f, 1f)] private float activationVolume = 1f;
     [SerializeField] private float duration = 3f;
     private GameObject ui;
     private float remaining;
@@ -42,7 +39,6 @@ public class CheckpointFeedback : MonoBehaviour
     {
         remaining = duration;
         ui.SetActive(true);
-        GetComponent<SfxPlayer>()?.PlayEffect(activationSound, activationVolume);
     }
 
     void Update()

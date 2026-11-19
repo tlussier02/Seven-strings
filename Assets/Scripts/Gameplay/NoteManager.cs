@@ -7,13 +7,11 @@ public class NoteManager : MonoBehaviour
     public ReceptorClock ReceptorClock { get; set; }
     public InputJudge InputJudge { get; set; }
     public float ActivationWindow = 0.4f;
+    
+    // for input hold mechanic
     public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
-    // Hold sustain: started when a hold note is hit (any judgement except Miss),
-    // ended when the key is released (or on Seek). Optionally also cut at the note's EndTime.
     public event Action<NoteData> OnHoldStarted;
     public event Action<NoteData> OnHoldEnded;
-    [Tooltip("If on, the hold sustain stops at the hold note's end even if the key is still down. Off = sound lasts exactly as long as the key is held.")]
-    public bool EndSustainAtNoteEnd = false;
 
     private List<NoteData> Notes;
     private int NextActivateIndex;
@@ -63,7 +61,7 @@ public class NoteManager : MonoBehaviour
 
     public void Seek(double songTime)
     {
-        // Stop any hold sustain before dropping the notes, so the sound never keeps playing after a restore.
+        // stop any hold sustain before dropping the notes, so the sound never keeps playing after a restore
         for (int i = Sustains.Count - 1; i >= 0; i--)
             EndSustain(i);
         ActiveNotes.Clear();
@@ -79,11 +77,6 @@ public class NoteManager : MonoBehaviour
             NextActivateIndex++;
         }
         
-        // Optional: cut the hold sustain at the note's EndTime even if the key is still down.
-        if (EndSustainAtNoteEnd)
-            for (int i = Sustains.Count - 1; i >= 0; i--)
-                if (receptor >= Sustains[i].EndTime)
-                    EndSustain(i);
 
         // expired note
         for (int i = ActiveNotes.Count - 1; i >= 0; i--)
@@ -123,8 +116,8 @@ public class NoteManager : MonoBehaviour
             return;
         }
     }
-
-    // Subscribed to InputHandler.OnInputReleased. Letting go of the key ends that input's sustain.
+    
+    // letting go of the key ends that input's sustain
     public void HandleRelease(InputType released)
     {
         for (int i = Sustains.Count - 1; i >= 0; i--)
