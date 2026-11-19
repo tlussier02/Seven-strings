@@ -31,7 +31,20 @@ public class LevelTools : MonoBehaviour
     private double SecondsPerStep => 60.0 / ChartLoader.Bpm / SegmentsPerBeat;
     private float RequiredSpeed => (float)(SegmentSize / SecondsPerStep);
 
+    private struct RollObstacle
+    {
+        public int StartStep;
+        public int LengthSteps;
+        public int Lane;
+    }
 
+    private struct InsetSegment
+    {
+        public int Lane;
+        public float StartDistance;
+        public float Length;
+    }
+    
     [ContextMenu("Clear All")]
     public void ClearTracks()
     {
@@ -72,6 +85,7 @@ public class LevelTools : MonoBehaviour
         
         TrackLayout layout = BuildLayout(notes, SecondsPerStep);
         SpawnTiles(layout, SegmentSize);
+        SpawnInsetSegments(layout, SegmentSize);
         SpawnObstacles(layout, SegmentSize);
         SpawnCheckpoints();
     }
@@ -81,13 +95,6 @@ public class LevelTools : MonoBehaviour
         Player.PlayerSpeed = RequiredSpeed;
         Debug.Log($"Player speed set to {RequiredSpeed:F2}");
     }
-    
-    private struct RollObstacle
-    {
-        public int StartStep;
-        public int LengthSteps;
-        public int Lane;
-    }
 
     private class TrackLayout
     {
@@ -95,6 +102,7 @@ public class LevelTools : MonoBehaviour
         public bool[,] HasTrack;
         public bool[] IsGap;
         public List<RollObstacle> Obstacles = new List<RollObstacle>();
+        public List<InsetSegment> InsetSegments = new List<InsetSegment>();
 
         public TrackLayout(int totalSteps)
         {
@@ -143,7 +151,7 @@ public class LevelTools : MonoBehaviour
                     currentLane = AddLaneChange(layout, note, noteStep, currentLane);
                     break;
                 case InputType.Jump:
-                    AddJumpGap(layout, noteStep);
+                    AddJumpGap(layout, noteStep, currentLane);
                     break;
                 case InputType.Roll:
                     AddRollObstacle(layout, noteStep, currentLane);
@@ -189,7 +197,7 @@ public class LevelTools : MonoBehaviour
         return targetLane;
     }
 
-    private void AddJumpGap(TrackLayout layout, int noteStep)
+    private void AddJumpGap(TrackLayout layout, int noteStep, int lane)
     {
         float jumpLengthSegments = JumpLengthBeats * SegmentsPerBeat;
         int firstGap = Mathf.CeilToInt(noteStep + JumpGapInsetSegments + 0.5f);
@@ -200,8 +208,47 @@ public class LevelTools : MonoBehaviour
             Debug.LogWarning($"Jump at step {noteStep}: inset {JumpGapInsetSegments} leaves no gap");
             return;
         }
+
         for (int step = firstGap; step <= lastGap; step++)
             layout.MarkGap(step);
+
+        if (JumpGapInsetSegments <= 0)
+            return;
+
+        float segmentSize = SegmentSize;
+        float insetLength = JumpGapInsetSegments * segmentSize;
+
+        float gapStart = (firstGap - 0.5f) * segmentSize;
+        float gapEnd = (lastGap + 0.5f) * segmentSize;
+
+        float remainingStart = insetLength;
+
+        while (remainingStart > 0)
+        {
+            float tileLength = Mathf.Min(1f, remainingStart / segmentSize) * segmentSize;
+            layout.InsetSegments.Add(new InsetSegment
+            {
+                Lane = lane,
+                StartDistance = gapStart + (insetLength - remainingStart),
+                Length = tileLength
+            });
+            
+            remainingStart -= tileLength;
+        }
+
+        float remainingEnd = insetLength;
+
+        while (remainingEnd > 0)
+        {
+            float tileLength = Mathf.Min(1f, remainingEnd / segmentSize) * segmentSize;
+            remainingEnd -= tileLength;
+            layout.InsetSegments.Add(new InsetSegment
+            {
+                Lane = lane,
+                StartDistance = gapEnd - (insetLength - remainingEnd),
+                Length = tileLength
+            });
+        }
     }
 
     private void AddRollObstacle(TrackLayout layout, int noteStep, int lane)
@@ -226,14 +273,15 @@ public class LevelTools : MonoBehaviour
             for (int lane = 0; lane < 3; lane++)
             {
                 bool placeTile = step < 0 ? lane == 1 : layout.HasTrack[step, lane];
-                
-                if (!placeTile) 
+
+                if (!placeTile)
                     continue;
 
                 Vector3 pos = TrackPosition(step * segmentLength, lane);
                 GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
                 segment.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, segmentLength);
                 segment.name = $"Track_{step}_Lane{lane}";
+
                 segment.GetComponentInChildren<Renderer>().sharedMaterial =
                     ((step + lane) & 1) == 0 ? LaneMaterialA : LaneMaterialB;
             }
@@ -264,6 +312,21 @@ public class LevelTools : MonoBehaviour
             pos.y = CheckpointPrefab.transform.position.y;
             GameObject marker = Instantiate(CheckpointPrefab, pos, Player.transform.rotation, TrackParent);
             marker.transform.localScale = new Vector3(laneWidth * 3f, marker.transform.localScale.y, marker.transform.localScale.z);
+        }
+    }
+    
+    private void SpawnInsetSegments(TrackLayout layout, float segmentLength)
+    {
+        Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
+
+        foreach (InsetSegment inset in layout.InsetSegments)
+        {
+            Vector3 pos = TrackPosition(inset.StartDistance + inset.Length / 2f, inset.Lane);
+            GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
+            
+            segment.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, inset.Length);
+            segment.name = $"JumpInset_Lane{inset.Lane}_{inset.Length:F2}";
+            segment.GetComponentInChildren<Renderer>().sharedMaterial = (inset.Lane & 1) == 0 ? LaneMaterialA : LaneMaterialB;
         }
     }
     
