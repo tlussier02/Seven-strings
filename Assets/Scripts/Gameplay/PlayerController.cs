@@ -5,7 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     public InputHandler InputHandler;
     public ReceptorClock ReceptorClock;
-    public LevelTools LevelTools { get; private set; }
+    public LevelTools LevelTools;
+    [System.NonSerialized]
     public float PlayerSpeed;
     public float LaneChangeDuration = 0.15f;
     public float JumpHeight = 2f;
