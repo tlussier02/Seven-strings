@@ -12,9 +12,12 @@ public class LevelMakerOverlay : Overlay
     public override VisualElement CreatePanelContent()
     {
         var root = new VisualElement();
-        root.Add(new Button(() => Run(p => p.PlaceBeats())) { text = "Place Beats" });
-        root.Add(new Button(() => Run(p => p.PlaceTrack())) { text = "Place Track" });
         
+        root.Add(new Button(() => Run(p =>
+        {
+            p.PlaceTrack();
+            p.PlaceBeats();
+        })) { text = "Update Track" });
         root.Add(ToggleBeats());
         
         return root;
