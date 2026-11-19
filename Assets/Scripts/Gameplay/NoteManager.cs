@@ -7,7 +7,11 @@ public class NoteManager : MonoBehaviour
     public ReceptorClock ReceptorClock { get; set; }
     public InputJudge InputJudge { get; set; }
     public float ActivationWindow = 0.4f;
+    
+    // for input hold mechanic
     public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
+    public event Action<NoteData> OnHoldStarted;
+    public event Action<NoteData> OnHoldEnded;
 
     private List<NoteData> Notes;
     private int NextActivateIndex;
@@ -20,6 +24,10 @@ public class NoteManager : MonoBehaviour
         public NoteData Note;
         public bool Pressed;
     }
+
+    // Hold notes whose key is still down. Kept separate from ActiveNotes so a sustain
+    // can outlive the note's judgement window (the player keeps holding past EndTime).
+    private readonly List<NoteData> Sustains = new List<NoteData>();
     
     public void SetNotes(List<NoteData> chartNotes)
     {
@@ -53,6 +61,9 @@ public class NoteManager : MonoBehaviour
 
     public void Seek(double songTime)
     {
+        // stop any hold sustain before dropping the notes, so the sound never keeps playing after a restore
+        for (int i = Sustains.Count - 1; i >= 0; i--)
+            EndSustain(i);
         ActiveNotes.Clear();
         NextActivateIndex = Notes.FindIndex(note => note.Time >= songTime);
         if (NextActivateIndex < 0) NextActivateIndex = Notes.Count;
@@ -66,6 +77,7 @@ public class NoteManager : MonoBehaviour
             NextActivateIndex++;
         }
         
+
         // expired note
         for (int i = ActiveNotes.Count - 1; i >= 0; i--)
         {
@@ -96,8 +108,28 @@ public class NoteManager : MonoBehaviour
             
             active.Pressed = true;
             ActiveNotes[i] = active;
+            if (active.Note.IsHold && judgement != InputJudge.Judgement.Miss)
+            {
+                Sustains.Add(active.Note);
+                OnHoldStarted?.Invoke(active.Note);
+            }
             return;
         }
+    }
+    
+    // letting go of the key ends that input's sustain
+    public void HandleRelease(InputType released)
+    {
+        for (int i = Sustains.Count - 1; i >= 0; i--)
+            if (Sustains[i].Input == released)
+                EndSustain(i);
+    }
+
+    private void EndSustain(int index)
+    {
+        NoteData note = Sustains[index];
+        Sustains.RemoveAt(index);
+        OnHoldEnded?.Invoke(note);
     }
 
     private void Activate(NoteData note)
