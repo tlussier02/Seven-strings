@@ -20,9 +20,8 @@ public class LevelTools : MonoBehaviour
     public int SegmentsPerBeat = 4;
     public int ExtraStartSegments = 2;
     public int ExtraEndSegments = 5;
-    public float LaneChangeBufferSegments = 1.5f;
+    public float InsetSegments = 0.5f;
     public float JumpLengthBeats = 1f;
-    public float JumpGapInsetSegments = 0.5f;
     public float RollLengthBeats = 1f;
     public float ObstacleHeight = 1.5f;
     
@@ -103,6 +102,7 @@ public class LevelTools : MonoBehaviour
         public bool[] IsGap;
         public List<RollObstacle> Obstacles = new List<RollObstacle>();
         public List<InsetSegment> InsetSegments = new List<InsetSegment>();
+        public List<InsetSegment> LaneChangeSegments = new List<InsetSegment>();
 
         public TrackLayout(int totalSteps)
         {
@@ -188,35 +188,48 @@ public class LevelTools : MonoBehaviour
         if (targetLane == currentLane)
             Debug.LogWarning($"{note.Input} at {note.Time:F2}s has no lane to move into");
 
-        int extraTiles = Mathf.CeilToInt(LaneChangeBufferSegments + 0.5f) - 1;
-        for (int step = noteStep - extraTiles; step <= noteStep + extraTiles; step++)
+        layout.MarkTrack(noteStep, currentLane);
+        
+        float insetLength = InsetSegments * SegmentSize;
+        float boundary = noteStep * SegmentSize;
+
+        layout.LaneChangeSegments.Add(new InsetSegment
         {
-            layout.MarkTrack(step, currentLane);
-            layout.MarkTrack(step, targetLane);
-        }
+            Lane = currentLane,
+            StartDistance = boundary + SegmentSize / 2f,
+            Length = insetLength
+        });
+
+        layout.LaneChangeSegments.Add(new InsetSegment
+        {
+            Lane = targetLane,
+            StartDistance = boundary - SegmentSize / 2f - insetLength,
+            Length = insetLength
+        });
+        
         return targetLane;
     }
 
     private void AddJumpGap(TrackLayout layout, int noteStep, int lane)
     {
         float jumpLengthSegments = JumpLengthBeats * SegmentsPerBeat;
-        int firstGap = Mathf.CeilToInt(noteStep + JumpGapInsetSegments + 0.5f);
-        int lastGap = Mathf.FloorToInt(noteStep + jumpLengthSegments - JumpGapInsetSegments - 0.5f);
+        int firstGap = Mathf.CeilToInt(noteStep + InsetSegments + 0.5f);
+        int lastGap = Mathf.FloorToInt(noteStep + jumpLengthSegments - InsetSegments - 0.5f);
 
         if (lastGap < firstGap)
         {
-            Debug.LogWarning($"Jump at step {noteStep}: inset {JumpGapInsetSegments} leaves no gap");
+            Debug.LogWarning($"Jump at step {noteStep}: inset {InsetSegments} leaves no gap");
             return;
         }
 
         for (int step = firstGap; step <= lastGap; step++)
             layout.MarkGap(step);
 
-        if (JumpGapInsetSegments <= 0)
+        if (InsetSegments <= 0)
             return;
 
         float segmentSize = SegmentSize;
-        float insetLength = JumpGapInsetSegments * segmentSize;
+        float insetLength = InsetSegments * segmentSize;
 
         float gapStart = (firstGap - 0.5f) * segmentSize;
         float gapEnd = (lastGap + 0.5f) * segmentSize;
@@ -318,14 +331,16 @@ public class LevelTools : MonoBehaviour
     private void SpawnInsetSegments(TrackLayout layout, float segmentLength)
     {
         Vector3 prefabScale = LaneSegmentPrefab.transform.localScale;
+        List<InsetSegment> segments = new List<InsetSegment>(layout.InsetSegments);
+        segments.AddRange(layout.LaneChangeSegments);
 
-        foreach (InsetSegment inset in layout.InsetSegments)
+        foreach (InsetSegment inset in segments)
         {
             Vector3 pos = TrackPosition(inset.StartDistance + inset.Length / 2f, inset.Lane);
             GameObject segment = Instantiate(LaneSegmentPrefab, pos, Player.transform.rotation, TrackParent);
-            
+
             segment.transform.localScale = new Vector3(prefabScale.x, prefabScale.y, inset.Length);
-            segment.name = $"JumpInset_Lane{inset.Lane}_{inset.Length:F2}";
+            segment.name = $"Inset_Lane{inset.Lane}_{inset.Length:F2}";
             segment.GetComponentInChildren<Renderer>().sharedMaterial = (inset.Lane & 1) == 0 ? LaneMaterialA : LaneMaterialB;
         }
     }
