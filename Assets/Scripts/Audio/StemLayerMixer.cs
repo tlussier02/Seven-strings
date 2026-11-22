@@ -85,7 +85,7 @@ public class StemLayerMixer : MonoBehaviour
         if (stems == null)
             return;
 
-        // DSP time freezes while AudioListener.pause is on, so fades pause with the menu automatically.
+        // DSP time freezes while AudioListener.pause is on, so fades pause with the menu automatically
         double now = AudioSettings.dspTime;
 
         for (int i = 0; i < stems.Length; i++)

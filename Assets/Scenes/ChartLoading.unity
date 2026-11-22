@@ -146158,10 +146158,10 @@ MonoBehaviour:
     volume: 0.6
   - inputType: 2
     clip: {fileID: 8300000, guid: 0c33f499b046442b9b25863a001b70eb, type: 3}
-    volume: 0.9
+    volume: 0.85
   - inputType: 3
     clip: {fileID: 8300000, guid: 0c33f499b046442b9b25863a001b70eb, type: 3}
-    volume: 0.9
+    volume: 0.85
   volume: 1
   perfectFlourish: {fileID: 8300000, guid: 192d5a49b5dfb40d29e1f98713ce814e, type: 3}
   flourishVolume: 0.15
@@ -146169,7 +146169,7 @@ MonoBehaviour:
   holdSustainVolume: 0.15
   holdReleaseFade: 0.25
   checkpointSound: {fileID: 8300000, guid: 17c5f4eae41ae46838dac004d302a24e, type: 3}
-  checkpointVolume: 0.45
+  checkpointVolume: 0.3
   checkpointManager: {fileID: 0}
 --- !u!114 &2132841069
 MonoBehaviour:
@@ -146187,6 +146187,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 46d6b574216034a06a069db65d05dd30, type: 3}
   - {fileID: 8300000, guid: c4118ac31e6ff4cbc9e85867eb10d0bd, type: 3}
   - {fileID: 8300000, guid: d68045d7a21fd44fcbe3aeab40322c3f, type: 3}
+  StemVolumes:
+  - 1
+  - 0.75
+  - 0.75
 --- !u!114 &2132841070
 MonoBehaviour:
   m_ObjectHideFlags: 0
