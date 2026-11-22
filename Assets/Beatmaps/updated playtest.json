@@ -321,37 +321,49 @@
 					"lane": 2
 				},
 				{
-					"uuid": "f7f4d9fc-2981-4d3c-991a-212244327834",
+					"uuid": "d7e18b60-a552-4185-97f0-382ddbee3d6e",
 					"songPos": 41750,
 					"beat": 83.5,
 					"lane": 2
 				},
 				{
-					"uuid": "8a21e327-4c92-465d-ab95-cf0f76970e4e",
-					"songPos": 42750,
-					"beat": 85.5,
-					"lane": 2
+					"uuid": "86d50b14-9a75-4fb9-abee-fd6e679246b0",
+					"songPos": 41750,
+					"beat": 83.5,
+					"lane": 3
 				},
 				{
-					"uuid": "04886e0a-64d0-45b5-a97d-3fc03088f646",
+					"uuid": "89c03ef3-1044-4cd7-a6b9-503fa19edd1f",
 					"songPos": 42750,
 					"beat": 85.5,
 					"lane": 3
 				},
 				{
-					"uuid": "d8a60cc9-62e4-4ca9-a19c-e48f916912cc",
-					"songPos": 43250,
-					"beat": 86.5,
-					"lane": 3
+					"uuid": "5923b732-e162-4c9c-95c8-7043ef2fd642",
+					"songPos": 42750,
+					"beat": 85.5,
+					"lane": 2
 				},
 				{
-					"uuid": "f1cb563a-8e8f-44c9-886d-7dd00c1553f0",
+					"uuid": "abe5bf78-873a-49a7-b2bc-04cd815a8413",
 					"songPos": 43250,
 					"beat": 86.5,
 					"lane": 2
 				},
 				{
-					"uuid": "2bebb198-85f3-46ca-89f7-659eb06bed87",
+					"uuid": "2eb5416a-1b36-41f6-bd1e-0c84d41dc56a",
+					"songPos": 43250,
+					"beat": 86.5,
+					"lane": 1
+				},
+				{
+					"uuid": "3bb01059-17a2-4a7d-9e3d-6e0684fb8927",
+					"songPos": 43750,
+					"beat": 87.5,
+					"lane": 1
+				},
+				{
+					"uuid": "01663a7e-e6f8-45f3-bdf7-ecbf59182b43",
 					"songPos": 43750,
 					"beat": 87.5,
 					"lane": 2
@@ -843,16 +855,6 @@
 					"endNote": "2acf1463-8f39-4976-8a9f-ac00326c1f08"
 				},
 				{
-					"uuid": "48ff54fd-073d-44c2-a32d-901aa5c10da9",
-					"startNote": "8a21e327-4c92-465d-ab95-cf0f76970e4e",
-					"endNote": "04886e0a-64d0-45b5-a97d-3fc03088f646"
-				},
-				{
-					"uuid": "41dde0f3-3d35-4c49-b0ce-42bd048c77f3",
-					"startNote": "d8a60cc9-62e4-4ca9-a19c-e48f916912cc",
-					"endNote": "f1cb563a-8e8f-44c9-886d-7dd00c1553f0"
-				},
-				{
 					"uuid": "e0df9742-c251-4384-ad56-63be3d410eb3",
 					"startNote": "3a1db1cb-5f4a-44c7-b9d8-e113ac8d02df",
 					"endNote": "bd81c49d-0318-48de-82e4-f01da853d39b"
@@ -941,6 +943,26 @@
 					"uuid": "a82b4c01-9350-4d5a-92ed-e82928c0ab17",
 					"startNote": "da9e1943-7cae-47d5-9115-fbde9826da8b",
 					"endNote": "f02389ad-62a7-448a-8d12-533e904d5486"
+				},
+				{
+					"uuid": "e4d201e7-9647-48d2-8075-9757b1440d92",
+					"startNote": "d7e18b60-a552-4185-97f0-382ddbee3d6e",
+					"endNote": "86d50b14-9a75-4fb9-abee-fd6e679246b0"
+				},
+				{
+					"uuid": "bcc7cbb6-8fe4-49ac-8c20-7bf118166433",
+					"startNote": "89c03ef3-1044-4cd7-a6b9-503fa19edd1f",
+					"endNote": "5923b732-e162-4c9c-95c8-7043ef2fd642"
+				},
+				{
+					"uuid": "8d10317e-3020-4ec5-861e-694100868346",
+					"startNote": "abe5bf78-873a-49a7-b2bc-04cd815a8413",
+					"endNote": "2eb5416a-1b36-41f6-bd1e-0c84d41dc56a"
+				},
+				{
+					"uuid": "b5caeb7f-ea35-4c2b-aca4-ca4ab23f1108",
+					"startNote": "3bb01059-17a2-4a7d-9e3d-6e0684fb8927",
+					"endNote": "01663a7e-e6f8-45f3-bdf7-ecbf59182b43"
 				}
 			]
 		}
