@@ -20,7 +20,6 @@ public class HarmonyMeter : MonoBehaviour
     
     public event Action<int, int> OnHarmonyChanged;
     public event Action OnHarmonyEmpty;  // hook for a fail state later
-    public event Action OnHarmonyFull;   // hook for a "full harmony" bonus (pop up message and chime sound)
 
     void Awake()
     {
@@ -59,8 +58,6 @@ public class HarmonyMeter : MonoBehaviour
 
         if (Current == 0)
             OnHarmonyEmpty?.Invoke();
-        else if (Current == maxHarmony)
-            OnHarmonyFull?.Invoke();
     }
 
     void OnValidate()

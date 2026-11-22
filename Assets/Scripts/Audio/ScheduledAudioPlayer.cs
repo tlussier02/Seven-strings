@@ -49,7 +49,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
             ApplyVolume(i);
     }
 
-    //Fade in
+    // Set stem's fade level (0-1)
     public void SetStemGain(int stemIndex, float gain)
     {
         if (stemIndex < 0 || stemIndex >= StemCount)
@@ -60,8 +60,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
 
     public float GetStemGain(int stemIndex) =>
         stemIndex >= 0 && stemIndex < StemCount ? stemGains[stemIndex] : 0f;
-
-    // Default set to 1f
+    
     private float StemVolume(int i) =>
         StemVolumes != null && i < StemVolumes.Length ? StemVolumes[i] : 1f;
 

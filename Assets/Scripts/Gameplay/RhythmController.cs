@@ -41,12 +41,14 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat += HandleBeat;
         InputHandler.OnInputPressed += HandleInput;
         InputHandler.OnInputPressed += SfxPlayer.PlayFor;
-        InputHandler.OnInputReleased += HandleInput;
         NoteManager.OnJudgement += HandleJudgement;
         // NoteManager.OnJudgement += AnimationManager.HandleJudgement;
         NoteManager.OnJudgement += HarmonyMeter.HandleJudgement;
         NoteManager.OnJudgement += SfxPlayer.HandleJudgement;
-        InputHandler.OnInputReleased += NoteManager.HandleRelease;
+        InputHandler.OnInputReleased += HandleRelease;
+        NoteManager.OnReleaseJudgement += HandleJudgement;
+        NoteManager.OnReleaseJudgement += HarmonyMeter.HandleJudgement;
+        NoteManager.OnReleaseJudgement += SfxPlayer.HandleJudgement;
         NoteManager.OnHoldStarted += SfxPlayer.StartHoldSustain;
         NoteManager.OnHoldEnded += SfxPlayer.StopHoldSustain;
     }
@@ -56,12 +58,14 @@ public class RhythmController : MonoBehaviour
         ReceptorClock.OnBeat -= HandleBeat;
         InputHandler.OnInputPressed -= HandleInput;
         InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
-        InputHandler.OnInputReleased -= HandleInput;
         NoteManager.OnJudgement -= HandleJudgement;
         // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
         NoteManager.OnJudgement -= SfxPlayer.HandleJudgement;
-        InputHandler.OnInputReleased -= NoteManager.HandleRelease;
+        InputHandler.OnInputReleased -= HandleRelease;
+        NoteManager.OnReleaseJudgement -= HandleJudgement;
+        NoteManager.OnReleaseJudgement -= HarmonyMeter.HandleJudgement;
+        NoteManager.OnReleaseJudgement -= SfxPlayer.HandleJudgement;
         NoteManager.OnHoldStarted -= SfxPlayer.StartHoldSustain;
         NoteManager.OnHoldEnded -= SfxPlayer.StopHoldSustain;
     }
@@ -93,6 +97,11 @@ public class RhythmController : MonoBehaviour
     public void HandleInput(InputType input)
     {
         NoteManager.HandleInput(input, ReceptorClock.Receptor);
+    }
+    
+    public void HandleRelease(InputType input)
+    {
+        NoteManager.HandleRelease(input, ReceptorClock.Receptor);
     }
 
     public void HandleJudgement(NoteData note, InputType input, InputJudge.Judgement judgement)

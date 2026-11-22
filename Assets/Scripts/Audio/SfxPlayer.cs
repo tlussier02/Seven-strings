@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// A class so the volume default of 1 applies to all wav files.
+
 [Serializable]
 public class InputSfx
 {

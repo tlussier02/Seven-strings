@@ -14,6 +14,7 @@ public class InputJudge : MonoBehaviour
         Ok,
         Miss
     }
+    
 
     private static readonly (double threshold, Judgement judgement)[] JudgementThresholds =
     {
@@ -22,6 +23,9 @@ public class InputJudge : MonoBehaviour
         (0.10, Judgement.Good),
         (0.15, Judgement.Ok)
     };
+    
+    // FUTURE: have more forgiving thresholds for QTE and Releases from holds
+        // Give extra param to Evaluate()
 
     public Judgement Evaluate(double receptor, double noteTime)
     {
