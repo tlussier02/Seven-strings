@@ -8,8 +8,10 @@ public class NoteManager : MonoBehaviour
     public InputJudge InputJudge { get; set; }
     public float ActivationWindow = 0.4f;
     
-    // for input hold mechanic
     public event Action<NoteData, InputType, InputJudge.Judgement> OnJudgement;
+    
+    // for input hold mechanic
+    public event Action<NoteData, InputType, InputJudge.Judgement> OnReleaseJudgement;
     public event Action<NoteData> OnHoldStarted;
     public event Action<NoteData> OnHoldEnded;
 
@@ -18,16 +20,29 @@ public class NoteManager : MonoBehaviour
     private List<ActiveNote> ActiveNotes = new List<ActiveNote>();
     private readonly Dictionary<string, (double early, double late)> NoteWindows = new Dictionary<string, (double early, double late)>();
     private double ExpiryWindow => InputJudge.WidestThreshold + 0.01;
+    // How long after a hold's EndTime a release can still be judged.
+    // Clamped so it never reaches halfway to the next note of the same input.
+    private readonly Dictionary<string, double> ReleaseLateWindows = new Dictionary<string, double>();
 
     private struct ActiveNote
     {
         public NoteData Note;
         public bool Pressed;
+        
+        // An input hold can be caught up until its release window opens
+        public bool PressMissed;
     }
 
-    // Hold notes whose key is still down. Kept separate from ActiveNotes so a sustain
-    // can outlive the note's judgement window (the player keeps holding past EndTime).
-    private readonly List<NoteData> Sustains = new List<NoteData>();
+    private struct HeldNote
+    {
+        public NoteData Note;
+        
+        // True once the late "held too long" Miss has fired
+        public bool ReleaseJudged;
+    }
+
+    // Hold notes whose key is still down are separate from ActiveNotes so the player can hold past EndTime
+    private readonly List<HeldNote> Sustains = new List<HeldNote>();
     
     public void SetNotes(List<NoteData> chartNotes)
     {
@@ -35,6 +50,7 @@ public class NoteManager : MonoBehaviour
         NextActivateIndex = 0;
         ActiveNotes.Clear();
         NoteWindows.Clear();
+        ReleaseLateWindows.Clear();
 
         for (int i = 0; i < Notes.Count; i++)
         {
@@ -56,6 +72,19 @@ public class NoteManager : MonoBehaviour
                 }
 
             NoteWindows[Notes[i].Id] = (early, late);
+
+            // A release can't be judged past halfway to the next note of the same input
+            if (Notes[i].IsHold)
+            {
+                double releaseLate = ExpiryWindow;
+                for (int j = i + 1; j < Notes.Count; j++)
+                    if (Notes[j].Input == Notes[i].Input)
+                    {
+                        releaseLate = Math.Min(releaseLate, (Notes[j].Time - Notes[i].EndTime) / 2.0);
+                        break;
+                    }
+                ReleaseLateWindows[Notes[i].Id] = Math.Max(0.0, releaseLate);
+            }
         }
     }
 
@@ -77,19 +106,39 @@ public class NoteManager : MonoBehaviour
             NextActivateIndex++;
         }
         
+        
+        for (int i = 0; i < Sustains.Count; i++)
+        {
+            HeldNote held = Sustains[i];
+            if (held.ReleaseJudged || receptor < held.Note.EndTime + ReleaseLateWindows[held.Note.Id])
+                continue;
+
+            held.ReleaseJudged = true;
+            Sustains[i] = held;
+            OnReleaseJudgement?.Invoke(held.Note, held.Note.Input, InputJudge.Judgement.Miss);
+        }
 
         // expired note
         for (int i = ActiveNotes.Count - 1; i >= 0; i--)
         {
             ActiveNote active = ActiveNotes[i];
-            double expireAt = (active.Note.IsHold && active.Pressed ? active.Note.EndTime : active.Note.Time)
-                              + NoteWindows[active.Note.Id].late;            
-            if (receptor < expireAt)
+            if (receptor < active.Note.Time + NoteWindows[active.Note.Id].late)
                 continue;
 
-            if (!active.Pressed)
+            if (!active.Pressed && !active.PressMissed)
+            {
                 OnJudgement?.Invoke(active.Note, active.Note.Input, InputJudge.Judgement.Miss);
-           
+                if (active.Note.IsHold)
+                {
+                    active.PressMissed = true;
+                    ActiveNotes[i] = active;
+                }
+            }
+            
+            // a late press hold can still start the sound and earn a release judgement
+            if (active.Note.IsHold && !active.Pressed && receptor < CatchDeadline(active.Note))
+                continue;
+
             ActiveNotes.RemoveAt(i);
         }
     }
@@ -103,34 +152,54 @@ public class NoteManager : MonoBehaviour
             if (active.Pressed || active.Note.Input != pressed)
                 continue;
 
-            InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, active.Note.Time);
-            OnJudgement?.Invoke(active.Note, pressed, judgement);
+            // A late catch already got its press Miss from Tick, so it isn't judged again
+            if (!active.PressMissed)
+            {
+                InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, active.Note.Time);
+                OnJudgement?.Invoke(active.Note, pressed, judgement);
+            }
             
             active.Pressed = true;
             ActiveNotes[i] = active;
-            if (active.Note.IsHold && judgement != InputJudge.Judgement.Miss)
+
+            // Every hold press starts the sustain, even a Miss; the release is judged separately
+            if (active.Note.IsHold)
             {
-                Sustains.Add(active.Note);
+                Sustains.Add(new HeldNote { Note = active.Note });
                 OnHoldStarted?.Invoke(active.Note);
             }
             return;
         }
     }
     
-    // letting go of the key ends that input's sustain
-    public void HandleRelease(InputType released)
+    
+    public void HandleRelease(InputType released, double receptor)
     {
         for (int i = Sustains.Count - 1; i >= 0; i--)
-            if (Sustains[i].Input == released)
-                EndSustain(i);
+        {
+            HeldNote held = Sustains[i];
+            if (held.Note.Input != released)
+                continue;
+
+            if (!held.ReleaseJudged)
+            {
+                InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, held.Note.EndTime);
+                OnReleaseJudgement?.Invoke(held.Note, released, judgement);
+            }
+            EndSustain(i);
+        }
     }
 
     private void EndSustain(int index)
     {
-        NoteData note = Sustains[index];
+        NoteData note = Sustains[index].Note;
         Sustains.RemoveAt(index);
         OnHoldEnded?.Invoke(note);
     }
+
+    // Last moment a missed hold can still be caught
+    private double CatchDeadline(NoteData note) =>
+        Math.Max(note.Time + NoteWindows[note.Id].late, note.EndTime - InputJudge.WidestThreshold);
 
     private void Activate(NoteData note)
     {

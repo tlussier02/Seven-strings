@@ -4,6 +4,7 @@ using UnityEngine;
 public class ScheduledAudioPlayer : MonoBehaviour
 {
     public AudioClip[] Stems;
+    [Range(0f, 1f)] public float[] StemVolumes = new float[0];
     public AudioSource[] StemSources { get; private set; }
     public int StemCount => StemSources != null ? StemSources.Length : 0;
 
@@ -34,7 +35,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
             source.clip = clips[i];
             StemSources[i] = source;
 
-            // Base layer audible by default; StemLayerMixer takes over from here.
+            // StemLayerMixer takes over from here
             stemGains[i] = i == 0 ? 1f : 0f;
         }
         
@@ -48,7 +49,7 @@ public class ScheduledAudioPlayer : MonoBehaviour
             ApplyVolume(i);
     }
 
-    //Fade in
+    // Set stem's fade level (0-1)
     public void SetStemGain(int stemIndex, float gain)
     {
         if (stemIndex < 0 || stemIndex >= StemCount)
@@ -59,11 +60,27 @@ public class ScheduledAudioPlayer : MonoBehaviour
 
     public float GetStemGain(int stemIndex) =>
         stemIndex >= 0 && stemIndex < StemCount ? stemGains[stemIndex] : 0f;
+    
+    private float StemVolume(int i) =>
+        StemVolumes != null && i < StemVolumes.Length ? StemVolumes[i] : 1f;
 
     private void ApplyVolume(int i)
     {
         if (StemSources[i] != null)
-            StemSources[i].volume = musicVolume * stemGains[i];
+            StemSources[i].volume = musicVolume * stemGains[i] * StemVolume(i);
+    }
+
+    void OnValidate()
+    {
+        // Added one volume slider per stem
+        int count = Stems != null ? Stems.Length : 0;
+        if (StemVolumes == null || StemVolumes.Length != count)
+        {
+            float[] resized = new float[count];
+            for (int i = 0; i < count; i++)
+                resized[i] = StemVolumes != null && i < StemVolumes.Length ? StemVolumes[i] : 1f;
+            StemVolumes = resized;
+        }
     }
 
     public void ScheduleFrom(double songTime)
@@ -86,12 +103,10 @@ public class ScheduledAudioPlayer : MonoBehaviour
         double time = AudioSettings.dspTime;
         if (!IsRunning && time + 1.0f > ScheduledStartTime)
         {
-            // Same DSP timestamp for every stem = sample-locked layers.
+            // Same DSP timestamp for every stem
             foreach (AudioSource source in StemSources)
                 source.PlayScheduled(ScheduledStartTime);
             IsRunning = true;
-
-            Debug.Log($"Scheduled {StemCount} stem(s) to start at dsp time {ScheduledStartTime} | DSP time: {time}");
         }
     }
 

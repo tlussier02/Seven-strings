@@ -1,17 +1,10 @@
 using UnityEngine;
 
-// Fade-in starts at the next beat/bar boundary of the song (measured on the DSP clock, the same clock
-// the music is scheduled on), so a layer always enters on the grid
+// Fades are lined up to the song's beats/bars (the "grid") so layers enter and leave in time with the music
 public class StemLayerMixer : MonoBehaviour
 {
     public enum Grid { Sixteenth, Eighth, Beat, HalfBar, Bar }
-    public enum Alignment
-    {
-        StartOnGrid,   // fade begins on the boundary
-        ArriveOnGrid   // fade is timed to reach full volume exactly on the boundary
-    }
     
-    // DEBUG SETTINGS
     [Header("References")]
     [SerializeField] private ScheduledAudioPlayer player;
     [SerializeField] private HarmonyMeter harmonyMeter;
@@ -33,7 +26,6 @@ public class StemLayerMixer : MonoBehaviour
 
     [Header("Fade in")]
     [SerializeField] private Grid fadeInGrid = Grid.Beat;
-    [SerializeField] private Alignment fadeInAlignment = Alignment.StartOnGrid;
     [SerializeField, Min(0.01f)] private float fadeInBeats = 1f;
 
     [Header("Fade out")]
@@ -63,6 +55,7 @@ public class StemLayerMixer : MonoBehaviour
         }
     }
 
+    // DSP time of the song's beat 1; Grid lines are counted from here
     double SongZeroDsp => player.ScheduledStartTime - player.SongOffset + firstBeatOffset;
 
     void OnEnable()  => harmonyMeter.OnHarmonyChanged += HandleHarmonyChanged;
@@ -70,7 +63,6 @@ public class StemLayerMixer : MonoBehaviour
 
     void Start()
     {
-        // ScheduledAudioPlayer builds its sources in Awake, so they exist by now.
         stems = new StemState[player.StemCount];
         for (int i = 0; i < stems.Length; i++)
         {
@@ -85,14 +77,14 @@ public class StemLayerMixer : MonoBehaviour
         if (stems == null)
             return;
 
-        // DSP time freezes while AudioListener.pause is on, so fades pause with the menu automatically.
+        // DSP time stops while the game is paused, so fades pause too.
         double now = AudioSettings.dspTime;
 
         for (int i = 0; i < stems.Length; i++)
         {
             StemState s = stems[i];
             if (!s.Fading || now < s.Start)
-                continue; // nothing to do, or waiting for the grid boundary
+                continue; // not fading, or still waiting for its grid line
 
             float t = (float)((now - s.Start) / (s.End - s.Start));
             if (t >= 1f)
@@ -118,9 +110,9 @@ public class StemLayerMixer : MonoBehaviour
         {
             float threshold = ThresholdFor(i);
             bool on = stems[i].TargetOn
-                ? normalized >= threshold - hysteresis   // already on: needs a real drop to turn off
-                : normalized >= threshold;               // off: turns on at the threshold
-            if (threshold <= 0f) on = true;              // base layer never fades out
+                ? normalized >= threshold - hysteresis   // on: stays on until the meter drops below threshold - hysteresis
+                : normalized >= threshold;               // off: turns on once the meter reaches the threshold
+            if (threshold <= 0f) on = true;              // stem 0 (base layer) is always on
 
             if (on != stems[i].TargetOn)
                 Retarget(i, on);
@@ -134,7 +126,7 @@ public class StemLayerMixer : MonoBehaviour
         float to = on ? 1f : 0f;
         double now = AudioSettings.dspTime;
 
-        // Before the music starts there's nothing to be musical about: just snap.
+        // Music hasn't started yet = no fade.
         if (!player.IsRunning || now < SongZeroDsp)
         {
             s.Gain = to;
@@ -147,13 +139,13 @@ public class StemLayerMixer : MonoBehaviour
         {
             if (now < s.Start)
             {
-                // Change was queued but hadn't begun yet: cancel it, the stem never moved.
+                // cancel the fade
                 s.Fading = false;
                 return;
             }
 
-            // Mid-fade reversal: the musical moment was already chosen, so turn around
-            // immediately from the current level instead of waiting for another boundary.
+            // Changed direction mid-fade: reverse right away from the current volume
+            // instead of waiting for another beat
             float beats = on ? fadeInBeats : fadeOutBeats;
             double duration = Mathf.Abs(to - s.Gain) * beats * SecondsPerBeat;
             BeginFade(s, s.Gain, to, now, now + Mathf.Max(0.01f, (float)duration));
@@ -163,19 +155,9 @@ public class StemLayerMixer : MonoBehaviour
         double spb = SecondsPerBeat;
         if (on)
         {
-            double fadeLen = fadeInBeats * spb;
-            double gridLen = GridBeats(fadeInGrid) * spb;
-            if (fadeInAlignment == Alignment.StartOnGrid)
-            {
-                double start = NextBoundary(now, gridLen);
-                BeginFade(s, s.Gain, 1f, start, start + fadeLen);
-            }
-            else
-            {
-                // Land on the first boundary that leaves room for the whole fade.
-                double end = NextBoundary(now + fadeLen, gridLen);
-                BeginFade(s, s.Gain, 1f, end - fadeLen, end);
-            }
+            // Fade starts on the next grid line.
+            double start = NextBoundary(now, GridBeats(fadeInGrid) * spb);
+            BeginFade(s, s.Gain, 1f, start, start + fadeInBeats * spb);
         }
         else
         {
@@ -196,14 +178,14 @@ public class StemLayerMixer : MonoBehaviour
         s.Fading = true;
     }
 
-    // First grid boundary strictly after <paramref name="dspTime"/>, as a DSP time
+    // The next grid line after dspTime (as a DSP time)
     private double NextBoundary(double dspTime, double gridLen)
     {
         double songPos = dspTime - SongZeroDsp;
         double index = System.Math.Floor(songPos / gridLen) + 1.0;
         return SongZeroDsp + index * gridLen;
     }
-
+    
     private float GridBeats(Grid grid) => grid switch
     {
         Grid.Sixteenth => 0.25f,
