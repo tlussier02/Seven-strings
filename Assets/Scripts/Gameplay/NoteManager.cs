@@ -28,21 +28,20 @@ public class NoteManager : MonoBehaviour
     {
         public NoteData Note;
         public bool Pressed;
-        // Hold whose press window passed with no press (already got its press Miss).
-        // It stays catchable by a late press until its release window opens.
+        
+        // An input hold can be caught up until its release window opens
         public bool PressMissed;
     }
 
     private struct HeldNote
     {
         public NoteData Note;
-        // True once the late "held too long" Miss has fired. The sound keeps
-        // playing until the real release, but nothing else is judged.
+        
+        // True once the late "held too long" Miss has fired
         public bool ReleaseJudged;
     }
 
-    // Hold notes whose key is still down. Kept separate from ActiveNotes so a sustain
-    // can outlive the note's judgement window (the player keeps holding past EndTime).
+    // Hold notes whose key is still down are separate from ActiveNotes so the player can hold past EndTime
     private readonly List<HeldNote> Sustains = new List<HeldNote>();
     
     public void SetNotes(List<NoteData> chartNotes)
@@ -74,7 +73,7 @@ public class NoteManager : MonoBehaviour
 
             NoteWindows[Notes[i].Id] = (early, late);
 
-            // Step 5: a release can't be judged past halfway to the next note of the same input.
+            // A release can't be judged past halfway to the next note of the same input
             if (Notes[i].IsHold)
             {
                 double releaseLate = ExpiryWindow;
@@ -107,9 +106,7 @@ public class NoteManager : MonoBehaviour
             NextActivateIndex++;
         }
         
-
-        // Step 4: still holding after the release window closed -> one late Miss.
-        // The sustain sound is NOT stopped here; it keeps going until the real release.
+        
         for (int i = 0; i < Sustains.Count; i++)
         {
             HeldNote held = Sustains[i];
@@ -137,9 +134,8 @@ public class NoteManager : MonoBehaviour
                     ActiveNotes[i] = active;
                 }
             }
-
-            // Late catch: an unpressed hold stays until its release window opens,
-            // so a late press can still start the sound and earn a release judgement.
+            
+            // a late press hold can still start the sound and earn a release judgement
             if (active.Note.IsHold && !active.Pressed && receptor < CatchDeadline(active.Note))
                 continue;
 
@@ -156,7 +152,7 @@ public class NoteManager : MonoBehaviour
             if (active.Pressed || active.Note.Input != pressed)
                 continue;
 
-            // A late catch already got its press Miss from Tick, so it isn't judged again.
+            // A late catch already got its press Miss from Tick, so it isn't judged again
             if (!active.PressMissed)
             {
                 InputJudge.Judgement judgement = InputJudge.Evaluate(receptor, active.Note.Time);
@@ -166,7 +162,7 @@ public class NoteManager : MonoBehaviour
             active.Pressed = true;
             ActiveNotes[i] = active;
 
-            // Every hold press starts the sustain, even a Miss; the release is judged separately.
+            // Every hold press starts the sustain, even a Miss; the release is judged separately
             if (active.Note.IsHold)
             {
                 Sustains.Add(new HeldNote { Note = active.Note });
@@ -176,8 +172,7 @@ public class NoteManager : MonoBehaviour
         }
     }
     
-    // Step 3: letting go judges the release against EndTime, then ends that input's sustain.
-    // Releasing too early falls outside every timing window, so Evaluate returns Miss right away.
+    
     public void HandleRelease(InputType released, double receptor)
     {
         for (int i = Sustains.Count - 1; i >= 0; i--)
@@ -202,8 +197,7 @@ public class NoteManager : MonoBehaviour
         OnHoldEnded?.Invoke(note);
     }
 
-    // Last moment a missed hold can still be caught: when its release window opens
-    // (so tapping right at the end can't farm a free release judgement).
+    // Last moment a missed hold can still be caught
     private double CatchDeadline(NoteData note) =>
         Math.Max(note.Time + NoteWindows[note.Id].late, note.EndTime - InputJudge.WidestThreshold);
 
