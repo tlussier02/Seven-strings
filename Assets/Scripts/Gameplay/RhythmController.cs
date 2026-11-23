@@ -48,7 +48,7 @@ public class RhythmController : MonoBehaviour
         InputHandler.OnInputReleased += HandleRelease;
         NoteManager.OnReleaseJudgement += HandleJudgement;
         NoteManager.OnReleaseJudgement += HarmonyMeter.HandleJudgement;
-        NoteManager.OnReleaseJudgement += SfxPlayer.HandleJudgement;
+        // NoteManager.OnReleaseJudgement += SfxPlayer.HandleJudgement;
         NoteManager.OnHoldStarted += SfxPlayer.StartHoldSustain;
         NoteManager.OnHoldEnded += SfxPlayer.StopHoldSustain;
     }
@@ -59,13 +59,11 @@ public class RhythmController : MonoBehaviour
         InputHandler.OnInputPressed -= HandleInput;
         InputHandler.OnInputPressed -= SfxPlayer.PlayFor;
         NoteManager.OnJudgement -= HandleJudgement;
-        // NoteManager.OnJudgement -= AnimationManager.HandleJudgement;
         NoteManager.OnJudgement -= HarmonyMeter.HandleJudgement;
         NoteManager.OnJudgement -= SfxPlayer.HandleJudgement;
         InputHandler.OnInputReleased -= HandleRelease;
         NoteManager.OnReleaseJudgement -= HandleJudgement;
         NoteManager.OnReleaseJudgement -= HarmonyMeter.HandleJudgement;
-        NoteManager.OnReleaseJudgement -= SfxPlayer.HandleJudgement;
         NoteManager.OnHoldStarted -= SfxPlayer.StartHoldSustain;
         NoteManager.OnHoldEnded -= SfxPlayer.StopHoldSustain;
     }
