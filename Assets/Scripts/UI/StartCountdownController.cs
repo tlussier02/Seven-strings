@@ -40,7 +40,7 @@ public class StartCountdownController : MonoBehaviour
         if (finished || !scheduledAudioPlayer.IsScheduled)
             return;
 
-        controlsText.text = InputHandler.ControlSchemeName + "\n\n" + InputHandler.ControlInstructions;
+        controlsText.text = "Controls\n\n" + InputHandler.ControlInstructions;
 
         double remainingTime = scheduledAudioPlayer.ScheduledStartTime - AudioSettings.dspTime;
         if (remainingTime <= 0d)
@@ -131,7 +131,7 @@ public class StartCountdownController : MonoBehaviour
         controlsText.color = Color.white;
         controlsText.alignment = TextAnchor.MiddleLeft;
         controlsText.raycastTarget = false;
-        controlsText.text = InputHandler.ControlSchemeName + "\n\n" + InputHandler.ControlInstructions;
+        controlsText.text = "Controls\n\n" + InputHandler.ControlInstructions;
 
         Shadow shadow = label.GetComponent<Shadow>();
         shadow.effectColor = new Color(0f, 0f, 0f, 0.9f);

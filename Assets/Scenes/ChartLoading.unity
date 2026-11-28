@@ -26519,6 +26519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsMenuController
   gameplayInput: {fileID: 2132841060}
+  controlsPage: {fileID: 5431394809024145110, guid: 8cdd63bd32d1344fba75eab27e18da91, type: 3}
 --- !u!114 &370468988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26578,7 +26579,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_UseReflectionProbes: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -147059,17 +147060,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
   bindings:
   - InputType: 0
-    Key: 1
   - InputType: 1
-    Key: 33
   - InputType: 2
-    Key: 15
   - InputType: 3
-    Key: 18
   - InputType: 4
-    Key: 51
   - InputType: 5
-    Key: 31
 --- !u!114 &2132841061
 MonoBehaviour:
   m_ObjectHideFlags: 0
