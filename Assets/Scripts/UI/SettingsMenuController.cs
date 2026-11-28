@@ -4,11 +4,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
-// Run before gameplay Update so Escape cannot leak into the rhythm input poll.
+// ensures this script executes before gameplay script reads input
 [DefaultExecutionOrder(-1000)]
 public class SettingsMenuController : MonoBehaviour
 {
     [SerializeField] private InputHandler gameplayInput;
+    [SerializeField] private GameObject controlsPage;
 
     public bool IsOpen { get; private set; }
 
@@ -17,7 +18,10 @@ public class SettingsMenuController : MonoBehaviour
     private Button settingsButton;
     private Button resumeButton;
     private Font font;
-    private Text controlSchemeLabel;
+    private GameObject settingsPanel; // future idea: change this to a prefab assignment like controlsPage
+    private Button controlsButton;
+    private GameObject controlsPageInstance;
+    private ControlsPageController controlsController;
     private float previousTimeScale;
     private bool previousAudioPause;
     private CursorLockMode previousCursorLock;
@@ -30,6 +34,8 @@ public class SettingsMenuController : MonoBehaviour
         AudioListener.volume = AudioVolumeSettings.MasterVolume;
         font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         BuildUI();
+        SetUpControlsPage();
+        KeyBindingSettings.OnBindingsChanged += MarkPreferencesDirty;
         // ChartLoading has no authored EventSystem. Keep pointer/navigation input alive
         // with the menu, while reusing an existing scene EventSystem when present.
         if (FindAnyObjectByType<EventSystem>() == null)
@@ -50,7 +56,13 @@ public class SettingsMenuController : MonoBehaviour
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (IsOpen)
+            // 'Esc' while user is setting key binding cancels that action
+            if (controlsController != null && controlsController.IsListening)
+                return;
+            // 'Esc' while on controls page goes back to settings page
+            if (IsOpen && IsControlsPageOpen)
+                ShowSettingsPage();
+            else if (IsOpen)
                 Close();
             else
                 Open();
@@ -73,8 +85,8 @@ public class SettingsMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         settingsButton.gameObject.SetActive(false);
-        controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
         overlay.SetActive(true);
+        ShowSettingsPage(); // Always open on the main page
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }
@@ -85,6 +97,8 @@ public class SettingsMenuController : MonoBehaviour
             return;
 
         IsOpen = false;
+        if (controlsController != null)
+            controlsController.CancelListening();
         if (overlay != null)
             overlay.SetActive(false);
         if (settingsButton != null)
@@ -105,14 +119,13 @@ public class SettingsMenuController : MonoBehaviour
         if (!IsOpen)
             return;
 
-        // Save preferences and restore the cursor before unloading the menu.
+        // Save preferences and restore the cursor before unloading the menu
         Close();
         GameplayReset.RequestRestart();
     }
 
     void OnDisable()
     {
-        // Scene unload or disabling the HUD must not leave global pause behind.
         Close();
         SavePreferences();
         if (uiRoot != null)
@@ -121,6 +134,9 @@ public class SettingsMenuController : MonoBehaviour
 
     void OnDestroy()
     {
+        KeyBindingSettings.OnBindingsChanged -= MarkPreferencesDirty;
+        if (controlsController != null)
+            controlsController.BackRequested -= ShowSettingsPage;
         if (uiRoot != null)
             Destroy(uiRoot);
     }
@@ -134,6 +150,57 @@ public class SettingsMenuController : MonoBehaviour
     void OnApplicationQuit()
     {
         SavePreferences();
+    }
+
+    public bool IsControlsPageOpen => controlsPageInstance != null && controlsPageInstance.activeSelf;
+
+    public void ShowControlsPage()
+    {
+        if (!IsOpen || controlsPageInstance == null)
+            return;
+
+        settingsPanel.SetActive(false);
+        controlsPageInstance.SetActive(true);
+    }
+
+    public void ShowSettingsPage()
+    {
+        if (controlsController != null)
+            controlsController.CancelListening();
+        if (controlsPageInstance != null)
+            controlsPageInstance.SetActive(false);
+        settingsPanel.SetActive(true);
+        if (IsOpen && EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(controlsButton.gameObject);
+    }
+    
+    private void SetUpControlsPage()
+    {
+        if (controlsPage == null)
+        {
+            Debug.Log("SettingsMenuController: no Controls page assigned, so the Controls button is disabled.", this);
+            controlsButton.interactable = false;
+            return;
+        }
+
+        controlsPageInstance = controlsPage.scene.IsValid() ? controlsPage : Instantiate(controlsPage);
+        controlsPageInstance.transform.SetParent(overlay.transform, false);
+        controlsController = controlsPageInstance.GetComponent<ControlsPageController>();
+        if (controlsController == null)
+        {
+            controlsPageInstance.SetActive(false);
+            controlsPageInstance = null;
+            controlsButton.interactable = false;
+            return;
+        }
+
+        controlsController.BackRequested += ShowSettingsPage;
+        controlsPageInstance.SetActive(false);
+    }
+
+    private void MarkPreferencesDirty()
+    {
+        preferencesDirty = true;
     }
 
     private void SavePreferences()
@@ -169,20 +236,13 @@ public class SettingsMenuController : MonoBehaviour
 
         RectTransform panel = CreateRect("Settings Panel", backdrop, new Vector2(440f, 530f), Vector2.zero);
         panel.gameObject.AddComponent<Image>().color = new Color(0.09f, 0.11f, 0.16f, 1f);
+        settingsPanel = panel.gameObject;
         CreateText("SETTINGS", panel, new Vector2(380f, 44f), new Vector2(0f, 230f), 28);
         CreateVolumeControl(panel, "Master Volume", 150f, AudioVolumeSettings.MasterVolume, AudioVolumeSettings.MasterVolumeKey);
         CreateVolumeControl(panel, "Music Volume", 60f, AudioVolumeSettings.MusicVolume, AudioVolumeSettings.MusicVolumeKey);
         CreateVolumeControl(panel, "Sound Effects Volume", -30f, AudioVolumeSettings.SfxVolume, AudioVolumeSettings.SfxVolumeKey);
-        Button schemeButton = CreateButton("Control Scheme: " + InputHandler.ControlSchemeName, panel,
-            new Vector2(400f, 42f), () =>
-            {
-                InputHandler.SetControlScheme(InputHandler.SelectedControlScheme == ControlScheme.CurrentControls
-                    ? ControlScheme.WASDControls : ControlScheme.CurrentControls);
-                controlSchemeLabel.text = "Control Scheme: " + InputHandler.ControlSchemeName;
-                preferencesDirty = true;
-            });
-        ((RectTransform)schemeButton.transform).anchoredPosition = new Vector2(0f, -105f);
-        controlSchemeLabel = schemeButton.GetComponentInChildren<Text>();
+        controlsButton = CreateButton("Controls", panel, new Vector2(400f, 42f), ShowControlsPage);
+        ((RectTransform)controlsButton.transform).anchoredPosition = new Vector2(0f, -105f);
         resumeButton = CreateButton("Resume", panel, new Vector2(180f, 44f), Close);
         ((RectTransform)resumeButton.transform).anchoredPosition = new Vector2(0f, -170f);
         Button restartButton = CreateButton("Restart", panel, new Vector2(180f, 44f), Restart);
